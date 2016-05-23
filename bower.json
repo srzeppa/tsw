@@ -1,0 +1,14 @@
+{
+    "name": "application-name",
+    "version": "0.0.0",
+    "dependencies": {
+        "jquery": "1.11.1",
+        "normalize-css": "latest"
+    },
+    "install" : {
+        "path"  : {
+            "js": "_js/",
+            "css": "_css/"
+        }
+    }
+}

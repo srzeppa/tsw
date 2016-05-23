@@ -23,7 +23,7 @@ module.exports = function(passport){
 
 	/* Handle Login POST */
 	router.post('/login', passport.authenticate('login', {
-		successRedirect: '/home',
+		successRedirect: '/referee',
 		failureRedirect: '/',
 		failureFlash : true  
 	}));
@@ -35,14 +35,14 @@ module.exports = function(passport){
 
 	/* Handle Registration POST */
 	router.post('/signup', passport.authenticate('signup', {
-		successRedirect: '/home',
+		successRedirect: '/referee',
 		failureRedirect: '/signup',
 		failureFlash : true  
 	}));
 
 	/* GET Home Page */
-	router.get('/home', isAuthenticated, function(req, res){
-		res.render('home', { user: req.user });
+	router.get('/referee', isAuthenticated, function(req, res){
+		res.render('referee', { user: req.user });
 	});
 
 	/* Handle Logout */
