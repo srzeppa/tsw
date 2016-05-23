@@ -2,5 +2,5 @@
 
 "use strict";
 $( document ).ready(function() {
-	console.log('index.ejs');
+	console.log('viewer.ejs');
 });
