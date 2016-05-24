@@ -7,6 +7,10 @@ var logger = require('morgan');
 var cookieParser = require('cookie-parser');
 var bodyParser = require('body-parser');
 
+// Configuring Passport
+var passport = require('passport');
+var expressSession = require('express-session');
+
 var dbConfig = require('./db');
 var mongoose = require('mongoose');
 // Connect to DB
@@ -26,20 +30,17 @@ app.use(cookieParser());
 app.use(express.static(path.join(__dirname, 'public')));
 app.use(express.static(path.join(__dirname, 'bower_components')));
 
-// Configuring Passport
-var passport = require('passport');
-var expressSession = require('express-session');
-// TODO - Why Do we need this key ?
-app.use(expressSession({secret: 'mySecretKey'}));
+app.use(expressSession({
+    secret: 'mySecretKey',
+    resave: true,
+    saveUninitialized: false
+}));
 app.use(passport.initialize());
 app.use(passport.session());
 
- // Using the flash middleware provided by connect-flash to store messages in session
- // and displaying in templates
 var flash = require('connect-flash');
 app.use(flash());
 
-// Initialize Passport
 var initPassport = require('./passport/init');
 initPassport(passport);
 
@@ -56,15 +57,12 @@ app.use('/admin', admin);
 app.use('/viewer', viewer);
 app.use('/referee', referee);
 
-/// catch 404 and forward to error handler
 app.use(function(req, res, next) {
     var err = new Error('Not Found');
     err.status = 404;
     next(err);
 });
 
-// development error handler
-// will print stacktrace
 if (app.get('env') === 'development') {
     app.use(function(err, req, res, next) {
         res.status(err.status || 500);
