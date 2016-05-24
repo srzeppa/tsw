@@ -23,7 +23,23 @@
    </div>
     <div class="collapse" id="addHorse">
       <div class="well">
-        Add horse
+        <div class="container">
+          <div class="row">
+            <div class="col-sm-6 col-md-4 col-md-offset-4">
+              <h1 class="text-center login-title">
+                <div class="signup-wall">
+                  <form action="/addhorse" method="POST" class="form-signin">
+                    <input type="text" name="name" placeholder="Name" required="required" autofocus="autofocus" class="form-control"/>
+                    <input type="text" name="gender" placeholder="Gender" required="required" class="form-control"/>
+                    <input type="text" name="owner" placeholder="Owner" required="required" class="form-control"/>
+                    <input type="date" name="born" placeholder="Born" required="required" class="form-control"/>
+                    <button type="submit" class="btn btn-lg btn-success btn-block">Add</button><span class="clearfix"></span>
+                  </form>
+                </div>
+              </h1>
+            </div>
+          </div>
+        </div>    
       </div>
     </div>
     <div class="collapse" id="addUser">
