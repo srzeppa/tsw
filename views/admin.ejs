@@ -5,11 +5,36 @@
     <link rel='stylesheet' href='/stylesheets/admin.css' />
     <script src='/jquery/dist/jquery.min.js'></script>
     <script src='/javascripts/adminManager.js'></script>
+    <script src="http://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/js/bootstrap.min.js"></script>
     <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.4/css/bootstrap.min.css">
     <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.4/css/bootstrap-theme.min.css">
   </head>
   <body>
-    <h1><%= title %></h1>
-    <p>Welcome to <%= title %></p>
+   <div class="span7 text-center" id="menuButtons">
+    <button class="btn btn-primary" type="button" data-toggle="collapse" data-target="#addHorse" aria-expanded="false" aria-controls="collapseExample">
+      Add horse
+    </button>
+    <button class="btn btn-primary" type="button" data-toggle="collapse" data-target="#addUser" aria-expanded="false" aria-controls="collapseExample">
+      Add user
+    </button>
+    <button class="btn btn-primary" type="button" data-toggle="collapse" data-target="#startCompetition" aria-expanded="false" aria-controls="collapseExample">
+      Start competition
+    </button>
+   </div>
+    <div class="collapse" id="addHorse">
+      <div class="well">
+        Add horse
+      </div>
+    </div>
+    <div class="collapse" id="addUser">
+      <div class="well">
+        Add user
+      </div>
+    </div>
+    <div class="collapse" id="startCompetition">
+      <div class="well">
+        Start competition
+      </div>
+    </div>
   </body>
 </html>

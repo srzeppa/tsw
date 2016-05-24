@@ -2,6 +2,18 @@
 
 
 body {
+  .btn:after {
+    font-family: "Glyphicons Halflings";
+    content: "\e114";
+    float: right;
+    margin-left: 15px;
+  }
+  .btn.collapsed:after {
+    content: "\e080";
+  }
+  #menuButtons{
+    padding: 1em;
+  }
   a {
       color: #00B7FF;
   }
