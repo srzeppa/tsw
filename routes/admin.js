@@ -58,6 +58,40 @@ router.get('/showHorses', function(req, res){
     });
 });
 
+router.get('/showUsers', function(req, res){
+    MongoClient.connect(url, function(err, db) {
+            if (err) {
+                console.log('Unable to connect to the mongoDB server. Error:', err);
+            } else {
+                console.log('Connection established to', url);
+
+                // Get the documents collection
+                var collection = db.collection('users');
+
+                // Insert some users
+                collection.find().toArray(function(err, result) {
+                    if (err) {
+                        console.log(err);
+                    } else if (result.length) {
+                        console.log('Found');
+                        
+                        var showUsersFunction = function() {
+                            return {
+                                "users": result
+                            };
+                        };
+                        res.json(showUsersFunction());
+                        console.log(res.returnValue);
+                        
+                    } else {
+                        console.log('No document(s) found with defined "find" criteria!');
+                    }
+                    db.close();
+                });
+            }
+    });
+});
+
 router.post('/addHorse', function(req, res) {
     var addHorseFunction = function() {
         var newHorse = new Horse();

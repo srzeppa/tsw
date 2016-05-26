@@ -5,7 +5,6 @@
 $( document ).ready(function() {
 	console.log('admin.ejs');
     $('#addHorseButton').on('click', function(e){
-        console.log('chuj');
         $.ajax({
             type: 'GET',
             url: '/admin/showHorses/',
@@ -25,6 +24,34 @@ $( document ).ready(function() {
                 }
                 
                 $table.appendTo( $( "#showAllHorses" ) );
+                
+            },
+            error: function(jqXHR, textStatus, errorThrown) {
+                console.log(textStatus, errorThrown);
+            }
+        });
+    });
+    
+    
+    $('#addUserButton').on('click', function(e){
+        $.ajax({
+            type: 'GET',
+            url: '/admin/showUsers/',
+            dataType: 'json',
+            success: function(e){
+                var arrayLength = e.users.length;
+                var $table = $( "<table></table>" );
+                
+                for (let i = 0; i < arrayLength; i ++){
+                    var us = e.users[i];
+                    var $line = $( "<tr></tr>" );
+                    $line.append( $( "<td></td>" ).html( us.username ) );
+                    $line.append( $( "<td></td>" ).html( us.email ) );
+                    $line.append( $( "<td></td>" ).html( us.role ) );
+                    $table.append( $line );
+                }
+                
+                $table.appendTo( $( "#showAllUsers" ) );
                 
             },
             error: function(jqXHR, textStatus, errorThrown) {
