@@ -3,8 +3,10 @@ var express = require('express');
 var router = express.Router();
 var Horse = require('../models/horse');
 var mongodb = require('mongodb');
+var ObjectId = require('mongodb').ObjectID;
 var MongoClient = mongodb.MongoClient;
 var url = 'mongodb://localhost:27017/tsw';
+var users = require('../models/users');
 
 router.use(function(req, res, next) {
     if (!req.user) {
@@ -24,7 +26,7 @@ router.get('/', function(req, res, next) {
 
 
 // Use connect method to connect to the Server
-router.get('/showHorses', function(req, res){
+router.get('/showHorses', function(req, res, next){
     MongoClient.connect(url, function(err, db) {
             if (err) {
                 console.log('Unable to connect to the mongoDB server. Error:', err);
@@ -58,7 +60,7 @@ router.get('/showHorses', function(req, res){
     });
 });
 
-router.get('/showUsers', function(req, res){
+router.get('/showUsers', function(req, res, next){
     MongoClient.connect(url, function(err, db) {
             if (err) {
                 console.log('Unable to connect to the mongoDB server. Error:', err);
@@ -92,7 +94,7 @@ router.get('/showUsers', function(req, res){
     });
 });
 
-router.post('/addHorse', function(req, res) {
+router.post('/addHorse', function(req, res, next) {
     var addHorseFunction = function() {
         var newHorse = new Horse();
 
@@ -118,6 +120,28 @@ router.post('/addHorse', function(req, res) {
     };
     res.json(addHorseFunction());
 });
+
+router.get('/:id', function (req, res, next) {
+    var deleteUserByIdFunction = function(){
+        users.remove({"_id": ObjectId(req.params.id)}, function(err, docs) {
+            if(err){
+                return{
+                    "msg": "deleted"
+                };
+            }
+            return {
+                "msg": "deleted"
+            };
+        });
+    };
+    res.json(deleteUserByIdFunction());
+    res.writeHead(302, {
+      'Location': '/admin/'
+      //add other headers here...
+    });
+    res.end();
+});
+
 
 /* Handle Registration POST */
 module.exports = function(passport) {

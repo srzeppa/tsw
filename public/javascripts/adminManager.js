@@ -45,9 +45,10 @@ $( document ).ready(function() {
                 for (let i = 0; i < arrayLength; i ++){
                     var us = e.users[i];
                     var $line = $( "<tr></tr>" );
-                    $line.append( $( "<td></td>" ).html( us.username ) );
-                    $line.append( $( "<td></td>" ).html( us.email ) );
-                    $line.append( $( "<td></td>" ).html( us.role ) );
+                    $line.append( $( "<td> </td>" ).html( us.username ) );
+                    $line.append( $( "<td> </td>" ).html( us.email ) );
+                    $line.append( $( "<td> </td>" ).html( us.role ) );
+                    $line.append( $( "<td> </td>" ).html("<a id=\"deleteUserByIdButton\" href = \"/admin/" + us._id + "\"/ > Delete </a>") );
                     $table.append( $line );
                 }
                 
@@ -59,4 +60,22 @@ $( document ).ready(function() {
             }
         });
     });
+    
+    $('#deleteUserByIdButton').on('click', function(e){
+        $.ajax({
+            type: 'GET',
+            url: '/admin/:id/',
+            success: function(e){
+                console.log(e.msg);
+            },
+            error: function(jqXHR, textStatus, errorThrown) {
+                console.log(textStatus, errorThrown);
+            }
+        });
+    });
 });
+
+
+
+
+//https://codepen.io/ashblue/pen/mCtuA
