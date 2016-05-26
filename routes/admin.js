@@ -18,11 +18,6 @@ router.get('/', function(req, res, next) {
   res.render('admin', { title: 'Admin' });
 });
 
-//router.get('/admin/chuj', function(req, res, next) {
-//  res.render('addHorse', { title: 'Add horse' });
-//});
-
-//router.get(/^\/admin\/((name\/(\d+)\/)?(gender\/(\d+)\/)?(owner\/(\d+)\/)?)?/, function(req,res){
 router.post('/addHorse', function(req,res){
     var fawekOdsylaczFunkcja = function(){
         var newHorse = new Horse();
@@ -49,5 +44,14 @@ router.post('/addHorse', function(req,res){
     };
     res.json(fawekOdsylaczFunkcja());
 });
-    
+
+/* Handle Registration POST */
+module.exports = function(passport){
+    router.post('/signup', passport.authenticate('signup', {
+        successRedirect: '/referee',
+        failureRedirect: '/signup',
+        failureFlash : true  
+    }))
+};
+
 module.exports = router;
