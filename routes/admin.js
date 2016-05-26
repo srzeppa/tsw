@@ -121,7 +121,7 @@ router.post('/addHorse', function(req, res, next) {
     res.json(addHorseFunction());
 });
 
-router.get('/:id', function (req, res, next) {
+router.get('/deleteuser/:id', function (req, res, next) {
     var deleteUserByIdFunction = function(){
         users.remove({"_id": ObjectId(req.params.id)}, function(err, docs) {
             if(err){
@@ -137,7 +137,26 @@ router.get('/:id', function (req, res, next) {
     res.json(deleteUserByIdFunction());
     res.writeHead(302, {
       'Location': '/admin/'
-      //add other headers here...
+    });
+    res.end();
+});
+
+router.get('/deletehorse/:id', function (req, res, next) {
+    var deleteHorseByIdFunction = function(){
+        Horse.remove({"_id": ObjectId(req.params.id)}, function(err, docs) {
+            if(err){
+                return{
+                    "msg": "deleted"
+                };
+            }
+            return {
+                "msg": "deleted"
+            };
+        });
+    };
+    res.json(deleteHorseByIdFunction());
+    res.writeHead(302, {
+      'Location': '/admin/'
     });
     res.end();
 });

@@ -20,6 +20,7 @@ $( document ).ready(function() {
                     $line.append( $( "<td></td>" ).html( hor.gender ) );
                     $line.append( $( "<td></td>" ).html( hor.born ) );
                     $line.append( $( "<td></td>" ).html( hor.owner ) );
+                    $line.append( $( "<td> </td>" ).html("<a id=\"deleteHorseByIdButton\" href = \"/admin/deletehorse/" + hor._id + "\"/ > Delete </a>") );
                     $table.append( $line );
                 }
                 
@@ -48,7 +49,7 @@ $( document ).ready(function() {
                     $line.append( $( "<td> </td>" ).html( us.username ) );
                     $line.append( $( "<td> </td>" ).html( us.email ) );
                     $line.append( $( "<td> </td>" ).html( us.role ) );
-                    $line.append( $( "<td> </td>" ).html("<a id=\"deleteUserByIdButton\" href = \"/admin/" + us._id + "\"/ > Delete </a>") );
+                    $line.append( $( "<td> </td>" ).html("<a id=\"deleteUserByIdButton\" href = \"/admin/deleteuser/" + us._id + "\"/ > Delete </a>") );
                     $table.append( $line );
                 }
                 
@@ -64,7 +65,20 @@ $( document ).ready(function() {
     $('#deleteUserByIdButton').on('click', function(e){
         $.ajax({
             type: 'GET',
-            url: '/admin/:id/',
+            url: '/admin/deleteuser/:id/',
+            success: function(e){
+                console.log(e.msg);
+            },
+            error: function(jqXHR, textStatus, errorThrown) {
+                console.log(textStatus, errorThrown);
+            }
+        });
+    });
+    
+    $('#deleteHorseByIdButton').on('click', function(e){
+        $.ajax({
+            type: 'GET',
+            url: '/admin/deletehorse/:id/',
             success: function(e){
                 console.log(e.msg);
             },
