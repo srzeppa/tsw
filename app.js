@@ -113,7 +113,7 @@ sio.use(passportSocketIo.authorize({
 }));
 
 
-sio.set('log level', 2); // 3 == DEBUG, 2 == INFO, 1 == WARN, 0 == ERROR
+//sio.set('log level', 2); // 3 == DEBUG, 2 == INFO, 1 == WARN, 0 == ERROR
 
 sio.sockets.on('connection', function (socket) {
     socket.emit('news', {
@@ -122,10 +122,6 @@ sio.sockets.on('connection', function (socket) {
     socket.on('reply', function (data) {
         console.log(data);
     });
-});
-
-server.listen(3001, function () {
-    console.log('Serwer pod adresem http://localhost:3001/');
 });
 
 module.exports = app;
