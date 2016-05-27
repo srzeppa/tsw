@@ -10,9 +10,26 @@ router.use(function (req, res, next){
     next();
 });
 
-/* GET home page. */
-router.get('/', function(req, res, next) {
-  res.render('referee', { title: 'Referee' });
-});
+function hasAccess(accessLevel) {
+    return function (req, res, next) {
+        if (req.user && req.user.hasAccess(accessLevel)) {
+            return next();
+        }
+        return res.json({
+            success: false,
+            error: 'Unauthorized'
+        });
+    };
+}
+ 
+router.get('/', [
+    hasAccess('referee'), // protection middleware 
+    function (req, res, next) {
+    console.log('you have access!');
+        res.render('referee', {
+            title: 'Referee'
+        });
+    }
+]);
 
 module.exports = router;

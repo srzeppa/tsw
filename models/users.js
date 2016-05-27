@@ -2,15 +2,7 @@
 'use strict';
 
 var mongoose = require('mongoose');
-// 
-//module.exports = mongoose.model('User',{
-//    username: String,
-//    password: String,
-//    email: String,
-//    gender: String
-//});
 
- 
 var UserSchema = new require('mongoose').Schema({
     username: String,
     password: String,
@@ -20,10 +12,10 @@ var UserSchema = new require('mongoose').Schema({
 UserSchema.plugin(require('mongoose-role'), {
   roles: ['referee', 'admin'],
   accessLevels: {
-    'public': ['public', 'user', 'admin'],
-    'anon': ['public'],
+    'public': ['public', 'referee', 'admin'],
+    'anon': ['public', 'admin', 'referee'],
     'referee': ['referee', 'admin'],
-    'admin': ['admin'],
+    'admin': ['admin']
   }
 });
  

@@ -15,15 +15,28 @@ router.use(function(req, res, next) {
     next();
 });
 
-console.log('here3');
 
-/* GET home page. */
-router.get('/', function(req, res, next) {
-    res.render('admin', {
-        title: 'Admin'
-    });
-});
-
+function hasAccess(accessLevel) {
+    return function (req, res, next) {
+        if (req.user && req.user.hasAccess(accessLevel)) {
+            return next();
+        }
+        return res.json({
+            success: false,
+            error: 'Unauthorized'
+        });
+    };
+}
+ 
+router.get('/', [
+    hasAccess('admin'), // protection middleware 
+    function (req, res, next) {
+    console.log('you have access!');
+        res.render('admin', {
+            title: 'Admin'
+        });
+    }
+]);
 
 // Use connect method to connect to the Server
 router.get('/showHorses', function(req, res, next){
@@ -31,8 +44,6 @@ router.get('/showHorses', function(req, res, next){
             if (err) {
                 console.log('Unable to connect to the mongoDB server. Error:', err);
             } else {
-                console.log('Connection established to', url);
-
                 // Get the documents collection
                 var collection = db.collection('horses');
 
@@ -49,8 +60,6 @@ router.get('/showHorses', function(req, res, next){
                             };
                         };
                         res.json(showHorsesFunction());
-                        console.log(res.returnValue);
-                        
                     } else {
                         console.log('No document(s) found with defined "find" criteria!');
                     }
@@ -65,8 +74,6 @@ router.get('/showUsers', function(req, res, next){
             if (err) {
                 console.log('Unable to connect to the mongoDB server. Error:', err);
             } else {
-                console.log('Connection established to', url);
-
                 // Get the documents collection
                 var collection = db.collection('users');
 
@@ -83,8 +90,6 @@ router.get('/showUsers', function(req, res, next){
                             };
                         };
                         res.json(showUsersFunction());
-                        console.log(res.returnValue);
-                        
                     } else {
                         console.log('No document(s) found with defined "find" criteria!');
                     }
