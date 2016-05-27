@@ -1,4 +1,5 @@
 /* jshint node: true */
+'use strict';
 
 var mongoose = require('mongoose');
 // 
@@ -9,7 +10,6 @@ var mongoose = require('mongoose');
 //    gender: String
 //});
 
-'use strict';
  
 var UserSchema = new require('mongoose').Schema({
     username: String,

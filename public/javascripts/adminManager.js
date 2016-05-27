@@ -11,7 +11,7 @@ $( document ).ready(function() {
             dataType: 'json',
             success: function(e){
                 var arrayLength = e.horses.length;
-                var $table = $( "<table></table>" );
+                var $table = $( "<table id=\"horsesTable\"></table>" );
                 
                 for (let i = 0; i < arrayLength; i ++){
                     var hor = e.horses[i];
@@ -41,7 +41,7 @@ $( document ).ready(function() {
             dataType: 'json',
             success: function(e){
                 var arrayLength = e.users.length;
-                var $table = $( "<table></table>" );
+                var $table = $( "<table id=\"usersTable\"></table>" );
                 
                 for (let i = 0; i < arrayLength; i ++){
                     var us = e.users[i];
