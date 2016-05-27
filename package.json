@@ -21,6 +21,8 @@
     "morgan": "~1.0.0",
     "passport": "~0.2.0",
     "passport-local": "~1.0.0",
+    "socketio": "^1.0.0",
+    "passport.socketio": "^3.6.1",
     "static-favicon": "~1.0.0"
   }
 }
