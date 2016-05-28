@@ -40,7 +40,6 @@ router.get('/', [
     }
 ]);
 
-// Use connect method to connect to the Server
 router.get('/showHorses', function(req, res, next){
     MongoClient.connect(url, function(err, db) {
             if (err) {

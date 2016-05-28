@@ -19,19 +19,26 @@ module.exports = function(passport){
 		res.render('index', { message: req.flash('message') });
 	});
     
-	/* Handle Login POST */
-	router.post('/login', passport.authenticate('login', {
-		successRedirect: '/referee',
-		failureRedirect: '/',
-		failureFlash : true  
-	}));
-
-	/* Handle Registration POST */
-	router.post('/signup', passport.authenticate('signup', {
-		successRedirect: '/admin',
-		failureRedirect: '/admin',
-		failureFlash : true  
-	}));
+    router.post('/login', function(req, res, next) {
+        passport.authenticate('login', function(err, user, info) {
+        if (err) { 
+            return next(err);
+        }
+        if (!user) {
+            return res.redirect('/'); 
+        }
+        req.logIn(user, function(err) {
+            if (err) { 
+                return next(err); 
+            }
+            if(req.user.role === 'admin'){
+                return res.redirect('/admin');
+            } else if(req.user.role === 'referee'){
+                return res.redirect('/referee');
+            }
+        });
+        })(req, res, next);
+    });
 
 	/* Handle Logout */
 	router.get('/signout', function(req, res) {
