@@ -34,7 +34,8 @@ router.get('/', [
     function (req, res, next) {
     console.log('you have access!');
         res.render('admin', {
-            title: 'Admin'
+            title: 'Admin',
+            user: req.user
         });
     }
 ]);
