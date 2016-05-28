@@ -26,22 +26,12 @@ module.exports = function(passport){
 		failureFlash : true  
 	}));
 
-	/* GET Registration Page */
-	router.get('/signup', function(req, res){
-		res.render('register',{message: req.flash('message')});
-	});
-
 	/* Handle Registration POST */
 	router.post('/signup', passport.authenticate('signup', {
 		successRedirect: '/admin',
 		failureRedirect: '/admin',
 		failureFlash : true  
 	}));
-
-	/* GET Home Page */
-	router.get('/referee', isAuthenticated, function(req, res){
-		res.render('referee', { user: req.user });
-	});
 
 	/* Handle Logout */
 	router.get('/signout', function(req, res) {

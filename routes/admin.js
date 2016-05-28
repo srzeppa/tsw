@@ -7,6 +7,7 @@ var ObjectId = require('mongodb').ObjectID;
 var MongoClient = mongodb.MongoClient;
 var url = 'mongodb://localhost:27017/tsw';
 var users = require('../models/users');
+var bCrypt = require('bcrypt-nodejs');
 
 router.use(function(req, res, next) {
     if (!req.user) {
@@ -166,14 +167,38 @@ router.get('/deletehorse/:id', function (req, res, next) {
     res.end();
 });
 
+router.post('/addUser', function(req, res, next) {
+    var addUserFunction = function() {
+        var newUser = new users();
 
-/* Handle Registration POST */
-module.exports = function(passport) {
-    router.post('/signup', passport.authenticate('signup', {
-        successRedirect: '/referee',
-        failureRedirect: '/signup',
-        failureFlash: true
-    }));
+        newUser.username = req.param('username');
+        var password = req.param('password');
+        newUser.password = createHash(password);
+        newUser.email = req.param('email');
+        newUser.firstname = req.param('firstname');
+        newUser.lastname = req.param('lastname');
+        newUser.role = req.param('role');
+
+        newUser.save(function(err) {
+            if (err) {
+                console.log('Error in Saving horse: ' + err);
+                throw err;
+            }
+            console.log('User saving succesful');
+            console.log(newUser);
+            res.statusCode = 302;
+            res.setHeader("Location", "/admin");
+            res.end();
+            return {
+                "user": newUser
+            };
+        });
+    };
+    res.json(addUserFunction());
+});
+
+var createHash = function(password){
+    return bCrypt.hashSync(password, bCrypt.genSaltSync(10), null);
 };
 
 module.exports = router;
