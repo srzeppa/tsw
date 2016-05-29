@@ -20,7 +20,12 @@ $( document ).ready(function() {
                 $line.append( $( "<td></td>" ).html( hor.gender ) );
                 $line.append( $( "<td></td>" ).html( hor.born ) );
                 $line.append( $( "<td></td>" ).html( hor.owner ) );
-                $line.append( $( "<td> </td>" ).html("<a id=\"deleteHorseByIdButton\" href = \"/admin/deletehorse/" + hor._id + "\"/ > Delete </a>") );
+                if(hor.activate === true){
+                    $line.append( $( "<td> </td>" ).html("<a href=\"/admin/deactivateHorse/" + hor._id + "\"/ class=\"btn btn-danger\" role=\"button\" id=\"deactivateHorseButton\"> Deactivate </a>"  ) );
+                } else {
+                    $line.append( $( "<td> </td>" ).html("<a href=\"/admin/activateHorse/" + hor._id + "\"/ class=\"btn btn-success\" role=\"button\" id=\"activateHorseButton\"> Activate </a>"  ) );
+                }
+//                $line.append( $( "<td> </td>" ).html("<a id=\"deleteHorseByIdButton\" href = \"/admin/deletehorse/" + hor._id + "\"/ > Delete </a>") );
                 $table.append( $line );
             }
 
@@ -46,7 +51,11 @@ $( document ).ready(function() {
                 $line.append( $( "<td> </td>" ).html( us.username ) );
                 $line.append( $( "<td> </td>" ).html( us.email ) );
                 $line.append( $( "<td> </td>" ).html( us.role ) );
-                $line.append( $( "<td> </td>" ).html("<a id=\"deleteUserByIdButton\" href = \"/admin/deleteuser/" + us._id + "\"/ > Delete </a>") );
+                if(us.activate === true){
+                    $line.append( $( "<td> </td>" ).html("<a href=\"/admin/deactivateUser/" + us._id + "\"/ class=\"btn btn-danger\" role=\"button\" id=\"deactivateUserButton\"> Deactivate </a>"  ) );
+                } else {
+                    $line.append( $( "<td> </td>" ).html("<a href=\"/admin/activateUser/" + us._id + "\"/ class=\"btn btn-success\" role=\"button\" id=\"activateUserButton\"> Activate </a>"  ) );
+                }
                 $table.append( $line );
             }
 
@@ -58,10 +67,36 @@ $( document ).ready(function() {
         }
     });
     
-    $('#deleteUserByIdButton').on('click', function(e){
+//    $('#deleteUserByIdButton').on('click', function(e){
+//        $.ajax({
+//            type: 'GET',
+//            url: '/admin/deleteuser/:id/',
+//            success: function(e){
+//                console.log(e.msg);
+//            },
+//            error: function(jqXHR, textStatus, errorThrown) {
+//                console.log(textStatus, errorThrown);
+//            }
+//        });
+//    });
+    
+//    $('#deleteHorseByIdButton').on('click', function(e){
+//        $.ajax({
+//            type: 'GET',
+//            url: '/admin/deletehorse/:id/',
+//            success: function(e){
+//                console.log(e.msg);
+//            },
+//            error: function(jqXHR, textStatus, errorThrown) {
+//                console.log(textStatus, errorThrown);
+//            }
+//        });
+//    });
+    
+    $('#activateUserButton').on('click', function(e){
         $.ajax({
             type: 'GET',
-            url: '/admin/deleteuser/:id/',
+            url: '/admin/activateUser/:id/',
             success: function(e){
                 console.log(e.msg);
             },
@@ -71,10 +106,10 @@ $( document ).ready(function() {
         });
     });
     
-    $('#deleteHorseByIdButton').on('click', function(e){
+    $('#deactivateUserButton').on('click', function(e){
         $.ajax({
             type: 'GET',
-            url: '/admin/deletehorse/:id/',
+            url: '/admin/deactivateUser/:id/',
             success: function(e){
                 console.log(e.msg);
             },
@@ -83,6 +118,33 @@ $( document ).ready(function() {
             }
         });
     });
+    
+    $('#activateHorseButton').on('click', function(e){
+        $.ajax({
+            type: 'GET',
+            url: '/admin/activateHorse/:id/',
+            success: function(e){
+                console.log(e.msg);
+            },
+            error: function(jqXHR, textStatus, errorThrown) {
+                console.log(textStatus, errorThrown);
+            }
+        });
+    });
+    
+    $('#deactivateHorseButton').on('click', function(e){
+        $.ajax({
+            type: 'GET',
+            url: '/admin/deactivateHorse/:id/',
+            success: function(e){
+                console.log(e.msg);
+            },
+            error: function(jqXHR, textStatus, errorThrown) {
+                console.log(textStatus, errorThrown);
+            }
+        });
+    });
+    
 });
 
 

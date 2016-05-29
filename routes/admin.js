@@ -108,6 +108,7 @@ router.post('/addHorse', function(req, res, next) {
         newHorse.gender = req.param('gender');
         newHorse.owner = req.param('owner');
         newHorse.born = req.param('born');
+        newHorse.activate = true;
 
         newHorse.save(function(err) {
             if (err) {
@@ -127,40 +128,132 @@ router.post('/addHorse', function(req, res, next) {
     res.json(addHorseFunction());
 });
 
-router.get('/deleteuser/:id', function (req, res, next) {
-    var deleteUserByIdFunction = function(){
-        users.remove({"_id": ObjectId(req.params.id)}, function(err, docs) {
-            if(err){
-                return{
-                    "msg": "deleted"
+//router.get('/deleteuser/:id', function (req, res, next) {
+//    var deleteUserByIdFunction = function(){
+//        users.remove({"_id": ObjectId(req.params.id)}, function(err, docs) {
+//            if(err){
+//                return{
+//                    "msg": "deleted"
+//                };
+//            }
+//            return {
+//                "msg": "deleted"
+//            };
+//        });
+//    };
+//    res.json(deleteUserByIdFunction());
+//    res.writeHead(302, {
+//      'Location': '/admin/'
+//    });
+//    res.end();
+//});
+
+//router.get('/deletehorse/:id', function (req, res, next) {
+//    var deleteHorseByIdFunction = function(){
+//        Horse.remove({"_id": ObjectId(req.params.id)}, function(err, docs) {
+//            if(err){
+//                return{
+//                    "msg": "deleted"
+//                };
+//            }
+//            return {
+//                "msg": "deleted"
+//            };
+//        });
+//    };
+//    res.json(deleteHorseByIdFunction());
+//    res.writeHead(302, {
+//      'Location': '/admin/'
+//    });
+//    res.end();
+//});
+
+router.get('/activateUser/:id', function (req, res, next) {
+    var activateUserByIdFunction = function(){
+        users.findOne({_id:req.params.id},function(err,user){
+            user.activate = true;
+            user.save(function(err){
+                if(err){
+                    return{
+                        "msg": "error"
+                    };
+                }
+                return {
+                    "msg": "activated"
                 };
-            }
-            return {
-                "msg": "deleted"
-            };
+            });
         });
     };
-    res.json(deleteUserByIdFunction());
+    res.json(activateUserByIdFunction());
     res.writeHead(302, {
       'Location': '/admin/'
     });
     res.end();
 });
 
-router.get('/deletehorse/:id', function (req, res, next) {
-    var deleteHorseByIdFunction = function(){
-        Horse.remove({"_id": ObjectId(req.params.id)}, function(err, docs) {
-            if(err){
-                return{
-                    "msg": "deleted"
+router.get('/deactivateUser/:id', function (req, res, next) {
+    var deactivateUserByIdFunction = function(){
+        users.findOne({_id:req.params.id},function(err,user){
+            user.activate = false;
+            user.save(function(err){
+                if(err){
+                    return{
+                        "msg": "error"
+                    };
+                }
+                return {
+                    "msg": "activated"
                 };
-            }
-            return {
-                "msg": "deleted"
-            };
+            });
         });
     };
-    res.json(deleteHorseByIdFunction());
+    res.json(deactivateUserByIdFunction());
+    res.writeHead(302, {
+      'Location': '/admin/'
+    });
+    res.end();
+});
+
+router.get('/activateHorse/:id', function (req, res, next) {
+    var activateUserByIdFunction = function(){
+        Horse.findOne({_id:req.params.id},function(err,horse){
+            horse.activate = true;
+            horse.save(function(err){
+                if(err){
+                    return{
+                        "msg": "error"
+                    };
+                }
+                return {
+                    "msg": "activated"
+                };
+            });
+        });
+    };
+    res.json(activateUserByIdFunction());
+    res.writeHead(302, {
+      'Location': '/admin/'
+    });
+    res.end();
+});
+
+router.get('/deactivateHorse/:id', function (req, res, next) {
+    var deactivateUserByIdFunction = function(){
+        Horse.findOne({_id:req.params.id},function(err,horse){
+            horse.activate = false;
+            horse.save(function(err){
+                if(err){
+                    return{
+                        "msg": "error"
+                    };
+                }
+                return {
+                    "msg": "activated"
+                };
+            });
+        });
+    };
+    res.json(deactivateUserByIdFunction());
     res.writeHead(302, {
       'Location': '/admin/'
     });
@@ -178,6 +271,7 @@ router.post('/addUser', function(req, res, next) {
         newUser.firstname = req.param('firstname');
         newUser.lastname = req.param('lastname');
         newUser.role = req.param('role');
+        newUser.activate = true;
 
         newUser.save(function(err) {
             if (err) {

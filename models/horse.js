@@ -6,5 +6,6 @@ module.exports = mongoose.model('Horse',{
   name: String,
   born: Date,
   owner: String,
-  gender: String
+  gender: String,
+  activate: Boolean
 }); 
