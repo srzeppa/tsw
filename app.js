@@ -10,7 +10,7 @@ var bodyParser = require('body-parser');
 
 // Configuring Passport
 var passport = require('passport');
-var LocalStrategy = require('passport-local').Strategy;
+//var LocalStrategy = require('passport-local').Strategy;
 var expressSession = require('express-session');
 
 var socketIo = require('socket.io');
@@ -124,4 +124,8 @@ sio.sockets.on('connection', function (socket) {
     });
 });
 
-module.exports = app;
+server.listen(3000, function () {
+    console.log('Serwer pod adresem http://localhost:3000/');
+});
+
+//module.exports = app;

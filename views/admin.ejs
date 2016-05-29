@@ -6,10 +6,20 @@
     <script src='/jquery/dist/jquery.min.js'></script>
     <script src='/javascripts/adminManager.js'></script>
     <script src="http://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/js/bootstrap.min.js"></script>
+    <script src='/socket.io/socket.io.js'></script>
     <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.4/css/bootstrap.min.css">
     <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.4/css/bootstrap-theme.min.css">
   </head>
   <body>
+      <script>
+    var socket = io.connect('//' + window.location.host);
+    socket.on('news', function(data) {
+        console.log(JSON.stringify(data));
+        socket.emit('reply', {
+            reply: 'odzew klienta'
+        });
+    });
+    </script>
    <div class="span7 text-center" id="menuButtons">
     <button class="btn btn-primary" type="button" data-toggle="collapse" data-target="#addHorse" aria-expanded="false" aria-controls="collapseExample" id="addHorseButton">
       Add horse
