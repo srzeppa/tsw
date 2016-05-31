@@ -10,14 +10,10 @@ var bodyParser = require('body-parser');
 
 // Configuring Passport
 var passport = require('passport');
-//var LocalStrategy = require('passport-local').Strategy;
 var expressSession = require('express-session');
 
 var socketIo = require('socket.io');
 var passportSocketIo = require('passport.socketio');
-var redisStore = require('connect-redis')(expressSession);
-var client  = require('redis').createClient();
-var sessionStore = new redisStore();
 
 var sessionSecret = 'wielkiSekret44';
 var sessionKey = 'express.sid';
@@ -45,8 +41,7 @@ app.use(expressSession({
     resave: true,
     saveUninitialized: true,
     key: sessionKey,
-    secret: sessionSecret,
-    store: sessionStore
+    secret: sessionSecret
 }));
 app.use(passport.initialize());
 app.use(passport.session());
@@ -86,34 +81,21 @@ if (app.get('env') === 'development') {
     });
 }
 
-
 var server = http.createServer(app);
 var sio = socketIo.listen(server);
 
-var onAuthorizeSuccess = function (data, accept) {
-    console.log('Udane połączenie z socket.io');
-    accept(null, true);
-};
-
-var onAuthorizeFail = function (data, message, error, accept) {
-    if (error) {
-        throw new Error(message);
-    }
-    console.log('Nieudane połączenie z socket.io:', message);
-    accept(null, false);
-};
-
-sio.use(passportSocketIo.authorize({
-  cookieParser: cookieParser,       // the same cookieParser middleware as registered in express
-  key:          sessionKey,         // the name of the cookie storing express/connect session_id
-  secret:       sessionSecret,      // the session_secret used to parse the cookie
-  store:        sessionStore,       // sessionstore – should not be memorystore!
-  success:      onAuthorizeSuccess, // *optional* callback on success
-  fail:         onAuthorizeFail     // *optional* callback on fail/error
-}));
-
-
-//sio.set('log level', 2); // 3 == DEBUG, 2 == INFO, 1 == WARN, 0 == ERROR
+//var onAuthorizeSuccess = function (data, accept) {
+//    console.log('Udane połączenie z socket.io');
+//    accept(null, true);
+//};
+//
+//var onAuthorizeFail = function (data, message, error, accept) {
+//    if (error) {
+//        throw new Error(message);
+//    }
+//    console.log('Nieudane połączenie z socket.io:', message);
+//    accept(null, false);
+//};
 
 sio.sockets.on('connection', function (socket) {
     socket.emit('news', {
@@ -127,5 +109,3 @@ sio.sockets.on('connection', function (socket) {
 server.listen(3000, function () {
     console.log('Serwer pod adresem http://localhost:3000/');
 });
-
-//module.exports = app;
