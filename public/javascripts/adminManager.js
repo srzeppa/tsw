@@ -34,7 +34,6 @@ $( document ).ready(function() {
             $table.appendTo( $( "#showAllHorses" ) );
             
             $('button#activationHorseButton').each(function(){
-               console.log('chuj') ;
                console.log(this);
                $(this).click(function(){
                    if($(this).attr('class') == "btn btn-danger"){
@@ -88,48 +87,6 @@ $( document ).ready(function() {
         }
     });
     
-    
-    
-    
-    
-    
-//    $( document ).change(function() {
-//        $('#activationHorseButton').each(function() {
-//            $(this).click(function(){
-//                console.log('clicked');
-//                if($(this).attr('class') == "btn btn-danger"){
-//                    console.log(this);
-//                    $.ajax({
-//                        type: 'GET',
-//                        url: '/admin/deactivateHorse/' + $( this ).attr('idHorse'),
-//                        success: function(e){
-//                            console.log('deactivated');
-//                        },
-//                        error: function(jqXHR, textStatus, errorThrown) {
-//                            console.log(textStatus, errorThrown);
-//                        }
-//                    });
-//                    $(this).attr('class', "btn btn-success");
-//                } else {
-//                    console.log(this);
-//                    $.ajax({
-//                        type: 'GET',
-//                        url: '/admin/activateHorse/' + $( this ).attr('idHorse'),
-//                        success: function(e){
-//                            console.log('activated');
-//                        },
-//                        error: function(jqXHR, textStatus, errorThrown) {
-//                            console.log(textStatus, errorThrown);
-//                        }
-//                    });
-//                    $(this).attr('class', "btn btn-danger");
-//                }
-//            });
-//        });
-//    });
-    
-//    $('#activationHorseButton').click(activationHorseButtonFunction);
-    
     $.ajax({
         type: 'GET',
         url: '/admin/showUsers/',
@@ -145,14 +102,64 @@ $( document ).ready(function() {
                 $line.append( $( "<td> </td>" ).html( us.email ) );
                 $line.append( $( "<td> </td>" ).html( us.role ) );
                 if(us.activate === true){
-                    $line.append( $( "<td> </td>" ).html("<a href=\"/admin/deactivateUser/" + us._id + "\"/ class=\"btn btn-danger\" role=\"button\" id=\"deactivateUserButton\"> Deactivate </a>"  ) );
+//                    data-text-swap=\"Activate\"
+                    $line.append( $( "<td> </td>" ).html( "<button id=\"activationUserButton\" class=\"btn btn-danger\" idUser="+ us._id +"> Activation </button>" ) );
                 } else {
-                    $line.append( $( "<td> </td>" ).html("<a href=\"/admin/activateUser/" + us._id + "\"/ class=\"btn btn-success\" role=\"button\" id=\"activateUserButton\"> Activate </a>"  ) );
+//                    data-text-swap=\"Activate\"
+                    $line.append( $( "<td> </td>" ).html( "<button id=\"activationUserButton\" class=\"btn btn-success\" idUser="+ us._id +"> Activation </button>" ) );
                 }
                 $table.append( $line );
             }
 
             $table.appendTo( $( "#showAllUsers" ) );
+            
+            $('button#activationUserButton').each(function(){
+               console.log(this);
+               $(this).click(function(){
+                   if($(this).attr('class') == "btn btn-danger"){
+                       console.log(this);
+                       $(this).val('value','Activate');
+                       var button = $(this);
+                       $.ajax({
+                           type: 'GET',
+                           url: '/admin/deactivateUser/' + $( this ).attr('idUser'),
+                           success: function(e){
+                               console.log('deactivated');
+//                               if(button.text() == button.data("text-swap")){
+//                                   button.text(button.data("text-original"));
+//                               } else {
+//                                   button.data("text-original", button.text());
+//                                   button.text(button.data("text-swap"));
+//                               }
+                           },
+                           error: function(jqXHR, textStatus, errorThrown) {
+                               console.log(textStatus, errorThrown);
+                           }
+                       });
+                       $(this).attr('class', "btn btn-success");
+                    } else {
+                        console.log(this);
+                        $(this).val('value','Deactivate');   
+                        $.ajax({
+                            type: 'GET',
+                            url: '/admin/activateUser/' + $( this ).attr('idUser'),
+                            success: function(e){
+                                console.log('activated');
+//                                if($(this).text() == $(this).data("text-swap")){
+//                                    $(this).text($(this).data("text-original"));
+//                                } else {
+//                                    $(this).data("text-original", $(this).text());
+//                                    $(this).text($(this).data("text-swap"));
+//                                }
+                            },
+                            error: function(jqXHR, textStatus, errorThrown) {
+                                console.log(textStatus, errorThrown);
+                            }
+                        });
+                        $(this).attr('class', "btn btn-danger");
+                    }
+               });    
+            });
 
         },
         error: function(jqXHR, textStatus, errorThrown) {
