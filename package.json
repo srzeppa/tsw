@@ -23,8 +23,6 @@
     "passport-local": "~1.0.0",
     "socketio": "^1.0.0",
     "passport.socketio": "^3.6.1",
-    "static-favicon": "~1.0.0",
-    "redis": "^2.6.0-2",
-    "connect-redis": "^3.0.2"
+    "static-favicon": "~1.0.0"
   }
 }
