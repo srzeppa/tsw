@@ -41,16 +41,17 @@
             <div class="col-sm-6 col-md-4 col-md-offset-4">
               <h1 class="text-center login-title">Add horse
                 <div class="signup-wall">
-                  <form action="/admin/addHorse" method="POST" class="form-signin">
-                    <input type="text" name="name" placeholder="Name" required="required" autofocus="autofocus" class="form-control"/>
-                    <select class="form-control" name="gender">
+<!--                  <form action="/admin/addHorse" method="POST" class="form-signin">-->
+<!--                   <form>-->
+                    <input id="horseName" type="text" name="name" placeholder="Name" required="required" autofocus="autofocus" class="form-control"/>
+                    <select id="horseGender" class="form-control" name="gender">
                         <option value="male">male</option>
                         <option value="female">female</option>
                     </select>
-                    <input type="text" name="owner" placeholder="Owner" required="required" class="form-control"/>
-                    <input type="date" name="born" placeholder="Born" required="required" class="form-control"/>
-                    <button id="addHorseButton" type="submit" class="btn btn-lg btn-success btn-block">Add</button><span class="clearfix"></span>
-                  </form>
+                    <input id="horseOwner" type="text" name="owner" placeholder="Owner" required="required" class="form-control"/>
+                    <input id="horseBorn" type="date" name="born" placeholder="Born" required="required" class="form-control"/>
+                    <button id="addHorseButtonForm" type="submit" class="btn btn-lg btn-success btn-block">Add</button><span class="clearfix"></span>
+<!--                  </form>-->
                 </div>
               </h1>
               <div id="showAllHorses"></div>

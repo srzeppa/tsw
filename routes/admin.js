@@ -45,10 +45,8 @@ router.get('/showHorses', function(req, res, next){
             if (err) {
                 console.log('Unable to connect to the mongoDB server. Error:', err);
             } else {
-                // Get the documents collection
                 var collection = db.collection('horses');
 
-                // Insert some users
                 collection.find().toArray(function(err, result) {
                     if (err) {
                         console.log(err);
@@ -75,10 +73,8 @@ router.get('/showUsers', function(req, res, next){
             if (err) {
                 console.log('Unable to connect to the mongoDB server. Error:', err);
             } else {
-                // Get the documents collection
                 var collection = db.collection('users');
 
-                // Insert some users
                 collection.find().toArray(function(err, result) {
                     if (err) {
                         console.log(err);
@@ -100,7 +96,8 @@ router.get('/showUsers', function(req, res, next){
     });
 });
 
-router.post('/addHorse', function(req, res, next) {
+router.get('/addHorse/name/:name/owner/:owner/gender/:gender/born/:born/', function(req, res) {
+    console.log('addHorse clicked route');
     var addHorseFunction = function() {
         var newHorse = new Horse();
 
@@ -117,56 +114,20 @@ router.post('/addHorse', function(req, res, next) {
             }
             console.log('Horse saving succesful');
             console.log(newHorse);
-            res.statusCode = 302;
-            res.setHeader("Location", "/admin");
-            res.end();
+//            res.statusCode = 302;
+//            res.setHeader("Location", "/admin");
+//            res.end();
             return {
                 "horse": newHorse
             };
         });
     };
     res.json(addHorseFunction());
+    res.writeHead(302, {
+      'Location': '/admin/'
+    });
+    res.end();
 });
-
-//router.get('/deleteuser/:id', function (req, res, next) {
-//    var deleteUserByIdFunction = function(){
-//        users.remove({"_id": ObjectId(req.params.id)}, function(err, docs) {
-//            if(err){
-//                return{
-//                    "msg": "deleted"
-//                };
-//            }
-//            return {
-//                "msg": "deleted"
-//            };
-//        });
-//    };
-//    res.json(deleteUserByIdFunction());
-//    res.writeHead(302, {
-//      'Location': '/admin/'
-//    });
-//    res.end();
-//});
-
-//router.get('/deletehorse/:id', function (req, res, next) {
-//    var deleteHorseByIdFunction = function(){
-//        Horse.remove({"_id": ObjectId(req.params.id)}, function(err, docs) {
-//            if(err){
-//                return{
-//                    "msg": "deleted"
-//                };
-//            }
-//            return {
-//                "msg": "deleted"
-//            };
-//        });
-//    };
-//    res.json(deleteHorseByIdFunction());
-//    res.writeHead(302, {
-//      'Location': '/admin/'
-//    });
-//    res.end();
-//});
 
 router.get('/activateUser/:id', function (req, res, next) {
     var activateUserByIdFunction = function(){
