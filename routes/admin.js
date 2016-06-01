@@ -40,59 +40,59 @@ router.get('/', [
     }
 ]);
 
-router.get('/showHorses', function(req, res, next){
+router.get('/showHorses', function(req, res){
     MongoClient.connect(url, function(err, db) {
-            if (err) {
-                console.log('Unable to connect to the mongoDB server. Error:', err);
-            } else {
-                var collection = db.collection('horses');
+        if (err) {
+            console.log('Unable to connect to the mongoDB server. Error:', err);
+        } else {
+            var collection = db.collection('horses');
 
-                collection.find().toArray(function(err, result) {
-                    if (err) {
-                        console.log(err);
-                    } else if (result.length) {
-                        console.log('Found');
-                        
-                        var showHorsesFunction = function() {
-                            return {
-                                "horses": result
-                            };
+            collection.find().toArray(function(err, result) {
+                if (err) {
+                    console.log(err);
+                } else if (result.length) {
+                    console.log('Found');
+
+                    var showHorsesFunction = function() {
+                        return {
+                            "horses": result
                         };
-                        res.json(showHorsesFunction());
-                    } else {
-                        console.log('No document(s) found with defined "find" criteria!');
-                    }
-                    db.close();
-                });
-            }
+                    };
+                    res.json(showHorsesFunction());
+                } else {
+                    console.log('No document(s) found with defined "find" criteria!');
+                }
+                db.close();
+            });
+        }
     });
 });
 
-router.get('/showUsers', function(req, res, next){
+router.get('/showUsers', function(req, res){
     MongoClient.connect(url, function(err, db) {
-            if (err) {
-                console.log('Unable to connect to the mongoDB server. Error:', err);
-            } else {
-                var collection = db.collection('users');
+        if (err) {
+            console.log('Unable to connect to the mongoDB server. Error:', err);
+        } else {
+            var collection = db.collection('users');
 
-                collection.find().toArray(function(err, result) {
-                    if (err) {
-                        console.log(err);
-                    } else if (result.length) {
-                        console.log('Found');
-                        
-                        var showUsersFunction = function() {
-                            return {
-                                "users": result
-                            };
+            collection.find().toArray(function(err, result) {
+                if (err) {
+                    console.log(err);
+                } else if (result.length) {
+                    console.log('Found');
+
+                    var showUsersFunction = function() {
+                        return {
+                            "users": result
                         };
-                        res.json(showUsersFunction());
-                    } else {
-                        console.log('No document(s) found with defined "find" criteria!');
-                    }
-                    db.close();
-                });
-            }
+                    };
+                    res.json(showUsersFunction());
+                } else {
+                    console.log('No document(s) found with defined "find" criteria!');
+                }
+                db.close();
+            });
+        }
     });
 });
 
@@ -126,7 +126,7 @@ router.get('/addHorse/name/:name/owner/:owner/gender/:gender/born/:born/', funct
     res.end();
 });
 
-router.get('/activateUser/:id', function (req, res, next) {
+router.get('/activateUser/:id', function (req, res) {
     var activateUserByIdFunction = function(){
         users.findOne({_id:req.params.id},function(err,user){
             user.activate = true;
@@ -149,7 +149,7 @@ router.get('/activateUser/:id', function (req, res, next) {
     res.end();
 });
 
-router.get('/deactivateUser/:id', function (req, res, next) {
+router.get('/deactivateUser/:id', function (req, res) {
     var deactivateUserByIdFunction = function(){
         users.findOne({_id:req.params.id},function(err,user){
             user.activate = false;
@@ -172,7 +172,36 @@ router.get('/deactivateUser/:id', function (req, res, next) {
     res.end();
 });
 
-router.get('/activateHorse/:id', function (req, res, next) {
+router.get('/getHorseById/:id', function(req,res){
+    Horse.findOne({_id:req.params.id},function(err,horse){
+        console.log(horse);
+        res.json(horse);
+    });
+});
+
+router.get('/editHorse/:id/name/:name/owner/:owner/gender/:gender/born/:born/', function(req,res){
+    console.log('edithorse clicked route');
+    var addHorseFunction = function() {
+        Horse.findOne({_id:req.params.id},function(err,horse){
+            console.log(horse);
+            horse.update({
+                name : req.params.name,
+                owner : req.params.owner,
+                gender : req.params.gender,
+                born : req.params.born,
+            }, function(error){
+                console.log(error);
+            });
+        });
+    };
+    res.json(addHorseFunction());
+    res.writeHead(302, {
+      'Location': '/admin/'
+    });
+    res.end();
+});
+
+router.get('/activateHorse/:id', function (req, res) {
     var activateUserByIdFunction = function(){
         Horse.findOne({_id:req.params.id},function(err,horse){
             horse.activate = true;
@@ -195,7 +224,7 @@ router.get('/activateHorse/:id', function (req, res, next) {
     res.end();
 });
 
-router.get('/deactivateHorse/:id', function (req, res, next) {
+router.get('/deactivateHorse/:id', function (req, res) {
     var deactivateUserByIdFunction = function(){
         Horse.findOne({_id:req.params.id},function(err,horse){
             horse.activate = false;
@@ -218,7 +247,7 @@ router.get('/deactivateHorse/:id', function (req, res, next) {
     res.end();
 });
 
-router.get('/addUser/username/:username/password/:password/email/:email/role/:role/firstname/:firstname/lastname/:lastname/', function(req, res, next) {
+router.get('/addUser/username/:username/password/:password/email/:email/role/:role/firstname/:firstname/lastname/:lastname/', function(req, res) {
     var addUserFunction = function() {
         var newUser = new users();
 
