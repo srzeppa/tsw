@@ -12,7 +12,8 @@ $( document ).ready(function() {
             dataType: 'json',
             success: function(e){
                 var arrayLength = e.horses.length;
-                var $table = $( "<table id=\"horsesTable\"></table>" );
+                var $table = $( "<table id=\"horsesTable\" class='table table-hover'><thead><tr><th>Name</th><th>Gender</th><th>Born</th><th>Owner</th></tr></thead></table>" );
+                var $tbody = $("<tbody></tbody>");
                 for (let i = 0; i < arrayLength; i ++){
                     var hor = e.horses[i];
                     var $line = $( "<tr></tr>" );
@@ -26,7 +27,8 @@ $( document ).ready(function() {
                         $line.append( $( "<td> </td>" ).html( "<button id=\"activationHorseButton\" class=\"btn btn-success\" idHorse="+ hor._id +"> Activation </button>" ) );
                     }
                     $line.append( $( "<td> </td>" ).html( "<button id=\"editHorseButton\" class=\"btn btn-warning\" idHorse="+ hor._id +"> Edit </button>" ) );
-                    $table.append( $line );
+                    $tbody.append( $line );
+                    $table.append( $tbody );
                 }
 
                 $table.appendTo( $( "#showAllHorses" ) );
@@ -123,8 +125,8 @@ $( document ).ready(function() {
             dataType: 'json',
             success: function(e){
                 var arrayLength = e.users.length;
-                var $table = $( "<table id=\"usersTable\"></table>" );
-
+                var $table = $( "<table id=\"usersTable\" class='table table-hover'><thead><tr><th>Username</th><th>Email</th><th>Role</th></tr></thead></table>" );
+                var $tbody = $("<tbody></tbody>");
                 for (let i = 0; i < arrayLength; i ++){
                     var us = e.users[i];
                     var $line = $( "<tr></tr>" );
@@ -137,7 +139,8 @@ $( document ).ready(function() {
                         $line.append( $( "<td> </td>" ).html( "<button id=\"activationUserButton\" class=\"btn btn-success\" idUser="+ us._id +"> Activation </button>" ) );
                     }
                     $line.append( $( "<td> </td>" ).html( "<button id=\"editUserButton\" class=\"btn btn-warning\" idUser="+ us._id +"> Edit </button>" ) );
-                    $table.append( $line );
+                    $tbody.append( $line );
+                    $table.append( $tbody );
                 }
 
                 $table.appendTo( $( "#showAllUsers" ) );
