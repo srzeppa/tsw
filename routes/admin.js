@@ -40,35 +40,41 @@ router.get('/', [
     }
 ]);
 
-router.get('/showHorses', function(req, res){
-    MongoClient.connect(url, function(err, db) {
-        if (err) {
-            console.log('Unable to connect to the mongoDB server. Error:', err);
-        } else {
-            var collection = db.collection('horses');
-
-            collection.find().toArray(function(err, result) {
+router.get('/showHorses', [
+    hasAccess('admin'),
+    function (req, res, next) {
+    console.log('you have access!');
+            MongoClient.connect(url, function(err, db) {
                 if (err) {
-                    console.log(err);
-                } else if (result.length) {
-                    console.log('Found');
-
-                    var showHorsesFunction = function() {
-                        return {
-                            "horses": result
-                        };
-                    };
-                    res.json(showHorsesFunction());
+                    console.log('Unable to connect to the mongoDB server. Error:', err);
                 } else {
-                    console.log('No document(s) found with defined "find" criteria!');
-                }
-                db.close();
-            });
-        }
-    });
-});
+                    var collection = db.collection('horses');
 
-router.get('/showUsers', function(req, res){
+                    collection.find().toArray(function(err, result) {
+                        if (err) {
+                            console.log(err);
+                        } else if (result.length) {
+                            console.log('Found');
+
+                            var showHorsesFunction = function() {
+                                return {
+                                    "horses": result
+                                };
+                            };
+                            res.json(showHorsesFunction());
+                        } else {
+                            console.log('No document(s) found with defined "find" criteria!');
+                        }
+                        db.close();
+                    });
+                }
+            });
+    }
+]);
+
+router.get('/showUsers', [
+    hasAccess('admin'),
+    function(req, res){
     MongoClient.connect(url, function(err, db) {
         if (err) {
             console.log('Unable to connect to the mongoDB server. Error:', err);
@@ -94,9 +100,11 @@ router.get('/showUsers', function(req, res){
             });
         }
     });
-});
+}]);
 
-router.get('/addHorse/name/:name/owner/:owner/gender/:gender/born/:born/', function(req, res) {
+router.get('/addHorse/name/:name/owner/:owner/gender/:gender/born/:born/', [
+    hasAccess('admin'),
+    function(req, res) {
     console.log('addHorse clicked route');
     var addHorseFunction = function() {
         var newHorse = new Horse();
@@ -124,9 +132,11 @@ router.get('/addHorse/name/:name/owner/:owner/gender/:gender/born/:born/', funct
       'Location': '/admin/'
     });
     res.end();
-});
+}]);
 
-router.get('/activateUser/:id', function (req, res) {
+router.get('/activateUser/:id', [
+    hasAccess('admin'),
+    function (req, res) {
     var activateUserByIdFunction = function(){
         users.findOne({_id:req.params.id},function(err,user){
             user.activate = true;
@@ -147,9 +157,11 @@ router.get('/activateUser/:id', function (req, res) {
       'Location': '/admin/'
     });
     res.end();
-});
+}]);
 
-router.get('/deactivateUser/:id', function (req, res) {
+router.get('/deactivateUser/:id', [
+    hasAccess('admin'),
+    function (req, res) {
     var deactivateUserByIdFunction = function(){
         users.findOne({_id:req.params.id},function(err,user){
             user.activate = false;
@@ -170,16 +182,20 @@ router.get('/deactivateUser/:id', function (req, res) {
       'Location': '/admin/'
     });
     res.end();
-});
+}]);
 
-router.get('/getHorseById/:id', function(req,res){
+router.get('/getHorseById/:id', [
+    hasAccess('admin'),
+    function(req,res){
     Horse.findOne({_id:req.params.id},function(err,horse){
         console.log(horse);
         res.json(horse);
     });
-});
+}]);
 
-router.get('/editHorse/:id/name/:name/owner/:owner/gender/:gender/born/:born/', function(req,res){
+router.get('/editHorse/:id/name/:name/owner/:owner/gender/:gender/born/:born/', [
+    hasAccess('admin'),
+    function(req,res){
     console.log('edithorse clicked route');
     var editHorseFunction = function() {
         Horse.findOne({_id:req.params.id},function(err,horse){
@@ -199,16 +215,20 @@ router.get('/editHorse/:id/name/:name/owner/:owner/gender/:gender/born/:born/', 
       'Location': '/admin/'
     });
     res.end();
-});
+}]);
 
-router.get('/getUserById/:id', function(req,res){
+router.get('/getUserById/:id', [
+    hasAccess('admin'),
+    function(req,res){
     users.findOne({_id:req.params.id},function(err,user){
         console.log(user);
         res.json(user);
     });
-});
+}]);
 
-router.get('/getAllActivateReferees/', function(req,res){
+router.get('/getAllActivateReferees/', [
+    hasAccess('admin'),
+    function(req,res){
     MongoClient.connect(url, function(err, db) {
         if (err) {
             console.log('Unable to connect to the mongoDB server. Error:', err);
@@ -234,9 +254,11 @@ router.get('/getAllActivateReferees/', function(req,res){
             });
         }
     });
-});
+}]);
 
-router.get('/getAllActivateHorses/', function(req,res){
+router.get('/getAllActivateHorses/', [
+    hasAccess('admin'),
+    function(req,res){
     MongoClient.connect(url, function(err, db) {
         if (err) {
             console.log('Unable to connect to the mongoDB server. Error:', err);
@@ -262,9 +284,11 @@ router.get('/getAllActivateHorses/', function(req,res){
             });
         }
     });
-});
+}]);
 
-router.get('/editUser/:id/username/:username/password/:password/email/:email/firstname/:firstname/lastname/:lastname/role/:role/',function(req,res){
+router.get('/editUser/:id/username/:username/password/:password/email/:email/firstname/:firstname/lastname/:lastname/role/:role/', [
+    hasAccess('admin'),
+    function(req,res){
     console.log('edituser clicked route');
     var editUserFunction = function() {
         users.findOne({_id:req.params.id},function(err,user){
@@ -287,9 +311,11 @@ router.get('/editUser/:id/username/:username/password/:password/email/:email/fir
       'Location': '/admin/'
     });
     res.end();
-});
+}]);
 
-router.get('/activateHorse/:id', function (req, res) {
+router.get('/activateHorse/:id', [
+    hasAccess('admin'),
+    function (req, res) {
     var activateUserByIdFunction = function(){
         Horse.findOne({_id:req.params.id},function(err,horse){
             horse.activate = true;
@@ -310,9 +336,11 @@ router.get('/activateHorse/:id', function (req, res) {
       'Location': '/admin/'
     });
     res.end();
-});
+}]);
 
-router.get('/deactivateHorse/:id', function (req, res) {
+router.get('/deactivateHorse/:id', [
+    hasAccess('admin'),
+    function (req, res) {
     var deactivateUserByIdFunction = function(){
         Horse.findOne({_id:req.params.id},function(err,horse){
             horse.activate = false;
@@ -333,9 +361,11 @@ router.get('/deactivateHorse/:id', function (req, res) {
       'Location': '/admin/'
     });
     res.end();
-});
+}]);
 
-router.get('/addUser/username/:username/password/:password/email/:email/role/:role/firstname/:firstname/lastname/:lastname/', function(req, res) {
+router.get('/addUser/username/:username/password/:password/email/:email/role/:role/firstname/:firstname/lastname/:lastname/', [
+    hasAccess('admin'),
+    function(req, res) {
     var addUserFunction = function() {
         var newUser = new users();
 
@@ -365,7 +395,7 @@ router.get('/addUser/username/:username/password/:password/email/:email/role/:ro
       'Location': '/admin/'
     });
     res.end();
-});
+}]);
 
 var createHash = function(password){
     return bCrypt.hashSync(password, bCrypt.genSaltSync(10), null);
