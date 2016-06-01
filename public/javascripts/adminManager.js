@@ -319,6 +319,36 @@ $( document ).ready(function() {
         });
     });
     
+    var selectAllActiveRefereesFunction = function(){
+        console.log('selectAllRefereesFunction');
+        $.ajax({
+            type: 'GET',
+            url: '/admin/getAllActivateReferees/',
+            success: function(e){
+                console.log(e);
+            },
+            error: function(jqXHR, textStatus, errorThrown) {
+                console.log(textStatus, errorThrown);
+            }
+        });
+    };
+    
+    var selectAllActiveHorsesFunction = function(){
+        console.log('selectAllRefereesFunction');
+        $.ajax({
+            type: 'GET',
+            url: '/admin/getAllActivateHorses/',
+            success: function(e){
+                console.log(e);
+            },
+            error: function(jqXHR, textStatus, errorThrown) {
+                console.log(textStatus, errorThrown);
+            }
+        });
+    };
+    
+    selectAllActiveRefereesFunction();
+    selectAllActiveHorsesFunction();
 });
 
 //https://codepen.io/ashblue/pen/mCtuA

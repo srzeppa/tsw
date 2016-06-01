@@ -208,6 +208,62 @@ router.get('/getUserById/:id', function(req,res){
     });
 });
 
+router.get('/getAllActivateReferees/', function(req,res){
+    MongoClient.connect(url, function(err, db) {
+        if (err) {
+            console.log('Unable to connect to the mongoDB server. Error:', err);
+        } else {
+            var collection = db.collection('users');
+
+            collection.find({role:'referee', activate:true}).toArray(function(err, result) {
+                if (err) {
+                    console.log(err);
+                } else if (result.length) {
+                    console.log('Found');
+
+                    var showUsersFunction = function() {
+                        return {
+                            "users": result
+                        };
+                    };
+                    res.json(showUsersFunction());
+                } else {
+                    console.log('No document(s) found with defined "find" criteria!');
+                }
+                db.close();
+            });
+        }
+    });
+});
+
+router.get('/getAllActivateHorses/', function(req,res){
+    MongoClient.connect(url, function(err, db) {
+        if (err) {
+            console.log('Unable to connect to the mongoDB server. Error:', err);
+        } else {
+            var collection = db.collection('horses');
+
+            collection.find({activate:true}).toArray(function(err, result) {
+                if (err) {
+                    console.log(err);
+                } else if (result.length) {
+                    console.log('Found');
+
+                    var showUsersFunction = function() {
+                        return {
+                            "horses": result
+                        };
+                    };
+                    res.json(showUsersFunction());
+                } else {
+                    console.log('No document(s) found with defined "find" criteria!');
+                }
+                db.close();
+            });
+        }
+    });
+});
+
 router.get('/editUser/:id/username/:username/password/:password/email/:email/firstname/:firstname/lastname/:lastname/role/:role/',function(req,res){
     console.log('edituser clicked route');
     var editUserFunction = function() {
