@@ -71,6 +71,7 @@ $( document ).ready(function() {
     };
     refreshHorsesTable();
     
+    var refreshUsersTable = function(){
     $.ajax({
         type: 'GET',
         url: '/admin/showUsers/',
@@ -133,6 +134,8 @@ $( document ).ready(function() {
             console.log(textStatus, errorThrown);
         }
     });
+    };
+    refreshUsersTable();
     
     $('#activateUserButton').on('click', function(e){
         $.ajax({
@@ -202,9 +205,20 @@ $( document ).ready(function() {
         });
     });
     
-    var z = function(){
-        
-    };
+    $('#addUserButtonForm').on('click', function(e){
+        console.log('addUser clicked');
+        $.ajax({
+            type: 'GET',
+            url: '/admin/addUser/username/' + $('#userUsername').val() + '/password/' + $('#userPassword').val() + '/email/' + $('#userEmail').val() + '/role/' + $('#userRole').val() + '/firstname/' + $('#userFirstname').val() + '/lastname/' + $('#userLastname').val() + '/',
+            success: function(e){
+                $( "#showAllUsers" ).empty();
+                refreshUsersTable();
+            },
+            error: function(jqXHR, textStatus, errorThrown) {
+                console.log(textStatus, errorThrown);
+            }
+        });
+    });
     
 });
 

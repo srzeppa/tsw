@@ -114,9 +114,6 @@ router.get('/addHorse/name/:name/owner/:owner/gender/:gender/born/:born/', funct
             }
             console.log('Horse saving succesful');
             console.log(newHorse);
-//            res.statusCode = 302;
-//            res.setHeader("Location", "/admin");
-//            res.end();
             return {
                 "horse": newHorse
             };
@@ -221,7 +218,7 @@ router.get('/deactivateHorse/:id', function (req, res, next) {
     res.end();
 });
 
-router.post('/addUser', function(req, res, next) {
+router.get('/addUser/username/:username/password/:password/email/:email/role/:role/firstname/:firstname/lastname/:lastname/', function(req, res, next) {
     var addUserFunction = function() {
         var newUser = new users();
 
@@ -241,15 +238,16 @@ router.post('/addUser', function(req, res, next) {
             }
             console.log('User saving succesful');
             console.log(newUser);
-            res.statusCode = 302;
-            res.setHeader("Location", "/admin");
-            res.end();
             return {
                 "user": newUser
             };
         });
     };
     res.json(addUserFunction());
+    res.writeHead(302, {
+      'Location': '/admin/'
+    });
+    res.end();
 });
 
 var createHash = function(password){
