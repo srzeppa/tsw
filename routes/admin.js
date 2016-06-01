@@ -181,7 +181,7 @@ router.get('/getHorseById/:id', function(req,res){
 
 router.get('/editHorse/:id/name/:name/owner/:owner/gender/:gender/born/:born/', function(req,res){
     console.log('edithorse clicked route');
-    var addHorseFunction = function() {
+    var editHorseFunction = function() {
         Horse.findOne({_id:req.params.id},function(err,horse){
             console.log(horse);
             horse.update({
@@ -194,7 +194,39 @@ router.get('/editHorse/:id/name/:name/owner/:owner/gender/:gender/born/:born/', 
             });
         });
     };
-    res.json(addHorseFunction());
+    res.json(editHorseFunction());
+    res.writeHead(302, {
+      'Location': '/admin/'
+    });
+    res.end();
+});
+
+router.get('/getUserById/:id', function(req,res){
+    users.findOne({_id:req.params.id},function(err,user){
+        console.log(user);
+        res.json(user);
+    });
+});
+
+router.get('/editUser/:id/username/:username/password/:password/email/:email/firstname/:firstname/lastname/:lastname/role/:role/',function(req,res){
+    console.log('edituser clicked route');
+    var editUserFunction = function() {
+        users.findOne({_id:req.params.id},function(err,user){
+            console.log(user);
+            var password = createHash(req.params.password);
+            user.update({
+                username : req.params.username,
+                password : password,
+                email : req.params.email,
+                firstname : req.params.firstname,
+                lastname : req.params.lastname,
+                role : req.params.role
+            }, function(error){
+                console.log(error);
+            });
+        });
+    };
+    res.json(editUserFunction());
     res.writeHead(302, {
       'Location': '/admin/'
     });

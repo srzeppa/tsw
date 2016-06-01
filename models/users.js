@@ -7,6 +7,8 @@ var UserSchema = new require('mongoose').Schema({
     username: String,
     password: String,
     email: String,
+    firstname: String,
+    lastname: String,
     activate: Boolean
 });
  

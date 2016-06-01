@@ -141,6 +141,56 @@ $( document ).ready(function() {
                 }
 
                 $table.appendTo( $( "#showAllUsers" ) );
+                
+                $('button#editUserButton').each(function(){
+                   $(this).click(function(){
+                       console.log(this);
+                       var $form;
+                       
+                       $( $("<div id='editUserDiv'><input id='userUsernameEdit' type='text' name='username' placeholder='Username' required='required' autofocus='autofocus' class='form-control'/><input id='userPasswordEdit' type='password' name='password' placeholder='Password' required='required' class='form-control nomargin'/><input id='userEmailEdit' type='email' name='email' placeholder='Email' required='required' class='form-control'/><input id='userFirstnameEdit' type='text' name='firstName' placeholder='First Name' required='required' class='form-control'/><input id='userLastnameEdit' type='text' name='lastName' placeholder='Last Name' required='required' class='form-control'/><select id='userRoleEdit' class='form-control' name='role'><option value='referee'>Referee</option><option value='admin'>Admin</option></select><button id='editUserButtonFormSubmit' type='submit' class='btn btn-lg btn-success btn-block'>Edit user</button><span class='clearfix'></span></div>")).insertAfter( "#usersTable" );
+                       
+                       var idUser = $( this ).attr('idUser');
+                       
+                       console.log('idUser');
+                       console.log(idUser);
+                       
+                       $.ajax({
+                           type: 'GET',
+                           url: '/admin/getUserById/' + $( this ).attr('idUser') + '/',
+                           dataType: 'json',
+                           success: function(e){
+                               console.log(e);
+
+                               document.getElementById("userUsernameEdit").value = e.username;
+                               document.getElementById("userPasswordEdit").value = e.password;
+                               document.getElementById("userEmailEdit").value = e.email;
+                               document.getElementById("userFirstnameEdit").value = e.firstname;
+                               document.getElementById("userLastnameEdit").value = e.lastname;
+                               document.getElementById("userRoleEdit").value = e.role;
+                           },
+                           error: function(jqXHR, textStatus, errorThrown) {
+                               console.log(textStatus, errorThrown);
+                           }
+                       });
+                       
+                       $('#editUserButtonFormSubmit').click(function(){
+                           console.log('clicked editUserButtonFormSubmit');
+                           $.ajax({
+                               type: 'GET',
+                               url: '/admin/editUser/' + idUser + '/username/' + $('#userUsernameEdit').val() + '/password/' + $('#userPasswordEdit').val() + '/email/' + $('#userEmailEdit').val() + '/firstname/' + $('#userFirstnameEdit').val() + '/lastname/' + $('#userLastnameEdit').val() + '/role/' + $('#userRoleEdit').val() + '/',
+                               success: function(e){
+                                   console.log('editUser clicked');
+                                   $( "#showAllUsers" ).empty();
+                                   $( "#editUserDiv" ).empty();
+                                   refreshUsersTable();
+                               },
+                               error: function(jqXHR, textStatus, errorThrown) {
+                                   console.log(textStatus, errorThrown);
+                               }
+                           });
+                       });
+                   });
+                });
 
                 $('button#activationUserButton').each(function(){
                    $(this).click(function(){
