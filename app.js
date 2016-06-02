@@ -84,19 +84,6 @@ if (app.get('env') === 'development') {
 var server = http.createServer(app);
 var sio = socketIo.listen(server);
 
-//var onAuthorizeSuccess = function (data, accept) {
-//    console.log('Udane połączenie z socket.io');
-//    accept(null, true);
-//};
-//
-//var onAuthorizeFail = function (data, message, error, accept) {
-//    if (error) {
-//        throw new Error(message);
-//    }
-//    console.log('Nieudane połączenie z socket.io:', message);
-//    accept(null, false);
-//};
-
 sio.sockets.on('connection', function (socket) {
     socket.emit('news', {
         ahoj: 'od serwera'

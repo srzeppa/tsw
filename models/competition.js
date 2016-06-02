@@ -5,13 +5,14 @@ var mongoose = require('mongoose');
 var Schema = mongoose.Schema;
 
 var Group = new Schema({
-	referees: [{type: Schema.Types.ObjectId, ref: 'Account'}],
-	horses:  [{type: Schema.Types.ObjectId, ref: 'Horse'}]
+	referees: [{type: Schema.Types.ObjectId, ref: 'users'}],
+	horses:  [{type: Schema.Types.ObjectId, ref: 'horse'}]
 });
 
 var Competition = new Schema({
 	name: String,
-	groups: [{type: Schema.Types.ObjectId, ref: 'Group'}]
+	groups: [{type: Schema.Types.ObjectId, ref: 'Group'}],
+    started: Boolean
 });
 
 var Result = new Schema({

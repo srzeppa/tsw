@@ -2,7 +2,7 @@
 var express = require('express');
 var router = express.Router();
 var Horse = require('../models/horse');
-var competition = require('../models/competition');
+var Competition = require('../models/competition');
 var mongodb = require('mongodb');
 var ObjectId = require('mongodb').ObjectID;
 var MongoClient = mongodb.MongoClient;
@@ -402,8 +402,16 @@ router.post('/addCompetition/', [
     hasAccess('admin'),
     function(req, res) {
     var addCompetitionFunction = function() {
-        var newCompetition = new competition();
+        var newCompetition = new Competition();
 
+        console.log('req.body.name');
+        console.log(req.body.name);
+        console.log('req.body.referees');
+        console.log(req.body.referees);
+        console.log('req.body.horses[0]');
+        console.log(req.body.horses);
+        
+        newCompetition.name = req.body.name;
         newCompetition.started = false;
 
         newCompetition.save(function(err) {
@@ -411,7 +419,7 @@ router.post('/addCompetition/', [
                 console.log('Error in Saving horse: ' + err);
                 throw err;
             }
-            console.log('User saving succesful');
+            console.log('Competition saving succesful');
             console.log(newCompetition);
             return {
                 "competition": newCompetition
@@ -429,7 +437,7 @@ router.get('/startCompetition/:id', [
     hasAccess('admin'),
     function (req, res) {
     var startCompetitionByIdFunction = function(){
-        competition.findOne({_id:req.params.id},function(err,competition){
+        Competition.findOne({_id:req.params.id},function(err,competition){
             competition.activate = true;
             competition.save(function(err){
                 if(err){
@@ -454,7 +462,7 @@ router.get('/stopCompetition/:id', [
     hasAccess('admin'),
     function (req, res) {
     var stopCompetitionByIdFunction = function(){
-        competition.findOne({_id:req.params.id},function(err,competition){
+        Competition.findOne({_id:req.params.id},function(err,competition){
             competition.started = false;
             competition.save(function(err){
                 if(err){
@@ -474,6 +482,37 @@ router.get('/stopCompetition/:id', [
     });
     res.end();
 }]);
+
+router.get('/showCompetitions', [
+    hasAccess('admin'),
+    function (req, res, next) {
+        MongoClient.connect(url, function(err, db) {
+            if (err) {
+                console.log('Unable to connect to the mongoDB server. Error:', err);
+            } else {
+                var collection = db.collection('competitions');
+
+                collection.find().toArray(function(err, result) {
+                    if (err) {
+                        console.log(err);
+                    } else if (result.length) {
+                        console.log('Found');
+
+                        var showCompetitionsFunction = function() {
+                            return {
+                                "competitions": result
+                            };
+                        };
+                        res.json(showCompetitionsFunction());
+                    } else {
+                        console.log('No document(s) found with defined "find" criteria!');
+                    }
+                    db.close();
+                });
+            }
+        });
+    }
+]);
 
 var createHash = function(password){
     return bCrypt.hashSync(password, bCrypt.genSaltSync(10), null);
