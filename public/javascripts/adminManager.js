@@ -248,51 +248,12 @@ $( document ).ready(function() {
                     } else {
                         $line.append( $( "<td> </td>" ).html( "<button id=\"startCompetitionButton\" class=\"btn btn-success\" idCompetition="+ comp._id +"> Activation </button>" ) );
                     }
-//                    $line.append( $( "<td> </td>" ).html( "<button id=\"editHorseButton\" class=\"btn btn-warning\" idCompetition="+ comp._id +"> Edit </button>" ) );
                     $tbody.append( $line );
                     $table.append( $tbody );
                 }
                 console.log('here3');
 
                 $table.appendTo( $( "#showAllCompetitions" ) );
-
-//                $('button#editHorseButton').each(function(){
-//                   $(this).click(function(){
-//                       console.log(this);
-//                       var $form;
-//                       
-//                       $( $("<div id='editHorseDiv'><input id='horseNameEdit' type='text' name='name' placeholder='Name' required='required' autofocus='autofocus' class='form-control'/><select id='horseGenderEdit' class='form-control' name='gender'><option value='male'>male</option><option value='female'>female</option></select><input id='horseOwnerEdit' type='text' name='owner' placeholder='Owner' required='required' autofocus='autofocus' class='form-control'/><input id='horseBornEdit' type='text' name='born' placeholder='Born' required='required' autofocus='autofocus' class='form-control'/><button id='editHorseButtonSubmit' type='submit' class='btn btn-lg btn-success btn-block'>Edit</button><span class='clearfix'></span></div>")).insertAfter( "#horsesTable" );
-//                       
-//                       var idHorse = $( this ).attr('idHorse');
-//                       
-//                       $.ajax({
-//                           type: 'GET',
-//                           url: '/admin/getHorseById/' + $( this ).attr('idHorse') + '/',
-//                           dataType: 'json',
-//                           success: function(e){
-//                               console.log(e);
-//
-//                               document.getElementById("horseNameEdit").value = e.name;
-//                               document.getElementById("horseOwnerEdit").value = e.owner;
-//                               document.getElementById("horseBornEdit").value = e.born;
-//                               document.getElementById("horseGenderEdit").value = e.gender;
-//                           },
-//                           error: function(jqXHR, textStatus, errorThrown) {
-//                               console.log(textStatus, errorThrown);
-//                           }
-//                       });
-//                       
-//                       $('#editHorseButtonSubmit').click(function(){
-//                           $.post( "/admin/edithorse/", {_id: idHorse, name: $('#horseNameEdit').val(), owner: $('#horseOwnerEdit').val(), gender: $('#horseGenderEdit').val(), born: $('#horseBornEdit').val()})
-//                               .done(function( data ) {
-//                               console.log('editHorseclicked');
-//                               $( "#showAllHorses" ).empty();
-//                               $( "#editHorseDiv" ).empty();
-//                               refreshHorsesTable();
-//                           });
-//                       });
-//                   });
-//                });
                                                        
                 $('button#startCompetitionButton').each(function(){
                    $(this).click(function(){
@@ -456,7 +417,7 @@ $( document ).ready(function() {
             $('#addCompetitionButton').on('click', function(e){
                 var refereesArray = $('#multipleReferees').val();
                 var horsesArray = $('#multipleHorses').val();
-                $.post( "/admin/addCompetition/", {name: $('#competitionName').val(), referees: refereesArray, horses: horsesArray})
+                $.post( "/admin/addCompetition/", {name: $('#competitionName').val(), referees: refereesArray, horses: horsesArray, numberOfReferees: $('#refereesInGroup').val(), numberOfHorses: $('#horsesInGroup').val()})
                     .done(function( data ) {
                     console.log('addcompetition cliekced');
                     refreshCompetitionsTable();

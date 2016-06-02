@@ -4,10 +4,10 @@
 var mongoose = require('mongoose');
 var Schema = mongoose.Schema;
 
-var Group = new Schema({
-	referees: [{type: Schema.Types.ObjectId, ref: 'users'}],
-	horses:  [{type: Schema.Types.ObjectId, ref: 'horse'}]
-});
+//var Group = new Schema({
+//	referees: [{type: Schema.Types.ObjectId, ref: 'users'}],
+//	horses:  [{type: Schema.Types.ObjectId, ref: 'horse'}]
+//});
 
 var Competition = new Schema({
 	name: String,
@@ -15,12 +15,11 @@ var Competition = new Schema({
     started: Boolean
 });
 
-var Result = new Schema({
-	competition: {type: Schema.Types.ObjectId, ref: 'Competition'},
-	horse: {type: Schema.Types.ObjectId, ref: 'Horse'},
-	overall: Number
-});
+//var Result = new Schema({
+//	competition: {type: Schema.Types.ObjectId, ref: 'Competition'},
+//	horse: {type: Schema.Types.ObjectId, ref: 'horse'},
+//	overall: Number
+//});
 
-module.exports = mongoose.model('Group', Group);
 module.exports = mongoose.model('Competition', Competition);
-module.exports = mongoose.model('Result', Result);
+//module.exports = mongoose.model('Result', Result);

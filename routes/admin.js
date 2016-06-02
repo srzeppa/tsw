@@ -3,6 +3,8 @@ var express = require('express');
 var router = express.Router();
 var Horse = require('../models/horse');
 var Competition = require('../models/competition');
+var Group = require('../models/group');
+var Result = require('../models/result');
 var mongodb = require('mongodb');
 var ObjectId = require('mongodb').ObjectID;
 var MongoClient = mongodb.MongoClient;
@@ -403,16 +405,23 @@ router.post('/addCompetition/', [
     function(req, res) {
     var addCompetitionFunction = function() {
         var newCompetition = new Competition();
-
-        console.log('req.body.name');
-        console.log(req.body.name);
-        console.log('req.body.referees');
-        console.log(req.body.referees);
-        console.log('req.body.horses[0]');
-        console.log(req.body.horses);
+        var newGroup = new Group();
         
         newCompetition.name = req.body.name;
         newCompetition.started = false;
+        
+        newGroup.referees = req.body.referees;
+        newGroup.horses = req.body.horses;
+        
+        newGroup.save(function(err) {
+            if (err) {
+                console.log('Error in Saving horse: ' + err);
+                throw err;
+            }
+            console.log('Competition saving succesful');
+            console.log(newGroup);
+        });
+        
 
         newCompetition.save(function(err) {
             if (err) {
@@ -421,10 +430,10 @@ router.post('/addCompetition/', [
             }
             console.log('Competition saving succesful');
             console.log(newCompetition);
-            return {
-                "competition": newCompetition
-            };
         });
+        return {
+            "competition": newCompetition,
+        };
     };
     res.json(addCompetitionFunction());
     res.writeHead(302, {
