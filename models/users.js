@@ -2,6 +2,7 @@
 'use strict';
 
 var mongoose = require('mongoose');
+var Schema = mongoose.Schema;
 
 var UserSchema = new require('mongoose').Schema({
     username: String,
@@ -9,7 +10,8 @@ var UserSchema = new require('mongoose').Schema({
     email: String,
     firstname: String,
     lastname: String,
-    activate: Boolean
+    activate: Boolean,
+    group: [{ type: Schema.Types.ObjectId, ref: 'Group' }]
 });
  
 UserSchema.plugin(require('mongoose-role'), {
