@@ -102,17 +102,17 @@ router.get('/showUsers', [
     });
 }]);
 
-router.get('/addHorse/name/:name/owner/:owner/gender/:gender/born/:born/', [
+router.post('/addHorse/', [
     hasAccess('admin'),
     function(req, res) {
     console.log('addHorse clicked route');
     var addHorseFunction = function() {
         var newHorse = new Horse();
-
-        newHorse.name = req.param('name');
-        newHorse.gender = req.param('gender');
-        newHorse.owner = req.param('owner');
-        newHorse.born = req.param('born');
+        
+        newHorse.name = req.body.name;
+        newHorse.gender = req.body.gender;
+        newHorse.owner = req.body.owner;
+        newHorse.born = req.body.born;
         newHorse.activate = true;
 
         newHorse.save(function(err) {
@@ -193,18 +193,18 @@ router.get('/getHorseById/:id', [
     });
 }]);
 
-router.get('/editHorse/:id/name/:name/owner/:owner/gender/:gender/born/:born/', [
+router.post('/editHorse/', [
     hasAccess('admin'),
     function(req,res){
     console.log('edithorse clicked route');
     var editHorseFunction = function() {
-        Horse.findOne({_id:req.params.id},function(err,horse){
+        Horse.findOne({_id:req.body._id},function(err,horse){
             console.log(horse);
             horse.update({
-                name : req.params.name,
-                owner : req.params.owner,
-                gender : req.params.gender,
-                born : req.params.born,
+                name : req.body.name,
+                owner : req.body.owner,
+                gender : req.body.gender,
+                born : req.body.born,
             }, function(error){
                 console.log(error);
             });
@@ -286,21 +286,21 @@ router.get('/getAllActivateHorses/', [
     });
 }]);
 
-router.get('/editUser/:id/username/:username/password/:password/email/:email/firstname/:firstname/lastname/:lastname/role/:role/', [
+router.post('/editUser/', [
     hasAccess('admin'),
     function(req,res){
     console.log('edituser clicked route');
     var editUserFunction = function() {
-        users.findOne({_id:req.params.id},function(err,user){
+        users.findOne({_id:req.body._id},function(err,user){
             console.log(user);
-            var password = createHash(req.params.password);
+            var password = createHash(req.body.password);
             user.update({
-                username : req.params.username,
+                username : req.body.username,
                 password : password,
-                email : req.params.email,
-                firstname : req.params.firstname,
-                lastname : req.params.lastname,
-                role : req.params.role
+                email : req.body.email,
+                firstname : req.body.firstname,
+                lastname : req.body.lastname,
+                role : req.body.role
             }, function(error){
                 console.log(error);
             });
@@ -363,19 +363,19 @@ router.get('/deactivateHorse/:id', [
     res.end();
 }]);
 
-router.get('/addUser/username/:username/password/:password/email/:email/role/:role/firstname/:firstname/lastname/:lastname/', [
+router.post('/addUser/', [
     hasAccess('admin'),
     function(req, res) {
     var addUserFunction = function() {
         var newUser = new users();
 
-        newUser.username = req.param('username');
-        var password = req.param('password');
+        newUser.username = req.body.username;
+        var password = req.body.password;
         newUser.password = createHash(password);
-        newUser.email = req.param('email');
-        newUser.firstname = req.param('firstname');
-        newUser.lastname = req.param('lastname');
-        newUser.role = req.param('role');
+        newUser.email = req.body.email;
+        newUser.firstname = req.body.firstname;
+        newUser.lastname = req.body.lastname;
+        newUser.role = req.body.role;
         newUser.activate = true;
 
         newUser.save(function(err) {

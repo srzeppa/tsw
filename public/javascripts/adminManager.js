@@ -60,18 +60,12 @@ $( document ).ready(function() {
                        });
                        
                        $('#editHorseButtonSubmit').click(function(){
-                           $.ajax({
-                               type: 'GET',
-                               url: '/admin/edithorse/' + idHorse + '/name/' + $('#horseNameEdit').val() + '/owner/' + $('#horseOwnerEdit').val() + '/gender/' + $('#horseGenderEdit').val() + '/born/' + $('#horseBornEdit').val() + '/',
-                               success: function(e){
-                                   console.log('editHorseclicked');
-                                   $( "#showAllHorses" ).empty();
-                                   $( "#editHorseDiv" ).empty();
-                                   refreshHorsesTable();
-                               },
-                               error: function(jqXHR, textStatus, errorThrown) {
-                                   console.log(textStatus, errorThrown);
-                               }
+                           $.post( "/admin/edithorse/", {_id: idHorse, name: $('#horseNameEdit').val(), owner: $('#horseOwnerEdit').val(), gender: $('#horseGenderEdit').val(), born: $('#horseBornEdit').val()})
+                               .done(function( data ) {
+                               console.log('editHorseclicked');
+                               $( "#showAllHorses" ).empty();
+                               $( "#editHorseDiv" ).empty();
+                               refreshHorsesTable();
                            });
                        });
                    });
@@ -178,18 +172,12 @@ $( document ).ready(function() {
                        
                        $('#editUserButtonFormSubmit').click(function(){
                            console.log('clicked editUserButtonFormSubmit');
-                           $.ajax({
-                               type: 'GET',
-                               url: '/admin/editUser/' + idUser + '/username/' + $('#userUsernameEdit').val() + '/password/' + $('#userPasswordEdit').val() + '/email/' + $('#userEmailEdit').val() + '/firstname/' + $('#userFirstnameEdit').val() + '/lastname/' + $('#userLastnameEdit').val() + '/role/' + $('#userRoleEdit').val() + '/',
-                               success: function(e){
+                           $.post( "/admin/edituser/", {_id: idUser, username: $('#userUsernameEdit').val(), password: $('#userPasswordEdit').val(), email: $('#userEmailEdit').val(), firstname: $('#userFirstnameEdit').val(), lastname: $('#userLastnameEdit').val(), role: $('#userRoleEdit').val()})
+                               .done(function( data ) {
                                    console.log('editUser clicked');
                                    $( "#showAllUsers" ).empty();
                                    $( "#editUserDiv" ).empty();
                                    refreshUsersTable();
-                               },
-                               error: function(jqXHR, textStatus, errorThrown) {
-                                   console.log(textStatus, errorThrown);
-                               }
                            });
                        });
                    });
@@ -291,64 +279,52 @@ $( document ).ready(function() {
     
     $('#addHorseButtonForm').on('click', function(e){
         console.log('addHorse clicked');
-        $.ajax({
-            type: 'GET',
-            url: '/admin/addHorse/name/' + $('#horseName').val() + '/owner/' + $('#horseOwner').val() + '/gender/' + $('#horseName').val() + '/born/' + $('#horseBorn').val() + '/',
-            success: function(e){
-                $( "#showAllHorses" ).empty();
+        $.post( "/admin/addHorse/", { name: $('#horseName').val(), owner: $('#horseOwner').val(), gender: $('#horseGender').val(), born: $('#horseBorn').val()})
+			.done(function( data ) {
+				$( "#showAllHorses" ).empty();
                 refreshHorsesTable();
-            },
-            error: function(jqXHR, textStatus, errorThrown) {
-                console.log(textStatus, errorThrown);
-            }
-        });
+			});
     });
     
     $('#addUserButtonForm').on('click', function(e){
         console.log('addUser clicked');
+        $.post( "/admin/adduser/", {username: $('#userUsername').val(), password: $('#userPassword').val(), email: $('#userEmail').val(), firstname: $('#userFirstname').val(), lastname: $('#userLastname').val(), role: $('#userRole').val()})
+            .done(function( data ) {
+            console.log('addUser clicked');
+            $( "#showAllUsers" ).empty();
+            refreshUsersTable();
+        });
+    });
+    
+    $('#newCompetitionButton').on('click', function(e){
+        console.log('newCompetitionButton clicked');
         $.ajax({
             type: 'GET',
-            url: '/admin/addUser/username/' + $('#userUsername').val() + '/password/' + $('#userPassword').val() + '/email/' + $('#userEmail').val() + '/role/' + $('#userRole').val() + '/firstname/' + $('#userFirstname').val() + '/lastname/' + $('#userLastname').val() + '/',
+            url: '/admin/getAllActivateHorses/',
             success: function(e){
-                $( "#showAllUsers" ).empty();
-                refreshUsersTable();
+                var horsesArrayLength = e.horses.length;
+                for (let i = 0; i < horsesArrayLength; i ++){
+                    $('#competitionStartedDiv').append(e.horses[i].name);
+                }
             },
             error: function(jqXHR, textStatus, errorThrown) {
                 console.log(textStatus, errorThrown);
             }
         });
-    });
-    
-    var selectAllActiveRefereesFunction = function(){
-        console.log('selectAllRefereesFunction');
         $.ajax({
             type: 'GET',
             url: '/admin/getAllActivateReferees/',
             success: function(e){
                 console.log(e);
+                var usersArrayLength = e.users.length;
+                for (let i = 0; i < usersArrayLength; i ++){
+                    $('#competitionStartedDiv').append(e.users[i].username);
+                }
             },
             error: function(jqXHR, textStatus, errorThrown) {
                 console.log(textStatus, errorThrown);
             }
         });
-    };
+    });
     
-    var selectAllActiveHorsesFunction = function(){
-        console.log('selectAllRefereesFunction');
-        $.ajax({
-            type: 'GET',
-            url: '/admin/getAllActivateHorses/',
-            success: function(e){
-                console.log(e);
-            },
-            error: function(jqXHR, textStatus, errorThrown) {
-                console.log(textStatus, errorThrown);
-            }
-        });
-    };
-    
-    selectAllActiveRefereesFunction();
-    selectAllActiveHorsesFunction();
 });
-
-//https://codepen.io/ashblue/pen/mCtuA
