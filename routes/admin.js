@@ -2,6 +2,7 @@
 var express = require('express');
 var router = express.Router();
 var Horse = require('../models/horse');
+var competition = require('../models/competition');
 var mongodb = require('mongodb');
 var ObjectId = require('mongodb').ObjectID;
 var MongoClient = mongodb.MongoClient;
@@ -391,6 +392,83 @@ router.post('/addUser/', [
         });
     };
     res.json(addUserFunction());
+    res.writeHead(302, {
+      'Location': '/admin/'
+    });
+    res.end();
+}]);
+
+router.post('/addCompetition/', [
+    hasAccess('admin'),
+    function(req, res) {
+    var addCompetitionFunction = function() {
+        var newCompetition = new competition();
+
+        newCompetition.started = false;
+
+        newCompetition.save(function(err) {
+            if (err) {
+                console.log('Error in Saving horse: ' + err);
+                throw err;
+            }
+            console.log('User saving succesful');
+            console.log(newCompetition);
+            return {
+                "competition": newCompetition
+            };
+        });
+    };
+    res.json(addCompetitionFunction());
+    res.writeHead(302, {
+      'Location': '/admin/'
+    });
+    res.end();
+}]);
+
+router.get('/startCompetition/:id', [
+    hasAccess('admin'),
+    function (req, res) {
+    var startCompetitionByIdFunction = function(){
+        competition.findOne({_id:req.params.id},function(err,competition){
+            competition.activate = true;
+            competition.save(function(err){
+                if(err){
+                    return{
+                        "msg": "error"
+                    };
+                }
+                return {
+                    "msg": "started"
+                };
+            });
+        });
+    };
+    res.json(startCompetitionByIdFunction());
+    res.writeHead(302, {
+      'Location': '/admin/'
+    });
+    res.end();
+}]);
+
+router.get('/stopCompetition/:id', [
+    hasAccess('admin'),
+    function (req, res) {
+    var stopCompetitionByIdFunction = function(){
+        competition.findOne({_id:req.params.id},function(err,competition){
+            competition.started = false;
+            competition.save(function(err){
+                if(err){
+                    return{
+                        "msg": "error"
+                    };
+                }
+                return {
+                    "msg": "stopped"
+                };
+            });
+        });
+    };
+    res.json(stopCompetitionByIdFunction());
     res.writeHead(302, {
       'Location': '/admin/'
     });
