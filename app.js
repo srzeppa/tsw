@@ -1,5 +1,13 @@
 /* jshint node: true */
 
+var fs = require('fs');
+var https = require('https');
+
+var options = {
+    key: fs.readFileSync('./file.pem'),
+    cert: fs.readFileSync('./file.crt')
+}
+
 var http = require('http');
 var express = require('express');
 var path = require('path');
@@ -12,7 +20,7 @@ var bodyParser = require('body-parser');
 var passport = require('passport');
 var expressSession = require('express-session');
 
-var socketIo = require('socket.io');
+//var socketIo = require('socket.io');
 var passportSocketIo = require('passport.socketio');
 
 var sessionSecret = 'wielkiSekret44';
@@ -36,6 +44,9 @@ app.use(bodyParser.urlencoded());
 app.use(cookieParser());
 app.use(express.static(path.join(__dirname, 'public')));
 app.use(express.static(path.join(__dirname, 'bower_components')));
+app.use(express.static(path.join(__dirname, 'node_modules/bootstrap/dist/css')));
+app.use(express.static(path.join(__dirname, 'node_modules/bootstrap/dist/js')));
+app.use(express.static(path.join(__dirname, 'node_modules/bootstrap/dist/fonts')));
 
 app.use(expressSession({
     resave: true,
@@ -81,7 +92,8 @@ if (app.get('env') === 'development') {
     });
 }
 
-var server = http.createServer(app);
+var server = https.createServer(options,app);
+var socketIo = require('socket.io')(server);
 var sio = socketIo.listen(server);
 
 sio.sockets.on('connection', function (socket) {
