@@ -1,29 +1,27 @@
 <!DOCTYPE html>
 <html>
   <head>
-    <title><%= title %></title>
+    <title>Admin</title>
     <link rel='stylesheet' href='/stylesheets/admin.css' />
     <script src='/jquery/dist/jquery.min.js'></script>
     <script src='/javascripts/adminManager.js'></script>
     <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.4/css/bootstrap.min.css">
     <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.4/css/bootstrap-theme.min.css">
+    <script src='/socket.io/socket.io.js'></script>
     <script src="bootstrap.js" ></script>
   </head>
   <body>
       <script>
-//    var socket = io.connect('//' + window.location.host);
-//    var socket = io.connect('http://localhost:3000/');
+    var socket = io.connect('//' + window.location.host);
+//    var socket = io.connect('https://localhost:3000/');
 //    var socket = io();
-//    socket.on('news', function(data) {
-//        console.log(JSON.stringify(data));
-//        socket.emit('reply', {
-//            reply: 'odzew klienta'
-//        });
-//    });
-//    socket.on('cursor', function(data) {
-//        console.log(data);
-//        data.broadcast.emit('msg', data);
-//    });
+          socket.emit('reqH','getAllReferees');
+    socket.on('reqH',function(data){
+        console.log(data);
+    });
+    socket.on('news',function(data){
+        console.log(JSON.stringify(data));
+    });
     </script>
    <div class="span7 text-center" id="menuButtons">
     <button class="btn btn-primary" type="button" data-toggle="collapse" data-target="#addHorse" aria-expanded="false" aria-controls="collapseExample" id="addHorseButton">

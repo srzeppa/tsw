@@ -405,33 +405,30 @@ router.post('/addCompetition/', [
     function(req, res) {
     var addCompetitionFunction = function() {
         var newCompetition = new Competition();
-//        var newGroup = new Group();
-        
         var tmpTable;
-        var start = 0;
+        var startHorse = 0;
+        var startReferee = 0;
         var randomizedHorses = shuffle(req.body.horses);
         var randomizedReferees = shuffle(req.body.referees);
-        var horsesCount = req.body.numberOfHorses;
-        var refereesCount = req.body.numberOfReferees;
-        var i = 0;
-        var end = horsesCount;
+        var horsesCount = parseInt(req.body.numberOfHorses);
+        var refereesCount = parseInt(req.body.numberOfReferees);
+        var endHorse = horsesCount;
+        var endReferee = refereesCount;
         var listOfGroups = [];
         var newGroup;
         var test = randomizedHorses.length / horsesCount;
 
-        while(i < test) {
-//            while(randomizedHorses.slice(start,end).length === (end - start) && randomizedReferees.slice(start,end).length === (end - start)) {
+        while (randomizedHorses.slice(startHorse, endHorse).length === (endHorse - startHorse) || randomizedReferees.slice(startReferee, endReferee).length === (endReferee - startReferee)) {
             newGroup = new Group({
-                horses: randomizedHorses.slice(start, end),
-                referees: randomizedReferees.slice(start, end)
+                horses: randomizedHorses.slice(startHorse, endHorse),
+                referees: randomizedReferees.slice(startReferee, endReferee)
             });
 
-            console.log('newGroup');
-            console.log(newGroup);
-            start = start + horsesCount;
-            end = end + horsesCount;
-            console.log('i');
-            console.log(i);
+            startHorse = startHorse + horsesCount;
+            endHorse = endHorse + horsesCount;
+            
+            startReferee = startReferee + refereesCount;
+            endReferee = endReferee + refereesCount;
 
             listOfGroups.push(newGroup._id);
             console.log('listOfGroups');
@@ -445,7 +442,6 @@ router.post('/addCompetition/', [
                 console.log('Group saving succesful');
                 console.log(newGroup);
             });
-            i++;
         }
 
         newCompetition.name = req.body.name;
@@ -489,7 +485,6 @@ router.get('/startCompetition/:id', [
             });
         });
     };
-    res.json(startCompetitionByIdFunction());
 }]);
 
 router.get('/stopCompetition/:id', [

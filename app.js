@@ -6,7 +6,7 @@ var https = require('https');
 var options = {
     key: fs.readFileSync('./file.pem'),
     cert: fs.readFileSync('./file.crt')
-}
+};
 
 var http = require('http');
 var express = require('express');
@@ -93,14 +93,15 @@ if (app.get('env') === 'development') {
 }
 
 var server = https.createServer(options,app);
-var socketIo = require('socket.io')(server);
-var sio = socketIo.listen(server);
+var io = require('socket.io')(server);
+//var sio = socketIo.listen(server);
 
-sio.sockets.on('connection', function (socket) {
+io.on('connection', function (socket) {
     socket.emit('news', {
         ahoj: 'od serwera'
     });
-    socket.on('reply', function (data) {
+        socket.emit('reqH','od serwera');
+    socket.on('reqH',function(data){
         console.log(data);
     });
 });
