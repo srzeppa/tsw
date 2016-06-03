@@ -405,24 +405,52 @@ router.post('/addCompetition/', [
     function(req, res) {
     var addCompetitionFunction = function() {
         var newCompetition = new Competition();
-        var newGroup = new Group();
+//        var newGroup = new Group();
         
-        newGroup.referees = req.body.referees;
-        newGroup.horses = req.body.horses;
-        
-        newCompetition.name = req.body.name;
-        newCompetition.groups = newGroup._id;
-        newCompetition.started = false;
-        
-        newGroup.save(function(err) {
-            if (err) {
-                console.log('Error in Saving horse: ' + err);
-                throw err;
-            }
-            console.log('Group saving succesful');
+        var tmpTable;
+        var start = 0;
+        var randomizedHorses = shuffle(req.body.horses);
+        var randomizedReferees = shuffle(req.body.referees);
+        var horsesCount = req.body.numberOfHorses;
+        var refereesCount = req.body.numberOfReferees;
+        var i = 0;
+        var end = horsesCount;
+        var listOfGroups = [];
+        var newGroup;
+        var test = randomizedHorses.length / horsesCount;
+
+        while(i < test) {
+//            while(randomizedHorses.slice(start,end).length === (end - start) && randomizedReferees.slice(start,end).length === (end - start)) {
+            newGroup = new Group({
+                horses: randomizedHorses.slice(start, end),
+                referees: randomizedReferees.slice(start, end)
+            });
+
+            console.log('newGroup');
             console.log(newGroup);
-        });
-        
+            start = start + horsesCount;
+            end = end + horsesCount;
+            console.log('i');
+            console.log(i);
+
+            listOfGroups.push(newGroup._id);
+            console.log('listOfGroups');
+            console.log(listOfGroups);
+
+            newGroup.save(function(err) {
+                if (err) {
+                    console.log('Error in Saving horse: ' + err);
+                    throw err;
+                }
+                console.log('Group saving succesful');
+                console.log(newGroup);
+            });
+            i++;
+        }
+
+        newCompetition.name = req.body.name;
+        newCompetition.groups = listOfGroups;
+        newCompetition.started = false;
 
         newCompetition.save(function(err) {
             if (err) {
@@ -434,7 +462,6 @@ router.post('/addCompetition/', [
         });
         return {
             "competition": newCompetition,
-            "group": newGroup
         };
     };
     res.json(addCompetitionFunction());
@@ -463,10 +490,6 @@ router.get('/startCompetition/:id', [
         });
     };
     res.json(startCompetitionByIdFunction());
-    res.writeHead(302, {
-      'Location': '/admin/'
-    });
-    res.end();
 }]);
 
 router.get('/stopCompetition/:id', [
@@ -488,10 +511,6 @@ router.get('/stopCompetition/:id', [
         });
     };
     res.json(stopCompetitionByIdFunction());
-    res.writeHead(302, {
-      'Location': '/admin/'
-    });
-    res.end();
 }]);
 
 router.get('/showCompetitions', [
@@ -527,6 +546,25 @@ router.get('/showCompetitions', [
 
 var createHash = function(password){
     return bCrypt.hashSync(password, bCrypt.genSaltSync(10), null);
+};
+
+var shuffle = function(array) {
+  var currentIndex = array.length, temporaryValue, randomIndex;
+
+  // While there remain elements to shuffle...
+  while (0 !== currentIndex) {
+
+    // Pick a remaining element...
+    randomIndex = Math.floor(Math.random() * currentIndex);
+    currentIndex -= 1;
+
+    // And swap it with the current element.
+    temporaryValue = array[currentIndex];
+    array[currentIndex] = array[randomIndex];
+    array[randomIndex] = temporaryValue;
+  }
+
+  return array;
 };
 
 module.exports = router;

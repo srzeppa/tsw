@@ -16,6 +16,9 @@
             reply: 'odzew klienta'
         });
     });
+    socket.on('start', function(data) {
+        console.log(JSON.stringify(data));
+    });
     </script>
     <div><a href="/signout">Wyloguj</a></div>
 </body>
