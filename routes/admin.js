@@ -7,8 +7,6 @@ var Group = require('../models/group');
 var Result = require('../models/result');
 var mongodb = require('mongodb');
 var ObjectId = require('mongodb').ObjectID;
-var MongoClient = mongodb.MongoClient;
-var url = 'mongodb://localhost:27017/tsw';
 var users = require('../models/users');
 var bCrypt = require('bcrypt-nodejs');
 
@@ -33,7 +31,7 @@ function hasAccess(accessLevel) {
 }
  
 router.get('/', [
-    hasAccess('admin'), // protection middleware 
+    hasAccess('admin'),
     function (req, res, next) {
     console.log('you have access!');
         res.render('admin', {
@@ -47,62 +45,24 @@ router.get('/showHorses', [
     hasAccess('admin'),
     function (req, res, next) {
     console.log('you have access!');
-            MongoClient.connect(url, function(err, db) {
-                if (err) {
-                    console.log('Unable to connect to the mongoDB server. Error:', err);
-                } else {
-                    var collection = db.collection('horses');
-
-                    collection.find().toArray(function(err, result) {
-                        if (err) {
-                            console.log(err);
-                        } else if (result.length) {
-                            console.log('Found');
-
-                            var showHorsesFunction = function() {
-                                return {
-                                    "horses": result
-                                };
-                            };
-                            res.json(showHorsesFunction());
-                        } else {
-                            console.log('No document(s) found with defined "find" criteria!');
-                        }
-                        db.close();
-                    });
-                }
-            });
+        Horse.find({}).exec(function(err, horses) {
+            if (err) throw err;
+            var result = JSON.parse(JSON.stringify(horses));
+            console.log(JSON.parse(JSON.stringify(horses)));
+            res.json({"horses" : result});
+        });
     }
 ]);
 
 router.get('/showUsers', [
     hasAccess('admin'),
     function(req, res){
-    MongoClient.connect(url, function(err, db) {
-        if (err) {
-            console.log('Unable to connect to the mongoDB server. Error:', err);
-        } else {
-            var collection = db.collection('users');
-
-            collection.find().toArray(function(err, result) {
-                if (err) {
-                    console.log(err);
-                } else if (result.length) {
-                    console.log('Found');
-
-                    var showUsersFunction = function() {
-                        return {
-                            "users": result
-                        };
-                    };
-                    res.json(showUsersFunction());
-                } else {
-                    console.log('No document(s) found with defined "find" criteria!');
-                }
-                db.close();
-            });
-        }
-    });
+        users.find({}).exec(function(err, users) {
+            if (err) throw err;
+            var result = JSON.parse(JSON.stringify(users));
+            console.log(JSON.parse(JSON.stringify(users)));
+            res.json({"users" : result});
+        });
 }]);
 
 router.post('/addHorse/', [
@@ -232,61 +192,23 @@ router.post('/getUserById/', [
 router.get('/getAllActivateReferees/', [
     hasAccess('admin'),
     function(req,res){
-    MongoClient.connect(url, function(err, db) {
-        if (err) {
-            console.log('Unable to connect to the mongoDB server. Error:', err);
-        } else {
-            var collection = db.collection('users');
-
-            collection.find({role:'referee', activate:true}).toArray(function(err, result) {
-                if (err) {
-                    console.log(err);
-                } else if (result.length) {
-                    console.log('Found');
-
-                    var showUsersFunction = function() {
-                        return {
-                            "users": result
-                        };
-                    };
-                    res.json(showUsersFunction());
-                } else {
-                    console.log('No document(s) found with defined "find" criteria!');
-                }
-                db.close();
-            });
-        }
-    });
+        users.find({role:'referee', activate:true}).exec(function(err, users) {
+            if (err) throw err;
+            var result = JSON.parse(JSON.stringify(users));
+            console.log(JSON.parse(JSON.stringify(users)));
+            res.json({"users" : result});
+        });
 }]);
 
 router.get('/getAllActivateHorses/', [
     hasAccess('admin'),
     function(req,res){
-    MongoClient.connect(url, function(err, db) {
-        if (err) {
-            console.log('Unable to connect to the mongoDB server. Error:', err);
-        } else {
-            var collection = db.collection('horses');
-
-            collection.find({activate:true}).toArray(function(err, result) {
-                if (err) {
-                    console.log(err);
-                } else if (result.length) {
-                    console.log('Found');
-
-                    var showUsersFunction = function() {
-                        return {
-                            "horses": result
-                        };
-                    };
-                    res.json(showUsersFunction());
-                } else {
-                    console.log('No document(s) found with defined "find" criteria!');
-                }
-                db.close();
-            });
-        }
-    });
+        Horse.find({activate:true}).exec(function(err, horses) {
+            if (err) throw err;
+            var result = JSON.parse(JSON.stringify(horses));
+            console.log(JSON.parse(JSON.stringify(horses)));
+            res.json({"horses" : result});
+        });
 }]);
 
 router.post('/editUser/', [
