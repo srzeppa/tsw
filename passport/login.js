@@ -22,6 +22,10 @@ module.exports = function(passport){
                         console.log('Invalid Password');
                         return done(null, false, req.flash('message', 'Invalid Password.')); // redirect back to login page
                     }
+                    if (!user.activate){
+                        console.log('Invalid Password');
+                        return done(null, false, req.flash('message', 'Invalid Password.')); // redirect back to login page
+                    }
                     return done(null, user);
                 }
             );
