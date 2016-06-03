@@ -237,9 +237,6 @@ $( document ).ready(function() {
                     var comp = e.competitions[i];
                     var $line = $( "<tr></tr>" );
                     $line.append( $( "<td> </td>" ).html( comp.name ) );
-//                    $line.append( $( "<td></td>" ).html( hor.gender ) );
-//                    $line.append( $( "<td></td>" ).html( hor.born ) );
-//                    $line.append( $( "<td></td>" ).html( hor.owner ) );
                     if(comp.started === true){
                         $line.append( $( "<td> </td>" ).html( "<button id=\"startCompetitionButton\" class=\"btn btn-danger\" idCompetition="+ comp._id +"> Activation </button>" ) );
                     } else {
@@ -403,7 +400,7 @@ $( document ).ready(function() {
                 console.log(textStatus, errorThrown);
             }
         }).done(function( data ) {
-            $('#nextButton').remove();
+            $('#nextButton').hide();
             $('#competitionStartedDiv').append($('<h1>Referees in group</h1>'));
             $('#competitionStartedDiv').append($("<input class='form-control input-lg col-lg-3' id='refereesInGroup' type='text' placeholder='Referees in group'>"));
             $('#competitionStartedDiv').append($('<h1>Horses in group</h1>'));
@@ -416,6 +413,9 @@ $( document ).ready(function() {
                 $.post( "/admin/addCompetition/", {name: $('#competitionName').val(), referees: refereesArray, horses: horsesArray, numberOfReferees: $('#refereesInGroup').val(), numberOfHorses: $('#horsesInGroup').val()})
                     .done(function( data ) {
                     console.log('addcompetition cliekced');
+                    $('#nextButton').show();
+                    $('#competitionStartedDiv').empty();
+                    $('#showAllCompetitions').empty();
                     refreshCompetitionsTable();
                 });
             });

@@ -407,18 +407,19 @@ router.post('/addCompetition/', [
         var newCompetition = new Competition();
         var newGroup = new Group();
         
-        newCompetition.name = req.body.name;
-        newCompetition.started = false;
-        
         newGroup.referees = req.body.referees;
         newGroup.horses = req.body.horses;
+        
+        newCompetition.name = req.body.name;
+        newCompetition.groups = newGroup._id;
+        newCompetition.started = false;
         
         newGroup.save(function(err) {
             if (err) {
                 console.log('Error in Saving horse: ' + err);
                 throw err;
             }
-            console.log('Competition saving succesful');
+            console.log('Group saving succesful');
             console.log(newGroup);
         });
         
@@ -433,6 +434,7 @@ router.post('/addCompetition/', [
         });
         return {
             "competition": newCompetition,
+            "group": newGroup
         };
     };
     res.json(addCompetitionFunction());
