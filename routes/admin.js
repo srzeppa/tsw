@@ -521,30 +521,10 @@ router.post('/stopCompetition/', [
 router.get('/showCompetitions', [
     hasAccess('admin'),
     function (req, res, next) {
-        MongoClient.connect(url, function(err, db) {
-            if (err) {
-                console.log('Unable to connect to the mongoDB server. Error:', err);
-            } else {
-                var collection = db.collection('competitions');
-
-                collection.find().toArray(function(err, result) {
-                    if (err) {
-                        console.log(err);
-                    } else if (result.length) {
-                        console.log('Found');
-
-                        var showCompetitionsFunction = function() {
-                            return {
-                                "competitions": result
-                            };
-                        };
-                        res.json(showCompetitionsFunction());
-                    } else {
-                        console.log('No document(s) found with defined "find" criteria!');
-                    }
-                    db.close();
-                });
-            }
+        Competition.find({}).populate('groups').exec(function(err, competition) {
+            if (err) throw err;
+            console.log(JSON.parse(JSON.stringify(competition)));
+            res.json(JSON.parse(JSON.stringify(competition)));
         });
     }
 ]);

@@ -174,11 +174,13 @@ $( document ).ready(function() {
             url: '/admin/showCompetitions/',
             dataType: 'json',
             success: function(e){
-                var arrayLength = e.competitions.length;
+                console.log(e);
+                console.log(e[0]._id);
+                var arrayLength = e.length;
                 var $table = $( "<table id='competitionsTable' class='table table-hover'><thead><tr><th>Name</th></tr></thead></table>" );
                 var $tbody = $("<tbody></tbody>");
                 for (let i = 0; i < arrayLength; i ++){
-                    var comp = e.competitions[i];
+                    var comp = e[i];
                     var $line = $( "<tr></tr>" );
                     $line.append( $( "<td> </td>" ).html( comp.name ) );
                     if(comp.started === true){
