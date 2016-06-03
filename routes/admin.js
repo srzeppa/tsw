@@ -137,11 +137,11 @@ router.post('/addHorse/', [
     res.end();
 }]);
 
-router.get('/activateUser/:id', [
+router.post('/activateUser/', [
     hasAccess('admin'),
     function (req, res) {
     var activateUserByIdFunction = function(){
-        users.findOne({_id:req.params.id},function(err,user){
+        users.findOne({_id:req.body._id},function(err,user){
             user.activate = true;
             user.save(function(err){
                 if(err){
@@ -162,11 +162,11 @@ router.get('/activateUser/:id', [
     res.end();
 }]);
 
-router.get('/deactivateUser/:id', [
+router.post('/deactivateUser/', [
     hasAccess('admin'),
     function (req, res) {
     var deactivateUserByIdFunction = function(){
-        users.findOne({_id:req.params.id},function(err,user){
+        users.findOne({_id:req.body._id},function(err,user){
             user.activate = false;
             user.save(function(err){
                 if(err){
@@ -187,10 +187,10 @@ router.get('/deactivateUser/:id', [
     res.end();
 }]);
 
-router.get('/getHorseById/:id', [
+router.post('/getHorseById/', [
     hasAccess('admin'),
     function(req,res){
-    Horse.findOne({_id:req.params.id},function(err,horse){
+    Horse.findOne({_id:req.body._id},function(err,horse){
         console.log(horse);
         res.json(horse);
     });
@@ -220,10 +220,10 @@ router.post('/editHorse/', [
     res.end();
 }]);
 
-router.get('/getUserById/:id', [
+router.post('/getUserById/', [
     hasAccess('admin'),
     function(req,res){
-    users.findOne({_id:req.params.id},function(err,user){
+    users.findOne({_id:req.body._id},function(err,user){
         console.log(user);
         res.json(user);
     });
@@ -316,11 +316,11 @@ router.post('/editUser/', [
     res.end();
 }]);
 
-router.get('/activateHorse/:id', [
+router.post('/activateHorse/', [
     hasAccess('admin'),
     function (req, res) {
-    var activateUserByIdFunction = function(){
-        Horse.findOne({_id:req.params.id},function(err,horse){
+    var activateHorseByIdFunction = function(){
+        Horse.findOne({_id:req.body._id},function(err,horse){
             horse.activate = true;
             horse.save(function(err){
                 if(err){
@@ -334,18 +334,18 @@ router.get('/activateHorse/:id', [
             });
         });
     };
-    res.json(activateUserByIdFunction());
+    res.json(activateHorseByIdFunction());
     res.writeHead(302, {
       'Location': '/admin/'
     });
     res.end();
 }]);
 
-router.get('/deactivateHorse/:id', [
+router.post('/deactivateHorse/', [
     hasAccess('admin'),
     function (req, res) {
-    var deactivateUserByIdFunction = function(){
-        Horse.findOne({_id:req.params.id},function(err,horse){
+    var deactivateHorseByIdFunction = function(){
+        Horse.findOne({_id:req.body._id},function(err,horse){
             horse.activate = false;
             horse.save(function(err){
                 if(err){
@@ -359,7 +359,7 @@ router.get('/deactivateHorse/:id', [
             });
         });
     };
-    res.json(deactivateUserByIdFunction());
+    res.json(deactivateHorseByIdFunction());
     res.writeHead(302, {
       'Location': '/admin/'
     });
@@ -467,45 +467,55 @@ router.post('/addCompetition/', [
     res.end();
 }]);
 
-router.get('/startCompetition/:id', [
+router.post('/startCompetition/', [
     hasAccess('admin'),
     function (req, res) {
-    var startCompetitionByIdFunction = function(){
-        Competition.findOne({_id:req.params.id},function(err,competition){
-            competition.started = true;
-            competition.save(function(err){
-                if(err){
-                    return{
-                        "msg": "error"
+        var startCompetitionByIdFunction = function(){
+            Competition.findOne({_id:req.body._id},function(err,competition){
+                competition.started = true;
+                competition.save(function(err){
+                    if(err){
+                        return{
+                            "msg": "error"
+                        };
+                    }
+                    return {
+                        "msg": "started"
                     };
-                }
-                return {
-                    "msg": "started"
-                };
+                });
             });
+        };
+        res.json(startCompetitionByIdFunction());
+        res.writeHead(302, {
+            'Location': '/admin/'
         });
-    };
-}]);
+        res.end();
+    }
+]);
 
-router.get('/stopCompetition/:id', [
+router.post('/stopCompetition/', [
     hasAccess('admin'),
     function (req, res) {
-    var stopCompetitionByIdFunction = function(){
-        Competition.findOne({_id:req.params.id},function(err,competition){
-            competition.started = false;
-            competition.save(function(err){
-                if(err){
-                    return{
-                        "msg": "error"
+        var stopCompetitionByIdFunction = function(){
+            Competition.findOne({_id:req.body._id},function(err,competition){
+                competition.started = false;
+                competition.save(function(err){
+                    if(err){
+                        return{
+                            "msg": "error"
+                        };
+                    }
+                    return {
+                        "msg": "stopped"
                     };
-                }
-                return {
-                    "msg": "stopped"
-                };
+                });
             });
+        };
+        res.json(stopCompetitionByIdFunction());
+        res.writeHead(302, {
+            'Location': '/admin/'
         });
-    };
-    res.json(stopCompetitionByIdFunction());
+        res.end();
 }]);
 
 router.get('/showCompetitions', [

@@ -42,22 +42,13 @@ $( document ).ready(function() {
                        
                        var idHorse = $( this ).attr('idHorse');
                        
-                       $.ajax({
-                           type: 'GET',
-                           url: '/admin/getHorseById/' + $( this ).attr('idHorse') + '/',
-                           dataType: 'json',
-                           success: function(e){
-                               console.log(e);
-
+                       $.post( "/admin/getHorseById/", {_id: idHorse })
+                               .done(function( e ) {
                                document.getElementById("horseNameEdit").value = e.name;
                                document.getElementById("horseOwnerEdit").value = e.owner;
                                document.getElementById("horseBornEdit").value = e.born;
                                document.getElementById("horseGenderEdit").value = e.gender;
-                           },
-                           error: function(jqXHR, textStatus, errorThrown) {
-                               console.log(textStatus, errorThrown);
-                           }
-                       });
+                           });
                        
                        $('#editHorseButtonSubmit').click(function(){
                            $.post( "/admin/edithorse/", {_id: idHorse, name: $('#horseNameEdit').val(), owner: $('#horseOwnerEdit').val(), gender: $('#horseGenderEdit').val(), born: $('#horseBornEdit').val()})
@@ -76,29 +67,12 @@ $( document ).ready(function() {
                        if($(this).attr('class') == "btn btn-danger"){
                            $(this).val('value','Activate');
                            var button = $(this);
-                           $.ajax({
-                               type: 'GET',
-                               url: '/admin/deactivateHorse/' + $( this ).attr('idHorse'),
-                               success: function(e){
-                                   console.log('deactivated');
-                               },
-                               error: function(jqXHR, textStatus, errorThrown) {
-                                   console.log(textStatus, errorThrown);
-                               }
-                           });
+                           
+                           $.post( "/admin/deactivateHorse/", {_id: $( this ).attr('idHorse') });
                            $(this).attr('class', "btn btn-success");
                         } else {
                             $(this).val('value','Deactivate');   
-                            $.ajax({
-                                type: 'GET',
-                                url: '/admin/activateHorse/' + $( this ).attr('idHorse'),
-                                success: function(e){
-                                    console.log('activated');
-                                },
-                                error: function(jqXHR, textStatus, errorThrown) {
-                                    console.log(textStatus, errorThrown);
-                                }
-                            });
+                            $.post( "/admin/activateHorse/", {_id: $( this ).attr('idHorse') });
                             $(this).attr('class', "btn btn-danger");
                         }
                    });    
@@ -148,26 +122,14 @@ $( document ).ready(function() {
                        
                        var idUser = $( this ).attr('idUser');
                        
-                       console.log('idUser');
-                       console.log(idUser);
-                       
-                       $.ajax({
-                           type: 'GET',
-                           url: '/admin/getUserById/' + $( this ).attr('idUser') + '/',
-                           dataType: 'json',
-                           success: function(e){
-                               console.log(e);
-
-                               document.getElementById("userUsernameEdit").value = e.username;
-                               document.getElementById("userPasswordEdit").value = e.password;
-                               document.getElementById("userEmailEdit").value = e.email;
-                               document.getElementById("userFirstnameEdit").value = e.firstname;
-                               document.getElementById("userLastnameEdit").value = e.lastname;
-                               document.getElementById("userRoleEdit").value = e.role;
-                           },
-                           error: function(jqXHR, textStatus, errorThrown) {
-                               console.log(textStatus, errorThrown);
-                           }
+                       $.post( "/admin/getUserById/", {_id: idUser })
+                           .done(function( e ) {
+                           document.getElementById("userUsernameEdit").value = e.username;
+                           document.getElementById("userPasswordEdit").value = e.password;
+                           document.getElementById("userEmailEdit").value = e.email;
+                           document.getElementById("userFirstnameEdit").value = e.firstname;
+                           document.getElementById("userLastnameEdit").value = e.lastname;
+                           document.getElementById("userRoleEdit").value = e.role;
                        });
                        
                        $('#editUserButtonFormSubmit').click(function(){
@@ -188,29 +150,11 @@ $( document ).ready(function() {
                        if($(this).attr('class') == "btn btn-danger"){
                            $(this).val('value','Activate');
                            var button = $(this);
-                           $.ajax({
-                               type: 'GET',
-                               url: '/admin/deactivateUser/' + $( this ).attr('idUser'),
-                               success: function(e){
-                                   console.log('deactivated');
-                               },
-                               error: function(jqXHR, textStatus, errorThrown) {
-                                   console.log(textStatus, errorThrown);
-                               }
-                           });
+                           $.post( "/admin/deactivateUser/", {_id: $( this ).attr('idUser') });
                            $(this).attr('class', "btn btn-success");
                         } else {
                             $(this).val('value','Deactivate');   
-                            $.ajax({
-                                type: 'GET',
-                                url: '/admin/activateUser/' + $( this ).attr('idUser'),
-                                success: function(e){
-                                    console.log('activated');
-                                },
-                                error: function(jqXHR, textStatus, errorThrown) {
-                                    console.log(textStatus, errorThrown);
-                                }
-                            });
+                           $.post( "/admin/activateUser/", {_id: $( this ).attr('idUser') });
                             $(this).attr('class', "btn btn-danger");
                         }
                    });    
@@ -253,29 +197,11 @@ $( document ).ready(function() {
                        if($(this).attr('class') == "btn btn-danger"){
                            $(this).val('value','Activate');
                            var button = $(this);
-                           $.ajax({
-                               type: 'GET',
-                               url: '/admin/stopCompetition/' + $( this ).attr('idCompetition'),
-                               success: function(e){
-                                   console.log('stopped');
-                               },
-                               error: function(jqXHR, textStatus, errorThrown) {
-                                   console.log(textStatus, errorThrown);
-                               }
-                           });
+                           $.post( "/admin/stopCompetition/", {_id: $( this ).attr('idCompetition') });
                            $(this).attr('class', "btn btn-success");
                         } else {
                             $(this).val('value','Deactivate');   
-                            $.ajax({
-                                type: 'GET',
-                                url: '/admin/startCompetition/' + $( this ).attr('idCompetition'),
-                                success: function(e){
-                                    console.log('started');
-                                },
-                                error: function(jqXHR, textStatus, errorThrown) {
-                                    console.log(textStatus, errorThrown);
-                                }
-                            });
+                           $.post( "/admin/startCompetition/", {_id: $( this ).attr('idCompetition') });
                             $(this).attr('class', "btn btn-danger");
                         }
                    });    

@@ -11,18 +11,6 @@
     <script src="bootstrap.js" ></script>
   </head>
   <body>
-      <script>
-    var socket = io.connect('//' + window.location.host);
-//    var socket = io.connect('https://localhost:3000/');
-//    var socket = io();
-          socket.emit('reqH','getAllReferees');
-    socket.on('reqH',function(data){
-        console.log(data);
-    });
-    socket.on('news',function(data){
-        console.log(JSON.stringify(data));
-    });
-    </script>
    <div class="span7 text-center" id="menuButtons">
     <button class="btn btn-primary" type="button" data-toggle="collapse" data-target="#addHorse" aria-expanded="false" aria-controls="collapseExample" id="addHorseButton">
       Add horse
@@ -113,5 +101,22 @@
         </div>
       </div>
     </div>
+      <script>
+//    var socket = io.connect('//' + window.location.host);
+          $(document).ready(function() {
+              var socket = io.connect('https://localhost:3000/');
+              socket.on('reqH',function(data){
+                  console.log(data);
+              });
+              socket.on('news',function(data){
+                  console.log(JSON.stringify(data));
+              });
+
+              $('#showAllCompetitions').on('click', 'button#startCompetitionButton', function(){
+                    console.log($( 'button#startCompetitionButton' ).attr('idCompetition'));
+                  socket.emit('reqH','getAllReferees');
+              });
+          });
+    </script>
   </body>
 </html>
