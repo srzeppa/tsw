@@ -88,6 +88,11 @@ sio.sockets.on('connection', function (socket) {
     socket.emit('news', {
         ahoj: 'od serwera'
     });
+//    socket.on('cursor', function(data) {
+    socket.broadcast.emit('news', {
+        ahoj: 'broadcast od serwera'
+    });
+//    });
     socket.on('reply', function (data) {
         console.log(data);
     });

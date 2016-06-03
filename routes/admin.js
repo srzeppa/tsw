@@ -447,7 +447,7 @@ router.get('/startCompetition/:id', [
     function (req, res) {
     var startCompetitionByIdFunction = function(){
         Competition.findOne({_id:req.params.id},function(err,competition){
-            competition.activate = true;
+            competition.started = true;
             competition.save(function(err){
                 if(err){
                     return{

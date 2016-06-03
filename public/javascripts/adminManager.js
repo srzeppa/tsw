@@ -225,21 +225,18 @@ $( document ).ready(function() {
     refreshUsersTable();
     
     var refreshCompetitionsTable = function(){
-        console.log('here0');
         $.ajax({
             type: 'GET',
             url: '/admin/showCompetitions/',
             dataType: 'json',
             success: function(e){
-                console.log('here1');
                 var arrayLength = e.competitions.length;
-                var $table = $( "<table id='competitionsTable' class='table table-hover'><thead><tr><th>Name</th><th>Gender</th><th>Born</th><th>Owner</th></tr></thead></table>" );
+                var $table = $( "<table id='competitionsTable' class='table table-hover'><thead><tr><th>Name</th></tr></thead></table>" );
                 var $tbody = $("<tbody></tbody>");
-                console.log('here2');
                 for (let i = 0; i < arrayLength; i ++){
                     var comp = e.competitions[i];
                     var $line = $( "<tr></tr>" );
-                    $line.append( $( "<td> </td>" ).html( "hor.name" ) );
+                    $line.append( $( "<td> </td>" ).html( comp.name ) );
 //                    $line.append( $( "<td></td>" ).html( hor.gender ) );
 //                    $line.append( $( "<td></td>" ).html( hor.born ) );
 //                    $line.append( $( "<td></td>" ).html( hor.owner ) );
@@ -251,7 +248,6 @@ $( document ).ready(function() {
                     $tbody.append( $line );
                     $table.append( $tbody );
                 }
-                console.log('here3');
 
                 $table.appendTo( $( "#showAllCompetitions" ) );
                                                        
