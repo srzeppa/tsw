@@ -247,7 +247,26 @@ $( document ).ready(function() {
                        url: '/admin/getGroupById/' + $( this ).attr('idGroup') + '/',
                        dataType: 'json',
                        success: function(e){
-                           console.log(e);
+                           var arrayLength = e.horses.length;
+                            var $table = $( "<table id=\"horsesTable\" class='table table-hover'><thead><tr><th>Name</th><th>Gender</th><th>Born</th><th>Owner</th></tr></thead></table>" );
+                            var $tbody = $("<tbody></tbody>");
+                            for (let i = 0; i < arrayLength; i ++){
+                                var hor = e.horses[i];
+                                var $line = $( "<tr></tr>" );
+                                $line.append( $( "<td></td>" ).html( hor.name ) );
+                                $line.append( $( "<td></td>" ).html( hor.gender ) );
+                                $line.append( $( "<td></td>" ).html( hor.born ) );
+                                $line.append( $( "<td></td>" ).html( hor.owner ) );
+                                if(hor.activate === true){
+                                    $line.append( $( "<td> </td>" ).html( "<button id=\"activationHorseButton\" class=\"btn btn-danger\" idHorse="+ hor._id +"> Activation </button>" ) );
+                                } else {
+                                    $line.append( $( "<td> </td>" ).html( "<button id=\"activationHorseButton\" class=\"btn btn-success\" idHorse="+ hor._id +"> Activation </button>" ) );
+                                }
+                                $tbody.append( $line );
+                                $table.append( $tbody );
+                            }
+
+                            $table.appendTo( $( "#competitionManagement" ) );
                        },
                        error: function(jqXHR, textStatus, errorThrown) {
                            console.log(textStatus, errorThrown);
