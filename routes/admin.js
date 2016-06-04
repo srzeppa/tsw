@@ -458,6 +458,15 @@ router.get('/getCompetitionById/:_id/', [
     }
 ]);
 
+router.get('/getGroupById/:_id/', [
+    hasAccess('admin'),
+    function(req,res){
+        Group.findOne({_id:req.params._id}).populate('horses').populate('referees').exec(function(err,group){
+            res.json(JSON.parse(JSON.stringify(group)));
+        });
+    }
+]);
+
 var createHash = function(password){
     return bCrypt.hashSync(password, bCrypt.genSaltSync(10), null);
 };

@@ -220,10 +220,40 @@ $( document ).ready(function() {
                             $(this).val('value','Deactivate');   
                             $.post( "/admin/startCompetition/", {_id: $( this ).attr('idCompetition') });
                             button.attr('class', "btn btn-danger");
-                            
+                           $.ajax({
+                               type: 'GET',
+                               url: '/admin/getCompetitionById/' + $( this ).attr('idCompetition') + '/',
+                               dataType: 'json',
+                               success: function(e){
+                                   console.log(e);
+                                   for (let i = 0; i < e.groups.length; i++){
+                                        $('#competitionManagement').append( "<button id=\"groupButton\" class=\"btn btn-info\" idGroup="+ e.groups[i]._id +"> Group </button>" );
+                                   }
+                               },
+                               error: function(jqXHR, textStatus, errorThrown) {
+                                   console.log(textStatus, errorThrown);
+                               }
+                           });
                         }
                    });    
                 });
+                
+                $('#competitionManagement').on('click', 'button#groupButton', function(){
+                    console.log('this');
+                    console.log(this);
+                    console.log($( this ).attr('idGroup'));
+                   $.ajax({
+                       type: 'GET',
+                       url: '/admin/getGroupById/' + $( this ).attr('idGroup') + '/',
+                       dataType: 'json',
+                       success: function(e){
+                           console.log(e);
+                       },
+                       error: function(jqXHR, textStatus, errorThrown) {
+                           console.log(textStatus, errorThrown);
+                       }
+                   });
+               });
             },
             error: function(jqXHR, textStatus, errorThrown) {
                 console.log(textStatus, errorThrown);
