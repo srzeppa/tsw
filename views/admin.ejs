@@ -96,33 +96,12 @@
                <h1 class="text-center login-title">Start competition
                </h1>
                    <div id="showAllCompetitions"></div>
+                   <div id="groupButtons"></div>
                    <div id="competitionManagement"></div>
               </div>
           </div>
         </div>
       </div>
     </div>
-      <script>
-          $(document).ready(function() {
-              var socket = io.connect('https://localhost:3000/');
-              $('#showAllCompetitions').on('click', 'button#startCompetitionButton', function(){
-                  console.log($( this ).attr('idCompetition'));
-                  $.ajax({
-                            type: 'GET',
-                            url: '/admin/getCompetitionById/' + $( this ).attr('idCompetition') + '/',
-                            dataType: 'json',
-                            success: function(e){
-                                if(e.started){
-                                    socket.emit('startCompetition', 'startCompetition');
-                                    socket.emit('startCompetition', e);
-                                }
-                            },
-                            error: function(jqXHR, textStatus, errorThrown) {
-                                console.log(textStatus, errorThrown);
-                            }
-                   });
-              });
-          });
-    </script>
   </body>
 </html>

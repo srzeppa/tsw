@@ -1,5 +1,4 @@
 /* jshint node: true */
-
 var fs = require('fs');
 var https = require('https');
 
@@ -25,6 +24,7 @@ var passportSocketIo = require('passport.socketio');
 
 var sessionSecret = 'wielkiSekret44';
 var sessionKey = 'express.sid';
+var dataForReferee = '';
 
 var dbConfig = require('./db');
 var mongoose = require('mongoose');
@@ -92,18 +92,22 @@ if (app.get('env') === 'development') {
     });
 }
 
+var Horse = require('./models/horse');
 var server = https.createServer(options,app);
 var io = require('socket.io')(server);
 
 io.on('connection', function (socket) {
-    socket.emit('news', {
-        ahoj: 'od serwera'
+    console.log('User connected');
+
+    socket.on('allowHorseToRating',function(data){
+      io.sockets.emit('allowHorseToRating', data);
     });
+    
     socket.on('startCompetition',function(data){
-        console.log(data);
+      io.sockets.emit('startCompetition', data);
     });
 });
 
 server.listen(3000, function () {
-    console.log('Serwer pod adresem http://localhost:3000/');
+    console.log('Serwer pod adresem https://localhost:3000/');
 });

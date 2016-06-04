@@ -23,13 +23,26 @@ function hasAccess(accessLevel) {
 }
  
 router.get('/', [
-    hasAccess('referee'), // protection middleware 
+    hasAccess('referee'), 
     function (req, res, next) {
     console.log('you have access!');
         res.render('referee', {
-            title: 'Referee'
+            title: 'Referee',
+            user: req.user
         });
     }
 ]);
+
+router.get('/user_data', function(req, res) {
+
+            if (req.user === undefined) {
+                // The user is not logged in
+                res.json({});
+            } else {
+                res.json({
+                    user: req.user
+                });
+            }
+        });
 
 module.exports = router;

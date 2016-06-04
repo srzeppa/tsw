@@ -2,13 +2,19 @@
 <html>
   <head>
    <title>Referee</title>
-    <link rel='stylesheet' href='/stylesheets/referee.css' />
+    <link rel='stylesheet' href='/stylesheets/admin.css' />
     <script src='/jquery/dist/jquery.min.js'></script>
     <script src='/javascripts/refereeManager.js'></script>
     <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.4/css/bootstrap.min.css">
     <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.4/css/bootstrap-theme.min.css">
+    <script src='/socket.io/socket.io.js'></script>
+    <script src="bootstrap.js" ></script>
   </head>
   <body>
-      
+    <div class="span7 text-center" id="menuButtons">
+        <a href="/signout" class="btn btn-danger" role="button">Logout <u>(<%= user.username %>)</u>
+    </a>
+   </div>
+   <div id="test"></div>
   </body>
 </html>

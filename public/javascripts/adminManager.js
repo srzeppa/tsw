@@ -1,9 +1,13 @@
 /*jshint jquery: true, devel: true, esversion: 6, browser: true, node: true */
-
+/*global io: false */
 "use strict";
 
 $( document ).ready(function() {
 	console.log('admin.ejs');
+    var socket = io('https://localhost:3000');
+    socket.on('startCompetition', function(data) {
+		console.log(data);
+	});
 
     var refreshHorsesTable = function(){
         $.ajax({
@@ -211,6 +215,7 @@ $( document ).ready(function() {
 
                 $('button#startCompetitionButton').each(function(){
                    var button = $(this);
+                    var competitionToSend;
                    $(this).click(function(){
                        if($(this).attr('class') == "btn btn-danger"){
                            $(this).val('value','Activate');
@@ -225,9 +230,13 @@ $( document ).ready(function() {
                                url: '/admin/getCompetitionById/' + $( this ).attr('idCompetition') + '/',
                                dataType: 'json',
                                success: function(e){
+                                   socket.emit('startCompetition', e);
+                                   competitionToSend = e;
                                    console.log(e);
+                                   $( "#competitionManagement" ).empty();
+                                   $('#groupButtons').empty();
                                    for (let i = 0; i < e.groups.length; i++){
-                                        $('#competitionManagement').append( "<button id=\"groupButton\" class=\"btn btn-info\" idGroup="+ e.groups[i]._id +"> Group </button>" );
+                                        $('#groupButtons').append( "<button id=\"groupButton\" class=\"btn btn-info\" idGroup="+ e.groups[i]._id +"> Group </button>" );
                                    }
                                },
                                error: function(jqXHR, textStatus, errorThrown) {
@@ -238,10 +247,7 @@ $( document ).ready(function() {
                    });    
                 });
                 
-                $('#competitionManagement').on('click', 'button#groupButton', function(){
-                    console.log('this');
-                    console.log(this);
-                    console.log($( this ).attr('idGroup'));
+                $('#groupButtons').on('click', 'button#groupButton', function(){
                    $.ajax({
                        type: 'GET',
                        url: '/admin/getGroupById/' + $( this ).attr('idGroup') + '/',
@@ -257,16 +263,31 @@ $( document ).ready(function() {
                                 $line.append( $( "<td></td>" ).html( hor.gender ) );
                                 $line.append( $( "<td></td>" ).html( hor.born ) );
                                 $line.append( $( "<td></td>" ).html( hor.owner ) );
-                                if(hor.activate === true){
-                                    $line.append( $( "<td> </td>" ).html( "<button id=\"activationHorseButton\" class=\"btn btn-danger\" idHorse="+ hor._id +"> Activation </button>" ) );
-                                } else {
-                                    $line.append( $( "<td> </td>" ).html( "<button id=\"activationHorseButton\" class=\"btn btn-success\" idHorse="+ hor._id +"> Activation </button>" ) );
-                                }
+//                                if(hor.activate === true){
+                                    $line.append( $( "<td> </td>" ).html( "<button id=\"allowHorseToRatingButton\" class=\"btn btn-danger\" idHorse="+ hor._id +"> Activation </button>" ) );
+//                                } else {
+//                                    $line.append( $( "<td> </td>" ).html( "<button id=\"allowHorseToRatingButton\" class=\"btn btn-success\" idHorse="+ hor._id +"> Activation </button>" ) );
+//                                }
                                 $tbody.append( $line );
                                 $table.append( $tbody );
                             }
+                           $( "#competitionManagement" ).empty();
 
                             $table.appendTo( $( "#competitionManagement" ) );
+                           
+                           $('#competitionManagement').on('click', 'button#allowHorseToRatingButton', function(){
+                              $.ajax({
+                                        type: 'GET',
+                                        url: '/admin/getHorseById/' + $( this ).attr('idHorse') + '/',
+                                        dataType: 'json',
+                                        success: function(e){
+                                            socket.emit('allowHorseToRating', e);
+                                        },
+                                        error: function(jqXHR, textStatus, errorThrown) {
+                                            console.log(textStatus, errorThrown);
+                                        }
+                               });
+                          });
                        },
                        error: function(jqXHR, textStatus, errorThrown) {
                            console.log(textStatus, errorThrown);
@@ -280,19 +301,6 @@ $( document ).ready(function() {
         });
     };
     refreshCompetitionsTable();
-    
-    $('#activateUserButton').on('click', function(e){
-        $.ajax({
-            type: 'GET',
-            url: '/admin/activateUser/:id/',
-            success: function(e){
-                console.log(e.msg);
-            },
-            error: function(jqXHR, textStatus, errorThrown) {
-                console.log(textStatus, errorThrown);
-            }
-        });
-    });
     
     $('#deactivateUserButton').on('click', function(e){
         $.ajax({
@@ -344,10 +352,8 @@ $( document ).ready(function() {
     });
     
     $('#addUserButtonForm').on('click', function(e){
-        console.log('addUser clicked');
         $.post( "/admin/adduser/", {username: $('#userUsername').val(), password: $('#userPassword').val(), email: $('#userEmail').val(), firstname: $('#userFirstname').val(), lastname: $('#userLastname').val(), role: $('#userRole').val()})
             .done(function( data ) {
-            console.log('addUser clicked');
             $( "#showAllUsers" ).empty();
             refreshUsersTable();
         });

@@ -1,4 +1,5 @@
 /*jshint node: true, browser: true, jquery: true*/
+/*jshint loopfunc: true */
 var express = require('express');
 var router = express.Router();
 var Horse = require('../models/horse');
@@ -150,7 +151,6 @@ router.get('/getHorseById/:_id/', [
     hasAccess('admin'),
     function(req,res){
     Horse.findOne({_id:req.params._id},function(err,horse){
-        console.log(horse);
         res.json(horse);
     });
 }]);
@@ -183,7 +183,6 @@ router.get('/getUserById/:_id/', [
     hasAccess('admin'),
     function(req,res){
     users.findOne({_id:req.params._id},function(err,user){
-        console.log(user);
         res.json(user);
     });
 }]);
