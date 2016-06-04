@@ -4,7 +4,7 @@
 
 $( document ).ready(function() {
 	console.log('admin.ejs');
-    
+
     var refreshHorsesTable = function(){
         $.ajax({
             type: 'GET',
@@ -42,13 +42,21 @@ $( document ).ready(function() {
                        
                        var idHorse = $( this ).attr('idHorse');
                        
-                       $.post( "/admin/getHorseById/", {_id: idHorse })
-                               .done(function( e ) {
+                       $.ajax({
+                           type: 'GET',
+                           url: '/admin/getHorseById/' + $( this ).attr('idHorse') + '/',
+                           dataType: 'json',
+                           success: function(e){
+                               console.log(e);
                                document.getElementById("horseNameEdit").value = e.name;
                                document.getElementById("horseOwnerEdit").value = e.owner;
                                document.getElementById("horseBornEdit").value = e.born;
                                document.getElementById("horseGenderEdit").value = e.gender;
-                           });
+                           },
+                           error: function(jqXHR, textStatus, errorThrown) {
+                               console.log(textStatus, errorThrown);
+                           }
+                       });
                        
                        $('#editHorseButtonSubmit').click(function(){
                            $.post( "/admin/edithorse/", {_id: idHorse, name: $('#horseNameEdit').val(), owner: $('#horseOwnerEdit').val(), gender: $('#horseGenderEdit').val(), born: $('#horseBornEdit').val()})
@@ -122,14 +130,23 @@ $( document ).ready(function() {
                        
                        var idUser = $( this ).attr('idUser');
                        
-                       $.post( "/admin/getUserById/", {_id: idUser })
-                           .done(function( e ) {
-                           document.getElementById("userUsernameEdit").value = e.username;
-                           document.getElementById("userPasswordEdit").value = e.password;
-                           document.getElementById("userEmailEdit").value = e.email;
-                           document.getElementById("userFirstnameEdit").value = e.firstname;
-                           document.getElementById("userLastnameEdit").value = e.lastname;
-                           document.getElementById("userRoleEdit").value = e.role;
+                       $.ajax({
+                            type: 'GET',
+                            url: '/admin/getUserById/' + $( this ).attr('idUser') + '/',
+                            dataType: 'json',
+                            success: function(e){
+                                console.log(e);
+ 
+                                document.getElementById("userUsernameEdit").value = e.username;
+                                document.getElementById("userPasswordEdit").value = e.password;
+                                document.getElementById("userEmailEdit").value = e.email;
+                                document.getElementById("userFirstnameEdit").value = e.firstname;
+                                document.getElementById("userLastnameEdit").value = e.lastname;
+                                document.getElementById("userRoleEdit").value = e.role;
+                            },
+                            error: function(jqXHR, textStatus, errorThrown) {
+                                console.log(textStatus, errorThrown);
+                            }
                        });
                        
                        $('#editUserButtonFormSubmit').click(function(){
@@ -174,8 +191,6 @@ $( document ).ready(function() {
             url: '/admin/showCompetitions/',
             dataType: 'json',
             success: function(e){
-                console.log(e);
-                console.log(e[0]._id);
                 var arrayLength = e.length;
                 var $table = $( "<table id='competitionsTable' class='table table-hover'><thead><tr><th>Name</th></tr></thead></table>" );
                 var $tbody = $("<tbody></tbody>");
@@ -193,22 +208,22 @@ $( document ).ready(function() {
                 }
 
                 $table.appendTo( $( "#showAllCompetitions" ) );
-                                                       
+
                 $('button#startCompetitionButton').each(function(){
+                   var button = $(this);
                    $(this).click(function(){
                        if($(this).attr('class') == "btn btn-danger"){
                            $(this).val('value','Activate');
-                           var button = $(this);
                            $.post( "/admin/stopCompetition/", {_id: $( this ).attr('idCompetition') });
-                           $(this).attr('class', "btn btn-success");
+                           button.attr('class', "btn btn-success");
                         } else {
                             $(this).val('value','Deactivate');   
-                           $.post( "/admin/startCompetition/", {_id: $( this ).attr('idCompetition') });
-                            $(this).attr('class', "btn btn-danger");
+                            $.post( "/admin/startCompetition/", {_id: $( this ).attr('idCompetition') });
+                            button.attr('class', "btn btn-danger");
+                            
                         }
                    });    
                 });
-
             },
             error: function(jqXHR, textStatus, errorThrown) {
                 console.log(textStatus, errorThrown);

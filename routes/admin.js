@@ -9,6 +9,7 @@ var mongodb = require('mongodb');
 var ObjectId = require('mongodb').ObjectID;
 var users = require('../models/users');
 var bCrypt = require('bcrypt-nodejs');
+var deepPopulate = require('mongoose-deep-populate');
 
 router.use(function(req, res, next) {
     if (!req.user) {
@@ -48,7 +49,6 @@ router.get('/showHorses', [
         Horse.find({}).exec(function(err, horses) {
             if (err) throw err;
             var result = JSON.parse(JSON.stringify(horses));
-            console.log(JSON.parse(JSON.stringify(horses)));
             res.json({"horses" : result});
         });
     }
@@ -60,7 +60,6 @@ router.get('/showUsers', [
         users.find({}).exec(function(err, users) {
             if (err) throw err;
             var result = JSON.parse(JSON.stringify(users));
-            console.log(JSON.parse(JSON.stringify(users)));
             res.json({"users" : result});
         });
 }]);
@@ -147,10 +146,10 @@ router.post('/deactivateUser/', [
     res.end();
 }]);
 
-router.post('/getHorseById/', [
+router.get('/getHorseById/:_id/', [
     hasAccess('admin'),
     function(req,res){
-    Horse.findOne({_id:req.body._id},function(err,horse){
+    Horse.findOne({_id:req.params._id},function(err,horse){
         console.log(horse);
         res.json(horse);
     });
@@ -180,10 +179,10 @@ router.post('/editHorse/', [
     res.end();
 }]);
 
-router.post('/getUserById/', [
+router.get('/getUserById/:_id/', [
     hasAccess('admin'),
     function(req,res){
-    users.findOne({_id:req.body._id},function(err,user){
+    users.findOne({_id:req.params._id},function(err,user){
         console.log(user);
         res.json(user);
     });
@@ -352,7 +351,7 @@ router.post('/addCompetition/', [
             startReferee = startReferee + refereesCount;
             endReferee = endReferee + refereesCount;
 
-            listOfGroups.push(newGroup._id);
+            listOfGroups.push(newGroup  );
             console.log('listOfGroups');
             console.log(listOfGroups);
 
@@ -443,10 +442,18 @@ router.post('/stopCompetition/', [
 router.get('/showCompetitions', [
     hasAccess('admin'),
     function (req, res, next) {
-        Competition.find({}).populate('groups').exec(function(err, competition) {
+        Competition.find({}).populate('groups').lean().exec(function(err, competition) {
             if (err) throw err;
-            console.log(JSON.parse(JSON.stringify(competition)));
             res.json(JSON.parse(JSON.stringify(competition)));
+        });
+    }
+]);
+
+router.get('/getCompetitionById/:_id/', [
+    hasAccess('admin'),
+    function(req,res){
+        Competition.findOne({_id:req.params._id}).populate('groups').exec(function(err,competition){
+            res.json(competition);
         });
     }
 ]);

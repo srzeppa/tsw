@@ -94,14 +94,12 @@ if (app.get('env') === 'development') {
 
 var server = https.createServer(options,app);
 var io = require('socket.io')(server);
-//var sio = socketIo.listen(server);
 
 io.on('connection', function (socket) {
     socket.emit('news', {
         ahoj: 'od serwera'
     });
-        socket.emit('reqH','od serwera');
-    socket.on('reqH',function(data){
+    socket.on('startCompetition',function(data){
         console.log(data);
     });
 });

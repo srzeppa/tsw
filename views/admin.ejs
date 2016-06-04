@@ -96,25 +96,31 @@
                <h1 class="text-center login-title">Start competition
                </h1>
                    <div id="showAllCompetitions"></div>
+                   <div id="competitionManagement"></div>
               </div>
           </div>
         </div>
       </div>
     </div>
       <script>
-//    var socket = io.connect('//' + window.location.host);
           $(document).ready(function() {
               var socket = io.connect('https://localhost:3000/');
-              socket.on('reqH',function(data){
-                  console.log(data);
-              });
-              socket.on('news',function(data){
-                  console.log(JSON.stringify(data));
-              });
-
               $('#showAllCompetitions').on('click', 'button#startCompetitionButton', function(){
-                    console.log($( 'button#startCompetitionButton' ).attr('idCompetition'));
-                  socket.emit('reqH','getAllReferees');
+                  console.log($( this ).attr('idCompetition'));
+                  $.ajax({
+                            type: 'GET',
+                            url: '/admin/getCompetitionById/' + $( this ).attr('idCompetition') + '/',
+                            dataType: 'json',
+                            success: function(e){
+                                if(e.started){
+                                    socket.emit('startCompetition', 'startCompetition');
+                                    socket.emit('startCompetition', e);
+                                }
+                            },
+                            error: function(jqXHR, textStatus, errorThrown) {
+                                console.log(textStatus, errorThrown);
+                            }
+                   });
               });
           });
     </script>

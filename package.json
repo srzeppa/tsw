@@ -17,6 +17,7 @@
     "express-session": "^1.13.0",
     "mongodb": "1.4.4",
     "mongoose": "^4.4.19",
+    "mongoose-deep-populate": "^3.0.0",
     "mongoose-role": "^1.2.0",
     "monk": "1.0.1",
     "morgan": "~1.0.0",
