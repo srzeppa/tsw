@@ -2,6 +2,7 @@
 
 var express = require('express');
 var router = express.Router();
+var Group = require('../models/group');
 
 router.use(function (req, res, next){
     if(!req.user){
@@ -29,6 +30,16 @@ router.get('/', [
         res.render('referee', {
             title: 'Referee',
             user: req.user
+        });
+    }
+]);
+
+router.get('/getGroupById/:_id/', [
+    hasAccess('referee'),
+    function(req,res){
+        console.log('getGroupById');
+        Group.findOne({_id:req.params._id}).populate('horses').populate('referees').exec(function(err,group){
+            res.json(JSON.parse(JSON.stringify(group)));
         });
     }
 ]);

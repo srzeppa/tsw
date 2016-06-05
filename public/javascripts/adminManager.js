@@ -6,7 +6,7 @@ $( document ).ready(function() {
 	console.log('admin.ejs');
     var socket = io('https://localhost:3000');
     socket.on('startCompetition', function(data) {
-		console.log(data);
+		console.log('startCompetition listen');
 	});
 
     var refreshHorsesTable = function(){
@@ -248,6 +248,7 @@ $( document ).ready(function() {
                 });
                 
                 $('#groupButtons').on('click', 'button#groupButton', function(){
+                    console.log('button#groupButton click');
                    $.ajax({
                        type: 'GET',
                        url: '/admin/getGroupById/' + $( this ).attr('idGroup') + '/',
@@ -274,20 +275,6 @@ $( document ).ready(function() {
                            $( "#competitionManagement" ).empty();
 
                             $table.appendTo( $( "#competitionManagement" ) );
-                           
-                           $('#competitionManagement').on('click', 'button#allowHorseToRatingButton', function(){
-                              $.ajax({
-                                        type: 'GET',
-                                        url: '/admin/getHorseById/' + $( this ).attr('idHorse') + '/',
-                                        dataType: 'json',
-                                        success: function(e){
-                                            socket.emit('allowHorseToRating', e);
-                                        },
-                                        error: function(jqXHR, textStatus, errorThrown) {
-                                            console.log(textStatus, errorThrown);
-                                        }
-                               });
-                          });
                        },
                        error: function(jqXHR, textStatus, errorThrown) {
                            console.log(textStatus, errorThrown);
@@ -301,6 +288,24 @@ $( document ).ready(function() {
         });
     };
     refreshCompetitionsTable();
+    var horse;
+    $('#competitionManagement').on('click', 'button#allowHorseToRatingButton', function(){
+        $.ajax({
+            type: 'GET',
+            url: '/admin/getHorseById/' + $( this ).attr('idHorse') + '/',
+            dataType: 'json',
+            success: function(data){
+                console.log('e');
+                console.log(data);
+                horse = data;
+            },
+            error: function(jqXHR, textStatus, errorThrown) {
+                console.log(textStatus, errorThrown);
+            }
+        }).done(function(){
+            socket.emit('allowHorseToRating', horse);
+        });
+    });
     
     $('#deactivateUserButton').on('click', function(e){
         $.ajax({

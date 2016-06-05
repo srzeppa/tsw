@@ -104,7 +104,8 @@ io.on('connection', function (socket) {
     });
     
     socket.on('startCompetition',function(data){
-      io.sockets.emit('startCompetition', data);
+        console.log(data);
+        io.sockets.emit('startCompetition', data);
     });
 });
 
