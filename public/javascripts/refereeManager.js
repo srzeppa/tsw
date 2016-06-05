@@ -16,6 +16,7 @@ $( document ).ready(function() {
 	});
     
     socket.on('startCompetition', function(data) {
+        competition = data;
         $('#horseToRateTable').empty();
         var $table = $( "<table id=\"horsesToRateTable\" class='table table-hover'><thead><tr><th>Name</th><th>Typ</th><th>Głowa</th><th>Kłoda</th><th>Nogi</th><th>Ruch</th></tr></thead></table>" );
         var $tbody = $("<tbody></tbody>");
@@ -66,7 +67,16 @@ $( document ).ready(function() {
         console.log('result');
         console.log(result);
         
-        socket.emit('markHorse', result);
+        console.log('competition._id');
+        console.log(competition._id);
+        console.log('$(this).attr()');
+        console.log($(this).attr('idHorse'));
+        
+        socket.emit('markHorse', 
+                    {result: result,
+                     competition: competition._id,
+                     horse: $(this).attr('idHorse')
+                    });
     });
     
     

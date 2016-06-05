@@ -429,6 +429,6 @@ $( document ).ready(function() {
         console.log('markHorseToDb');
         console.log(data);
         
-        $.post( "/admin/mark/", {overall: data});
+        $.post( "/admin/mark/", {overall: data.result, competition: data.competition, horse: data.horse});
     });
 });
