@@ -3,6 +3,7 @@
 var express = require('express');
 var router = express.Router();
 var Result = require('../models/result');
+var Horse = require('../models/horse');
 
 function hasAccess(accessLevel) {
     return function (req, res, next) {
@@ -65,6 +66,12 @@ router.get('/getAllResults', function (req, res, next) {
     Result.find({}).populate('horse').populate('competition').lean().exec(function(err, competition) {
         if (err) throw err;
         res.json(JSON.parse(JSON.stringify(competition)));
+    });
+});
+
+router.get('/getHorseById/:_id/', function(req,res){
+    Horse.findOne({_id:req.params._id},function(err,horse){
+        res.json(horse);
     });
 });
 
