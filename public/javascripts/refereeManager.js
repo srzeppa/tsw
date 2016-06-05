@@ -51,26 +51,25 @@ $( document ).ready(function() {
     
     socket.on('allowHorseToRating', function(data) {
         console.log('allowHorseToRating');
-        $('#' + data._id).parent().append($( "<td id='typMark'></td>" ).html( "<input required='true' type='number' class='form-control'>" ));
-        $('#' + data._id).parent().append($( "<td id='glowaMark'></td>" ).html( "<input required='true' type='number' class='form-control'>" ));
-        $('#' + data._id).parent().append($( "<td id='klodaMark'></td>" ).html( "<input required='true' type='number' class='form-control'>" ));
-        $('#' + data._id).parent().append($( "<td id='nogiMark'></td>" ).html( "<input required='true' type='number' class='form-control'>" ));
-        $('#' + data._id).parent().append($( "<td id='ruchMark'></td>" ).html( "<input required='true' type='number' class='form-control'>" ));
+        $('#' + data._id).parent().append($( "<td id='typeMark'></td>" ).html( "<input required='true' type='number' class='form-control'>" ));
+        $('#' + data._id).parent().append($( "<td id='headMark'></td>" ).html( "<input required='true' type='number' class='form-control'>" ));
+        $('#' + data._id).parent().append($( "<td id='bodyMark'></td>" ).html( "<input required='true' type='number' class='form-control'>" ));
+        $('#' + data._id).parent().append($( "<td id='legsMark'></td>" ).html( "<input required='true' type='number' class='form-control'>" ));
+        $('#' + data._id).parent().append($( "<td id='movementMark'></td>" ).html( "<input required='true' type='number' class='form-control'>" ));
         $('#' + data._id).parent().append($( "<td></td>" ).html( "<button id=\"markHorseButton\" class=\"btn btn-info\" idHorse="+ data._id +"> Mark </button>" ) );
 	});
     
     $('#horseToRateTable').on('click', 'button#markHorseButton', function(){
         var result = 0;
         
-        console.log("$('#markHorseButton').parent().closest().parseInt($('#typMark').val())");
-        console.log($(this).closest('td').prevAll("td#nogiMark").children('input').val());
-        
-        result = (parseInt($(this).closest('td').prevAll("td#typMark").children('input').val()) + parseInt($(this).closest('td').prevAll("td#glowaMark").children('input').val()) + parseInt($(this).closest('td').prevAll("td#klodaMark").children('input').val()) + parseInt($(this).closest('td').prevAll("td#nogiMark").children('input').val()) + parseInt($(this).closest('td').prevAll("td#ruchMark").children('input').val()))/5;
+        result = (parseInt($(this).closest('td').prevAll("td#typeMark").children('input').val()) + parseInt($(this).closest('td').prevAll("td#headMark").children('input').val()) + parseInt($(this).closest('td').prevAll("td#bodyMark").children('input').val()) + parseInt($(this).closest('td').prevAll("td#legsMark").children('input').val()) + parseInt($(this).closest('td').prevAll("td#movementMark").children('input').val()))/5;
         console.log('result');
         console.log(result);
+        $(this).parent().parent().remove();
         
         socket.emit('markHorse', 
                     {result: result,
+                     referee: userId,
                      competition: competition._id,
                      horse: $(this).attr('idHorse')
                     });

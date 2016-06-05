@@ -472,12 +472,7 @@ router.post('/mark/', [
     var markFunction = function() {
         var mark = new Result();
         
-        console.log('req.body.overall');
-        console.log(req.body.overall);
-//        var overall = parseInt(req.body.overall);
-//        console.log('overall');
-//        console.log(overall);
-        
+
         mark.overall = req.body.overall;
         mark.competition = req.body.competition;
         mark.horse = req.body.horse;

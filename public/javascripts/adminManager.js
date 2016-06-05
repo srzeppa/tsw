@@ -4,6 +4,9 @@
 
 $( document ).ready(function() {
 	console.log('admin.ejs');
+    
+    var refereesSize;
+    
     var socket = io('https://localhost:3000');
     socket.on('startCompetition', function(data) {
 		console.log('startCompetition listen');
@@ -235,6 +238,7 @@ $( document ).ready(function() {
                                    console.log(e);
                                    $( "#competitionManagement" ).empty();
                                    $('#groupButtons').empty();
+                                   refereesSize = e.groups[0].referees.length;
                                    for (let i = 0; i < e.groups.length; i++){
                                         $('#groupButtons').append( "<button id=\"groupButton\" class=\"btn btn-info\" idGroup="+ e.groups[i]._id +"> Group </button>" );
                                    }
@@ -425,12 +429,51 @@ $( document ).ready(function() {
         });
     });
     
+    var tmp = 0;
+    var mark = 0;
+    var competition = '';
+    var horseCompetition = '';
     socket.on('markHorseToDb', function(data){
         console.log('markHorseToDb');
         console.log(data);
         
-        $.post( "/admin/mark/", {overall: data.result, competition: data.competition, horse: data.horse});
+        mark = mark + data.result;
+        tmp ++;
+        $.ajax({
+            type: 'GET',
+            url: '/admin/getUserById/' + data.referee + '/',
+            dataType: 'json',
+            success: function(e){
+                if(refereesSize == tmp){
+                    competition = data.competition;
+                    horseCompetition = data.horse;
+                    $('#referees').html( "<button id=\"sendMarkToDb\" class=\"btn btn-info\"> Send mark </button>" );
+                }
+                
+            },
+            error: function(jqXHR, textStatus, errorThrown) {
+                console.log(textStatus, errorThrown);
+            }
+        });
         
-        socket.emit('results', data);
     });
+    
+    $('#referees').on('click', 'button#sendMarkToDb', function(){
+        console.log('mark');
+        console.log(mark);
+        tmp = 0;
+        mark = mark / refereesSize;
+        console.log('refereesSize');
+        console.log(refereesSize);
+        console.log('mark');
+        console.log(mark);
+        console.log('competition');
+        console.log(competition);
+        console.log('horseCompetition');
+        console.log(horseCompetition);
+        $.post( "/admin/mark/", {overall: mark, competition: competition, horse: horseCompetition});
+        $('button#sendMarkToDb').remove();
+//        socket.emit('results', data);
+    });
+    
 });
