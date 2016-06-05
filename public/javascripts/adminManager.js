@@ -473,7 +473,7 @@ $( document ).ready(function() {
         console.log(horseCompetition);
         $.post( "/admin/mark/", {overall: mark, competition: competition, horse: horseCompetition});
         $('button#sendMarkToDb').remove();
-//        socket.emit('results', data);
+        socket.emit('results', {overall: mark, competition: competition, horse: horseCompetition});
     });
     
 });
