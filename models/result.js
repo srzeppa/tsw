@@ -6,7 +6,7 @@ var Schema = mongoose.Schema;
 
 var Result = new Schema({
 	competition: {type: Schema.Types.ObjectId, ref: 'Competition'},
-	horse: {type: Schema.Types.ObjectId, ref: 'horse'},
+	horse: {type: Schema.Types.ObjectId, ref: 'Horse'},
 	overall: Number
 });
 

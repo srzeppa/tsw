@@ -430,5 +430,7 @@ $( document ).ready(function() {
         console.log(data);
         
         $.post( "/admin/mark/", {overall: data.result, competition: data.competition, horse: data.horse});
+        
+        socket.emit('results', data);
     });
 });

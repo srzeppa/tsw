@@ -2,13 +2,19 @@
 
 var express = require('express');
 var router = express.Router();
+var Result = require('../models/result');
 
-//router.use(function (req, res, next){
-//    if(!req.user){
-//        res.redirect('/');
-//    }
-//    next();
-//});
+function hasAccess(accessLevel) {
+    return function (req, res, next) {
+        if (req.user && req.user.hasAccess(accessLevel)) {
+            return next();
+        }
+        return res.json({
+            success: false,
+            error: 'Unauthorized'
+        });
+    };
+}
 
 /* GET home page. */
 router.get('/', function(req, res, next) {
@@ -50,9 +56,16 @@ exports.logout = function (req, res) {
 };
 
 	/* Handle Logout */
-	router.get('/signout', function(req, res) {
-		req.logout();
-		res.redirect('/');
-	});
+router.get('/signout', function(req, res) {
+    req.logout();
+    res.redirect('/');
+});
+
+router.get('/getAllResults', function (req, res, next) {
+    Result.find({}).populate('horse').populate('competition').lean().exec(function(err, competition) {
+        if (err) throw err;
+        res.json(JSON.parse(JSON.stringify(competition)));
+    });
+});
 
 module.exports = router;

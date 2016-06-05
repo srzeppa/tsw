@@ -113,6 +113,11 @@ io.on('connection', function (socket) {
         console.log(data);
         io.sockets.emit('markHorseToDb', data);
     });
+    
+    socket.on('results',function(data){
+        console.log(data);
+        io.sockets.emit('showResults', data);
+    });
 });
 
 server.listen(3000, function () {

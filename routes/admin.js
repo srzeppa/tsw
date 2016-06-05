@@ -10,7 +10,6 @@ var mongodb = require('mongodb');
 var ObjectId = require('mongodb').ObjectID;
 var users = require('../models/users');
 var bCrypt = require('bcrypt-nodejs');
-var deepPopulate = require('mongoose-deep-populate');
 
 router.use(function(req, res, next) {
     if (!req.user) {
