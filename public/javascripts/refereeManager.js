@@ -17,7 +17,7 @@ $( document ).ready(function() {
     
     socket.on('startCompetition', function(data) {
         $('#horseToRateTable').empty();
-        var $table = $( "<table id=\"horsesToRateTable\" class='table table-hover'><thead><tr><th>Name</th></tr></thead></table>" );
+        var $table = $( "<table id=\"horsesToRateTable\" class='table table-hover'><thead><tr><th>Name</th><th>Typ</th><th>Głowa</th><th>Kłoda</th><th>Nogi</th><th>Ruch</th></tr></thead></table>" );
         var $tbody = $("<tbody></tbody>");
         refereesArray = [];
         console.log('startCompetition listen');
@@ -50,7 +50,13 @@ $( document ).ready(function() {
     
     socket.on('allowHorseToRating', function(data) {
 		console.log(data);
-        $('#horseToRate').append(data.name);
+        console.log('allowHorseToRating');
+        $('#' + data._id).parent().append($( "<td></td>" ).html( "<input type='number' class='form-control' id='typMark'>" ));
+        $('#' + data._id).parent().append($( "<td></td>" ).html( "<input type='number' class='form-control' id='glowaMark'>" ));
+        $('#' + data._id).parent().append($( "<td></td>" ).html( "<input type='number' class='form-control' id='klodaMark'>" ));
+        $('#' + data._id).parent().append($( "<td></td>" ).html( "<input type='number' class='form-control' id='nogiMark'>" ));
+        $('#' + data._id).parent().append($( "<td></td>" ).html( "<input type='number' class='form-control' id='ruchMark'>" ));
+        $('#' + data._id).parent().append($( "<td></td>" ).html( $( "<td> </td>" ).html( "<button id=\"markHorseButton\" class=\"btn btn-info\" idHorse="+ data._id +"> Mark </button>" ) ));
 	});
     
     
