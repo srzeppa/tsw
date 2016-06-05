@@ -466,6 +466,42 @@ router.get('/getGroupById/:_id/', [
     }
 ]);
 
+router.post('/mark/', [
+    hasAccess('admin'),
+    function(req, res) {
+    console.log('mark clicked route');
+    var markFunction = function() {
+        var mark = new Result();
+        
+        console.log('req.body.overall');
+        console.log(req.body.overall);
+//        var overall = parseInt(req.body.overall);
+//        console.log('overall');
+//        console.log(overall);
+        
+        mark.overall = req.body.overall;
+        mark.competition = req.body.competition;
+        mark.horse = req.body.horse;
+
+        mark.save(function(err) {
+            if (err) {
+                console.log('Error in Saving horse: ' + err);
+                throw err;
+            }
+            console.log('Mark saving succesful');
+            console.log(mark);
+            return {
+                "mark": mark
+            };
+        });
+    };
+    res.json(markFunction());
+    res.writeHead(302, {
+      'Location': '/admin/'
+    });
+    res.end();
+}]);
+
 var createHash = function(password){
     return bCrypt.hashSync(password, bCrypt.genSaltSync(10), null);
 };

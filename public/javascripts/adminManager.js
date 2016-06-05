@@ -424,4 +424,11 @@ $( document ).ready(function() {
             });
         });
     });
+    
+    socket.on('markHorseToDb', function(data){
+        console.log('markHorseToDb');
+        console.log(data);
+        
+        $.post( "/admin/mark/", {overall: data});
+    });
 });

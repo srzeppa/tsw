@@ -100,12 +100,18 @@ io.on('connection', function (socket) {
     console.log('User connected');
 
     socket.on('allowHorseToRating',function(data){
-      io.sockets.emit('allowHorseToRating', data);
+        io.sockets.emit('allowHorseToRating', data);
     });
     
     socket.on('startCompetition',function(data){
         console.log(data);
         io.sockets.emit('startCompetition', data);
+    });
+    
+    socket.on('markHorse', function(data){
+        console.log('markHorse:');
+        console.log(data);
+        io.sockets.emit('markHorseToDb', data);
     });
 });
 

@@ -55,34 +55,4 @@ router.get('/user_data', function(req, res) {
     }
 });
 
-router.post('/mark/', [
-    hasAccess('referee'),
-    function(req, res) {
-    console.log('mark clicked route');
-    var markFunction = function() {
-        var mark = new Result();
-        
-        mark.overall = req.body.overall;
-        mark.competition = req.body.competition;
-        mark.horse = req.body.horse;
-
-        mark.save(function(err) {
-            if (err) {
-                console.log('Error in Saving horse: ' + err);
-                throw err;
-            }
-            console.log('Mark saving succesful');
-            console.log(mark);
-            return {
-                "mark": mark
-            };
-        });
-    };
-    res.json(markFunction());
-    res.writeHead(302, {
-      'Location': '/admin/'
-    });
-    res.end();
-}]);
-
 module.exports = router;

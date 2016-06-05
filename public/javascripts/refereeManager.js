@@ -51,13 +51,23 @@ $( document ).ready(function() {
     socket.on('allowHorseToRating', function(data) {
 		console.log(data);
         console.log('allowHorseToRating');
-        $('#' + data._id).parent().append($( "<td></td>" ).html( "<input type='number' class='form-control' id='typMark'>" ));
-        $('#' + data._id).parent().append($( "<td></td>" ).html( "<input type='number' class='form-control' id='glowaMark'>" ));
-        $('#' + data._id).parent().append($( "<td></td>" ).html( "<input type='number' class='form-control' id='klodaMark'>" ));
-        $('#' + data._id).parent().append($( "<td></td>" ).html( "<input type='number' class='form-control' id='nogiMark'>" ));
-        $('#' + data._id).parent().append($( "<td></td>" ).html( "<input type='number' class='form-control' id='ruchMark'>" ));
+        $('#' + data._id).parent().append($( "<td></td>" ).html( "<input required='true' type='number' class='form-control' id='typMark'>" ));
+        $('#' + data._id).parent().append($( "<td></td>" ).html( "<input required='true' type='number' class='form-control' id='glowaMark'>" ));
+        $('#' + data._id).parent().append($( "<td></td>" ).html( "<input required='true' type='number' class='form-control' id='klodaMark'>" ));
+        $('#' + data._id).parent().append($( "<td></td>" ).html( "<input required='true' type='number' class='form-control' id='nogiMark'>" ));
+        $('#' + data._id).parent().append($( "<td></td>" ).html( "<input required='true' type='number' class='form-control' id='ruchMark'>" ));
         $('#' + data._id).parent().append($( "<td></td>" ).html( $( "<td> </td>" ).html( "<button id=\"markHorseButton\" class=\"btn btn-info\" idHorse="+ data._id +"> Mark </button>" ) ));
 	});
+    
+    $('#horseToRateTable').on('click', 'button#markHorseButton', function(){
+        var result = 0;
+        
+        result = (parseInt($('#typMark').val()) + parseInt($('#glowaMark').val()) + parseInt($('#klodaMark').val()) + parseInt($('#nogiMark').val()) + parseInt($('#ruchMark').val()))/5;
+        console.log('result');
+        console.log(result);
+        
+        socket.emit('markHorse', result);
+    });
     
     
     $.ajax({
