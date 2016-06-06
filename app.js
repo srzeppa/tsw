@@ -124,6 +124,12 @@ io.on('connection', function (socket) {
         console.log(data);
         io.sockets.emit('reminderReferee', data);
     });
+    
+    socket.on('stopCompetition',function(data){
+        console.log('reminder data');
+        console.log(data);
+        io.sockets.emit('stopCompetitionToReferee', data);
+    });
 });
 
 server.listen(3000, function () {

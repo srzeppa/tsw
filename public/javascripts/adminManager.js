@@ -219,6 +219,7 @@ $( document ).ready(function() {
                            $(this).val('value','Activate');
                            $.post( "/admin/stopCompetition/", {_id: $( this ).attr('idCompetition') });
                            button.attr('class', "btn btn-success");
+                           socket.emit('stopCompetition', $( this ).attr('idCompetition'));
                         } else {
                             $(this).val('value','Deactivate');   
                             $.post( "/admin/startCompetition/", {_id: $( this ).attr('idCompetition') });
@@ -469,6 +470,7 @@ $( document ).ready(function() {
         $.post( "/admin/mark/", {overall: mark, competition: competition, horse: horseCompetition});
         $('button#sendMarkToDb').remove();
         socket.emit('results', {overall: mark, competition: competition, horse: horseCompetition});
+        $('#referees').empty();
     });
     
 });

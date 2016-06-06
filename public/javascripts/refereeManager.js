@@ -91,4 +91,8 @@ $( document ).ready(function() {
         }
     });
     
+    socket.on('stopCompetitionToReferee', function(data){
+        $('#horseToRateTable').empty();
+    });
+    
 });
