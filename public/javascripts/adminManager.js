@@ -258,6 +258,7 @@ $( document ).ready(function() {
                        url: '/admin/getGroupById/' + $( this ).attr('idGroup') + '/',
                        dataType: 'json',
                        success: function(e){
+                           var arrayRefereesLength = e.referees.length;
                            var arrayLength = e.horses.length;
                             var $table = $( "<table id=\"horsesTable\" class='table table-hover'><thead><tr><th>Name</th><th>Gender</th><th>Born</th><th>Owner</th></tr></thead></table>" );
                             var $tbody = $("<tbody></tbody>");
@@ -277,8 +278,21 @@ $( document ).ready(function() {
                                 $table.append( $tbody );
                             }
                            $( "#competitionManagement" ).empty();
-
                             $table.appendTo( $( "#competitionManagement" ) );
+                           
+                            var $tableReferees = $( "<table id=\"horsesTable\" class='table table-hover'><thead><tr><th>Firstname</th><th>Lastname</th></tr></thead></table>" );
+                            for (let i = 0; i < arrayRefereesLength; i ++){
+                                var $tbodyRef = $("<tbody></tbody>");
+                                var ref = e.referees[i];
+                                var $linee = $( "<tr></tr>" );
+                                $linee.append( $( "<td></td>" ).html( ref.firstname ) );
+                                $linee.append( $( "<td></td>" ).html( ref.lastname ) );
+                                $linee.append( $( "<td> </td>" ).html( "<button id=\"reminderButton\" class=\"btn btn-danger\" idReferee="+ ref._id +"> Reminder </button>" ) );
+                                $tbodyRef.append( $linee );
+                                $tableReferees.append( $tbodyRef );
+                            }
+                            $tableReferees.appendTo( $( "#referees" ) );
+                           
                        },
                        error: function(jqXHR, textStatus, errorThrown) {
                            console.log(textStatus, errorThrown);
@@ -292,6 +306,11 @@ $( document ).ready(function() {
         });
     };
     refreshCompetitionsTable();
+    
+    $('#referees').on('click', 'button#reminderButton', function(){
+        socket.emit('reminder', $( this ).attr('idReferee'));
+    });
+    
     var horse;
     $('#competitionManagement').on('click', 'button#allowHorseToRatingButton', function(){
         $.ajax({

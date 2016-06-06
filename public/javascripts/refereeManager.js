@@ -89,4 +89,10 @@ $( document ).ready(function() {
         }
     });
     
+    socket.on('reminderReferee',function(data){
+        if(data == userId){
+            alert('Send me marks please!!');
+        }
+    });
+    
 });

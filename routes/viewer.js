@@ -4,6 +4,7 @@ var express = require('express');
 var router = express.Router();
 var Result = require('../models/result');
 var Horse = require('../models/horse');
+var Competition = require('../models/competition');
 
 function hasAccess(accessLevel) {
     return function (req, res, next) {
@@ -72,6 +73,12 @@ router.get('/getAllResults', function (req, res, next) {
 router.get('/getHorseById/:_id/', function(req,res){
     Horse.findOne({_id:req.params._id},function(err,horse){
         res.json(horse);
+    });
+});
+
+router.get('/getCompetitionById/:_id/', function(req,res){
+    Competition.findOne({_id:req.params._id}).populate('groups').exec(function(err,competition){
+        res.json(competition);
     });
 });
 

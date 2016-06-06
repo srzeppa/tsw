@@ -118,6 +118,12 @@ io.on('connection', function (socket) {
         console.log(data);
         io.sockets.emit('showResults', data);
     });
+    
+    socket.on('reminder',function(data){
+        console.log('reminder data');
+        console.log(data);
+        io.sockets.emit('reminderReferee', data);
+    });
 });
 
 server.listen(3000, function () {
