@@ -280,7 +280,7 @@ $( document ).ready(function() {
                            $( "#competitionManagement" ).empty();
                             $table.appendTo( $( "#competitionManagement" ) );
                            
-                            var $tableReferees = $( "<table id=\"horsesTable\" class='table table-hover'><thead><tr><th>Firstname</th><th>Lastname</th></tr></thead></table>" );
+                            var $tableReferees = $( "<table id=\"refereesTable\" class='table table-hover'><thead><tr><th>Firstname</th><th>Lastname</th></tr></thead></table>" );
                             for (let i = 0; i < arrayRefereesLength; i ++){
                                 var $tbodyRef = $("<tbody></tbody>");
                                 var ref = e.referees[i];
@@ -468,12 +468,13 @@ $( document ).ready(function() {
                     horseCompetition = data.horse;
                     $('#referees').html( "<button id=\"sendMarkToDb\" class=\"btn btn-info\"> Send mark </button>" );
                 }
-                
+                $("#reminderButton[idReferee=\"" + data.referee + "\"]").remove();
             },
             error: function(jqXHR, textStatus, errorThrown) {
                 console.log(textStatus, errorThrown);
             }
         });
+        
         
     });
     
