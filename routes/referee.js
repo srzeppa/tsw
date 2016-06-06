@@ -27,7 +27,6 @@ function hasAccess(accessLevel) {
 router.get('/', [
     hasAccess('referee'), 
     function (req, res, next) {
-    console.log('you have access!');
         res.render('referee', {
             title: 'Referee',
             user: req.user
@@ -38,7 +37,6 @@ router.get('/', [
 router.get('/getGroupById/:_id/', [
     hasAccess('referee'),
     function(req,res){
-        console.log('getGroupById');
         Group.findOne({_id:req.params._id}).populate('horses').populate('referees').exec(function(err,group){
             res.json(JSON.parse(JSON.stringify(group)));
         });

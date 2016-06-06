@@ -42,7 +42,6 @@ $( document ).ready(function() {
 
                 $('button#editHorseButton').each(function(){
                    $(this).click(function(){
-                       console.log(this);
                        var $form;
                        
                        $( $("<div id='editHorseDiv'><input id='horseNameEdit' type='text' name='name' placeholder='Name' required='required' autofocus='autofocus' class='form-control'/><select id='horseGenderEdit' class='form-control' name='gender'><option value='male'>male</option><option value='female'>female</option></select><input id='horseOwnerEdit' type='text' name='owner' placeholder='Owner' required='required' autofocus='autofocus' class='form-control'/><input id='horseBornEdit' type='text' name='born' placeholder='Born' required='required' autofocus='autofocus' class='form-control'/><button id='editHorseButtonSubmit' type='submit' class='btn btn-lg btn-success btn-block'>Edit</button><span class='clearfix'></span></div>")).insertAfter( "#horsesTable" );
@@ -68,7 +67,6 @@ $( document ).ready(function() {
                        $('#editHorseButtonSubmit').click(function(){
                            $.post( "/admin/edithorse/", {_id: idHorse, name: $('#horseNameEdit').val(), owner: $('#horseOwnerEdit').val(), gender: $('#horseGenderEdit').val(), born: $('#horseBornEdit').val()})
                                .done(function( data ) {
-                               console.log('editHorseclicked');
                                $( "#showAllHorses" ).empty();
                                $( "#editHorseDiv" ).empty();
                                refreshHorsesTable();
@@ -130,7 +128,6 @@ $( document ).ready(function() {
                 
                 $('button#editUserButton').each(function(){
                    $(this).click(function(){
-                       console.log(this);
                        var $form;
                        
                        $( $("<div id='editUserDiv'><input id='userUsernameEdit' type='text' name='username' placeholder='Username' required='required' autofocus='autofocus' class='form-control'/><input id='userPasswordEdit' type='password' name='password' placeholder='Password' required='required' class='form-control nomargin'/><input id='userEmailEdit' type='email' name='email' placeholder='Email' required='required' class='form-control'/><input id='userFirstnameEdit' type='text' name='firstName' placeholder='First Name' required='required' class='form-control'/><input id='userLastnameEdit' type='text' name='lastName' placeholder='Last Name' required='required' class='form-control'/><select id='userRoleEdit' class='form-control' name='role'><option value='referee'>Referee</option><option value='admin'>Admin</option></select><button id='editUserButtonFormSubmit' type='submit' class='btn btn-lg btn-success btn-block'>Edit user</button><span class='clearfix'></span></div>")).insertAfter( "#usersTable" );
@@ -157,10 +154,8 @@ $( document ).ready(function() {
                        });
                        
                        $('#editUserButtonFormSubmit').click(function(){
-                           console.log('clicked editUserButtonFormSubmit');
                            $.post( "/admin/edituser/", {_id: idUser, username: $('#userUsernameEdit').val(), password: $('#userPasswordEdit').val(), email: $('#userEmailEdit').val(), firstname: $('#userFirstnameEdit').val(), lastname: $('#userLastnameEdit').val(), role: $('#userRoleEdit').val()})
                                .done(function( data ) {
-                                   console.log('editUser clicked');
                                    $( "#showAllUsers" ).empty();
                                    $( "#editUserDiv" ).empty();
                                    refreshUsersTable();
@@ -235,7 +230,6 @@ $( document ).ready(function() {
                                success: function(e){
                                    socket.emit('startCompetition', e);
                                    competitionToSend = e;
-                                   console.log(e);
                                    $( "#competitionManagement" ).empty();
                                    $('#groupButtons').empty();
                                    refereesSize = e.groups[0].referees.length;
@@ -252,7 +246,6 @@ $( document ).ready(function() {
                 });
                 
                 $('#groupButtons').on('click', 'button#groupButton', function(){
-                    console.log('button#groupButton click');
                    $.ajax({
                        type: 'GET',
                        url: '/admin/getGroupById/' + $( this ).attr('idGroup') + '/',
@@ -318,8 +311,6 @@ $( document ).ready(function() {
             url: '/admin/getHorseById/' + $( this ).attr('idHorse') + '/',
             dataType: 'json',
             success: function(data){
-                console.log('e');
-                console.log(data);
                 horse = data;
             },
             error: function(jqXHR, textStatus, errorThrown) {
@@ -336,7 +327,6 @@ $( document ).ready(function() {
             url: '/admin/deactivateUser/:id/',
             success: function(e){
                 e.preventDefault();
-                console.log(e.msg);
             },
             error: function(jqXHR, textStatus, errorThrown) {
                 console.log(textStatus, errorThrown);
@@ -349,7 +339,6 @@ $( document ).ready(function() {
             type: 'GET',
             url: '/admin/activateHorse/:id/',
             success: function(e){
-                console.log(e.msg);
             },
             error: function(jqXHR, textStatus, errorThrown) {
                 console.log(textStatus, errorThrown);
@@ -371,7 +360,6 @@ $( document ).ready(function() {
     });
     
     $('#addHorseButtonForm').on('click', function(e){
-        console.log('addHorse clicked');
         $.post( "/admin/addHorse/", { name: $('#horseName').val(), owner: $('#horseOwner').val(), gender: $('#horseGender').val(), born: $('#horseBorn').val()})
 			.done(function( data ) {
 				$( "#showAllHorses" ).empty();
@@ -438,7 +426,6 @@ $( document ).ready(function() {
                 var horsesArray = $('#multipleHorses').val();
                 $.post( "/admin/addCompetition/", {name: $('#competitionName').val(), referees: refereesArray, horses: horsesArray, numberOfReferees: $('#refereesInGroup').val(), numberOfHorses: $('#horsesInGroup').val()})
                     .done(function( data ) {
-                    console.log('addcompetition cliekced');
                     $('#nextButton').show();
                     $('#competitionStartedDiv').empty();
                     $('#showAllCompetitions').empty();
@@ -453,8 +440,6 @@ $( document ).ready(function() {
     var competition = '';
     var horseCompetition = '';
     socket.on('markHorseToDb', function(data){
-        console.log('markHorseToDb');
-        console.log(data);
         
         mark = mark + data.result;
         tmp ++;
@@ -479,18 +464,8 @@ $( document ).ready(function() {
     });
     
     $('#referees').on('click', 'button#sendMarkToDb', function(){
-        console.log('mark');
-        console.log(mark);
         tmp = 0;
         mark = mark / refereesSize;
-        console.log('refereesSize');
-        console.log(refereesSize);
-        console.log('mark');
-        console.log(mark);
-        console.log('competition');
-        console.log(competition);
-        console.log('horseCompetition');
-        console.log(horseCompetition);
         $.post( "/admin/mark/", {overall: mark, competition: competition, horse: horseCompetition});
         $('button#sendMarkToDb').remove();
         socket.emit('results', {overall: mark, competition: competition, horse: horseCompetition});

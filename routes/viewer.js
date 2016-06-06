@@ -52,7 +52,6 @@ exports.login = function (req, res) {
 };
 
 exports.logout = function (req, res) {
-    console.log('Wylogowanie...');
     req.logout();
     res.redirect('/login');
 };

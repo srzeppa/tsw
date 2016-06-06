@@ -12,7 +12,6 @@ $( document ).ready(function() {
     var userId;
 
     socket.on('connect', function(data) {
-//		console.log(data);
 	});
     
     socket.on('startCompetition', function(data) {
@@ -50,7 +49,6 @@ $( document ).ready(function() {
 	});
     
     socket.on('allowHorseToRating', function(data) {
-        console.log('allowHorseToRating');
         $('#' + data._id).parent().append($( "<td id='typeMark'></td>" ).html( "<input required='true' type='number' class='form-control'>" ));
         $('#' + data._id).parent().append($( "<td id='headMark'></td>" ).html( "<input required='true' type='number' class='form-control'>" ));
         $('#' + data._id).parent().append($( "<td id='bodyMark'></td>" ).html( "<input required='true' type='number' class='form-control'>" ));
@@ -63,8 +61,6 @@ $( document ).ready(function() {
         var result = 0;
         
         result = (parseInt($(this).closest('td').prevAll("td#typeMark").children('input').val()) + parseInt($(this).closest('td').prevAll("td#headMark").children('input').val()) + parseInt($(this).closest('td').prevAll("td#bodyMark").children('input').val()) + parseInt($(this).closest('td').prevAll("td#legsMark").children('input').val()) + parseInt($(this).closest('td').prevAll("td#movementMark").children('input').val()))/5;
-        console.log('result');
-        console.log(result);
         $(this).parent().parent().remove();
         
         socket.emit('markHorse', 

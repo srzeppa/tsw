@@ -34,7 +34,6 @@ function hasAccess(accessLevel) {
 router.get('/', [
     hasAccess('admin'),
     function (req, res, next) {
-    console.log('you have access!');
         res.render('admin', {
             title: 'Admin',
             user: req.user
@@ -45,7 +44,6 @@ router.get('/', [
 router.get('/showHorses', [
     hasAccess('admin'),
     function (req, res, next) {
-    console.log('you have access!');
         Horse.find({}).exec(function(err, horses) {
             if (err) throw err;
             var result = JSON.parse(JSON.stringify(horses));
@@ -67,7 +65,6 @@ router.get('/showUsers', [
 router.post('/addHorse/', [
     hasAccess('admin'),
     function(req, res) {
-    console.log('addHorse clicked route');
     var addHorseFunction = function() {
         var newHorse = new Horse();
         
@@ -82,8 +79,6 @@ router.post('/addHorse/', [
                 console.log('Error in Saving horse: ' + err);
                 throw err;
             }
-            console.log('Horse saving succesful');
-            console.log(newHorse);
             return {
                 "horse": newHorse
             };
@@ -157,10 +152,8 @@ router.get('/getHorseById/:_id/', [
 router.post('/editHorse/', [
     hasAccess('admin'),
     function(req,res){
-    console.log('edithorse clicked route');
     var editHorseFunction = function() {
         Horse.findOne({_id:req.body._id},function(err,horse){
-            console.log(horse);
             horse.update({
                 name : req.body.name,
                 owner : req.body.owner,
@@ -192,7 +185,6 @@ router.get('/getAllActivateReferees/', [
         users.find({role:'referee', activate:true}).exec(function(err, users) {
             if (err) throw err;
             var result = JSON.parse(JSON.stringify(users));
-            console.log(JSON.parse(JSON.stringify(users)));
             res.json({"users" : result});
         });
 }]);
@@ -203,7 +195,6 @@ router.get('/getAllActivateHorses/', [
         Horse.find({activate:true}).exec(function(err, horses) {
             if (err) throw err;
             var result = JSON.parse(JSON.stringify(horses));
-            console.log(JSON.parse(JSON.stringify(horses)));
             res.json({"horses" : result});
         });
 }]);
@@ -211,10 +202,8 @@ router.get('/getAllActivateHorses/', [
 router.post('/editUser/', [
     hasAccess('admin'),
     function(req,res){
-    console.log('edituser clicked route');
     var editUserFunction = function() {
         users.findOne({_id:req.body._id},function(err,user){
-            console.log(user);
             var password = createHash(req.body.password);
             user.update({
                 username : req.body.username,
@@ -302,11 +291,9 @@ router.post('/addUser/', [
 
         newUser.save(function(err) {
             if (err) {
-                console.log('Error in Saving horse: ' + err);
+                console.log('Error in Saving user: ' + err);
                 throw err;
             }
-            console.log('User saving succesful');
-            console.log(newUser);
             return {
                 "user": newUser
             };
@@ -349,17 +336,13 @@ router.post('/addCompetition/', [
             startReferee = startReferee + refereesCount;
             endReferee = endReferee + refereesCount;
 
-            listOfGroups.push(newGroup  );
-            console.log('listOfGroups');
-            console.log(listOfGroups);
+            listOfGroups.push(newGroup);
 
             newGroup.save(function(err) {
                 if (err) {
                     console.log('Error in Saving horse: ' + err);
                     throw err;
                 }
-                console.log('Group saving succesful');
-                console.log(newGroup);
             });
         }
 
@@ -372,8 +355,6 @@ router.post('/addCompetition/', [
                 console.log('Error in Saving horse: ' + err);
                 throw err;
             }
-            console.log('Competition saving succesful');
-            console.log(newCompetition);
         });
         return {
             "competition": newCompetition,
@@ -468,7 +449,6 @@ router.get('/getGroupById/:_id/', [
 router.post('/mark/', [
     hasAccess('admin'),
     function(req, res) {
-    console.log('mark clicked route');
     var markFunction = function() {
         var mark = new Result();
         
@@ -482,8 +462,6 @@ router.post('/mark/', [
                 console.log('Error in Saving horse: ' + err);
                 throw err;
             }
-            console.log('Mark saving succesful');
-            console.log(mark);
             return {
                 "mark": mark
             };
@@ -503,14 +481,9 @@ var createHash = function(password){
 var shuffle = function(array) {
   var currentIndex = array.length, temporaryValue, randomIndex;
 
-  // While there remain elements to shuffle...
   while (0 !== currentIndex) {
-
-    // Pick a remaining element...
     randomIndex = Math.floor(Math.random() * currentIndex);
     currentIndex -= 1;
-
-    // And swap it with the current element.
     temporaryValue = array[currentIndex];
     array[currentIndex] = array[randomIndex];
     array[randomIndex] = temporaryValue;
