@@ -6,6 +6,9 @@
 $( document ).ready(function() {
 	console.log('referee.ejs');
     
+//    $('#horseToRateTable').hide();
+//    document.getElementById('horseToRateTable').style.visibility = "hidden";
+    
     var socket = io.connect('https://localhost:3000');
     var refereesArray = [];
     var competition;
@@ -15,6 +18,12 @@ $( document ).ready(function() {
 	});
     
     socket.on('startRateHorseReferee', function(data) {
+        $('#horseToRate').html("<h1>" + data._id + "</h1>");
+        console.log('startRateHorseReferee');
+        console.log(data);
+//        document.getElementById('horseToRateTable').style.visibility = "visible";
+//        $('#horseToRateTable').show();
+        
 //        competition = data;
 //        $('#horseToRateTable').empty();
 //        var $table = $( "<table id=\"horsesToRateTable\" class='table table-hover'><thead><tr><th>Name</th><th>Typ</th><th>Głowa</th><th>Kłoda</th><th>Nogi</th><th>Ruch</th></tr></thead></table>" );
@@ -47,7 +56,6 @@ $( document ).ready(function() {
 //        }
 //        $table.appendTo( $( "#horseToRateTable" ) );
         
-        $("<div class='row'><h4 class='text-center' style='color: black'>Type</h4><div class='col-lg-6 col-lg-push-3 col-md-8 col-md-push-2 col-sm-12 text-center'><input id='typeMark' class='rangeslider rangeslider-horizontal' type='range' min='0' max='20' step='2' value='0'/>  <div id='neck' class='btn btn-info'>0</div></div></div><div class='row'><h4 class='text-center' style='color: black'>Head</h4><div class='col-lg-6 col-lg-push-3 col-md-8 col-md-push-2 col-sm-12 text-center'><input id='headMark' class='rangeslider rangeslider-horizontal' type='range' min='0' max='20' step='2' value='0'/>  <div id='neck' class='btn btn-info'>0</div></div></div><div class='row'><h4 class='text-center' style='color: black'>Body</h4><div class='col-lg-6 col-lg-push-3 col-md-8 col-md-push-2 col-sm-12 text-center'><input id='bodyMark' class='rangeslider rangeslider-horizontal' type='range' min='0' max='20' step='2' value='0'/>  <div id='neck' class='btn btn-info'>0</div></div></div><div class='row'><h4 class='text-center' style='color: black'>Legs</h4><div class='col-lg-6 col-lg-push-3 col-md-8 col-md-push-2 col-sm-12 text-center'><input id='legsMark' class='rangeslider rangeslider-horizontal' type='range' min='0' max='20' step='2' value='0'/><div id='movementMark' class='btn btn-info'>0</div></div></div><div class='row'><h4 class='text-center' style='color: black'>Movement</h4><div class='col-lg-6 col-lg-push-3 col-md-8 col-md-push-2 col-sm-12 text-center'><input id='neck' class='rangeslider rangeslider-horizontal' type='range' min='0' max='20' step='2' value='0'/>  <div id='neck' class='btn btn-info'>0</div></div></div>").appendTo('#horseToRateTable');
 	});
     
     socket.on('allowHorseToRating', function(data) {
@@ -90,11 +98,24 @@ $( document ).ready(function() {
     socket.on('reminderReferee',function(data){
         if(data == userId){
             alert('Send me marks please!!');
+            $('#headMarkDiv').css('border', '3px solid red'); 
+            $('#legsMarkDiv').css('border', '3px solid red'); 
+            $('#movementMarkDiv').css('border', '3px solid red'); 
+            $('#bodyMarkDiv').css('border', '3px solid red'); 
+            $('#neckMarkDiv').css('border', '3px solid red'); 
         }
     });
     
     socket.on('stopCompetitionToReferee', function(data){
-        $('#horseToRateTable').empty();
+//        $('#horseToRateTable').empty();
+    });
+    
+    $('input[type=range]').each(function(){
+        $(this).change(function(){
+           var attr = $(this).attr('id');
+            var value = $(this).val();
+           $('div[id*='+attr+']').text(value);
+        });
     });
     
 });
