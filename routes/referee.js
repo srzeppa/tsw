@@ -17,9 +17,9 @@ function hasAccess(accessLevel) {
         if (req.user && req.user.hasAccess(accessLevel)) {
             return next();
         }
-        return res.json({
+        return res.render('index',{
             success: false,
-            error: 'Unauthorized'
+            error: 'Unauthorized | go back please !'
         });
     };
 }

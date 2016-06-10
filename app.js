@@ -103,9 +103,9 @@ io.on('connection', function (socket) {
         io.sockets.emit('allowHorseToRating', data);
     });
     
-    socket.on('startCompetition',function(data){
+    socket.on('startRateHorse',function(data){
         console.log(data);
-        io.sockets.emit('startCompetition', data);
+        io.sockets.emit('startRateHorseReferee', data);
     });
     
     socket.on('markHorse', function(data){

@@ -14,38 +14,40 @@ $( document ).ready(function() {
     socket.on('connect', function(data) {
 	});
     
-    socket.on('startCompetition', function(data) {
-        competition = data;
-        $('#horseToRateTable').empty();
-        var $table = $( "<table id=\"horsesToRateTable\" class='table table-hover'><thead><tr><th>Name</th><th>Typ</th><th>Głowa</th><th>Kłoda</th><th>Nogi</th><th>Ruch</th></tr></thead></table>" );
-        var $tbody = $("<tbody></tbody>");
-        refereesArray = [];
-        console.log('startCompetition listen');
-        console.log(data);
-        for (let i = 0; i < data.groups.length; i++){
-            refereesArray.push(data.groups[i].referees);
-        }
-        for(let i = 0; i < data.groups.length; i ++){
-            $.ajax({
-                type: 'GET',
-                url: "/referee/getGroupById/" + data.groups[i]._id + '/',
-                dataType: 'json',
-                success: function (e) {
-                    for(let j = 0; j < e.referees.length; j ++){
-                        if (userId == e.referees[j]._id){
-                            for(let k = 0; k < e.horses.length; k ++){
-                                var $line = $( "<tr></tr>" );
-                                $line.append( $( "<td id='"+e.horses[k]._id+"'></td>" ).html( e.horses[k].name ) );
-                                $tbody.append( $line );
-                                $table.append( $tbody );
-                            }
-                            break;
-                        }
-                    }
-                }
-            });
-        }
-        $table.appendTo( $( "#horseToRateTable" ) );
+    socket.on('startRateHorseReferee', function(data) {
+//        competition = data;
+//        $('#horseToRateTable').empty();
+//        var $table = $( "<table id=\"horsesToRateTable\" class='table table-hover'><thead><tr><th>Name</th><th>Typ</th><th>Głowa</th><th>Kłoda</th><th>Nogi</th><th>Ruch</th></tr></thead></table>" );
+//        var $tbody = $("<tbody></tbody>");
+//        refereesArray = [];
+//        console.log('startCompetition listen');
+//        console.log(data);
+//        for (let i = 0; i < data.groups.length; i++){
+//            refereesArray.push(data.groups[i].referees);
+//        }
+//        for(let i = 0; i < data.groups.length; i ++){
+//            $.ajax({
+//                type: 'GET',
+//                url: "/referee/getGroupById/" + data.groups[i]._id + '/',
+//                dataType: 'json',
+//                success: function (e) {
+//                    for(let j = 0; j < e.referees.length; j ++){
+//                        if (userId == e.referees[j]._id){
+//                            for(let k = 0; k < e.horses.length; k ++){
+//                                var $line = $( "<tr></tr>" );
+//                                $line.append( $( "<td id='"+e.horses[k]._id+"'></td>" ).html( e.horses[k].name ) );
+//                                $tbody.append( $line );
+//                                $table.append( $tbody );
+//                            }
+//                            break;
+//                        }
+//                    }
+//                }
+//            });
+//        }
+//        $table.appendTo( $( "#horseToRateTable" ) );
+        
+        $("<div class='row'><h4 class='text-center' style='color: black'>Type</h4><div class='col-lg-6 col-lg-push-3 col-md-8 col-md-push-2 col-sm-12 text-center'><input id='typeMark' class='rangeslider rangeslider-horizontal' type='range' min='0' max='20' step='2' value='0'/>  <div id='neck' class='btn btn-info'>0</div></div></div><div class='row'><h4 class='text-center' style='color: black'>Head</h4><div class='col-lg-6 col-lg-push-3 col-md-8 col-md-push-2 col-sm-12 text-center'><input id='headMark' class='rangeslider rangeslider-horizontal' type='range' min='0' max='20' step='2' value='0'/>  <div id='neck' class='btn btn-info'>0</div></div></div><div class='row'><h4 class='text-center' style='color: black'>Body</h4><div class='col-lg-6 col-lg-push-3 col-md-8 col-md-push-2 col-sm-12 text-center'><input id='bodyMark' class='rangeslider rangeslider-horizontal' type='range' min='0' max='20' step='2' value='0'/>  <div id='neck' class='btn btn-info'>0</div></div></div><div class='row'><h4 class='text-center' style='color: black'>Legs</h4><div class='col-lg-6 col-lg-push-3 col-md-8 col-md-push-2 col-sm-12 text-center'><input id='legsMark' class='rangeslider rangeslider-horizontal' type='range' min='0' max='20' step='2' value='0'/><div id='movementMark' class='btn btn-info'>0</div></div></div><div class='row'><h4 class='text-center' style='color: black'>Movement</h4><div class='col-lg-6 col-lg-push-3 col-md-8 col-md-push-2 col-sm-12 text-center'><input id='neck' class='rangeslider rangeslider-horizontal' type='range' min='0' max='20' step='2' value='0'/>  <div id='neck' class='btn btn-info'>0</div></div></div>").appendTo('#horseToRateTable');
 	});
     
     socket.on('allowHorseToRating', function(data) {

@@ -18,7 +18,7 @@ $( document ).ready(function() {
                 if($('#' + e[i].competition._id).length){
                     var $line = $( "<tr></tr>" );
                     $line.append( $( "<td></td>" ).html( e[i].horse.name ) );
-                    $line.append( $( "<td></td>" ).html( e[i].overall ) );
+                    $line.append( $( "<td></td>" ).html( Math.round((e[i].overall) * 100 )/100 ));
                     $line.appendTo( $( "#" + e[i].competition._id));
                 } else {
                     var $title = $( "<h1>" + e[i].competition.name + "</h1>");
@@ -27,7 +27,7 @@ $( document ).ready(function() {
                     $table.appendTo( $( "#results" ) );
                     var $linee = $( "<tr></tr>" );
                     $linee.append( $( "<td></td>" ).html( e[i].horse.name ) );
-                    $linee.append( $( "<td></td>" ).html( e[i].overall ) );
+                    $linee.append( $( "<td></td>" ).html( Math.round((e[i].overall) * 100) /100) );
                     $linee.appendTo( $( "#" + e[i].competition._id));
                 }
             }

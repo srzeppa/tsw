@@ -216,6 +216,9 @@ $( document ).ready(function() {
                     var competitionToSend;
                    $(this).click(function(){
                        if($(this).attr('class') == "btn btn-danger"){
+                           $('#groupButtons').empty();
+                           $('#competitionManagement').empty();
+                           $('#referees').empty();
                            $(this).val('value','Activate');
                            $.post( "/admin/stopCompetition/", {_id: $( this ).attr('idCompetition') });
                            button.attr('class', "btn btn-success");
@@ -229,7 +232,7 @@ $( document ).ready(function() {
                                url: '/admin/getCompetitionById/' + $( this ).attr('idCompetition') + '/',
                                dataType: 'json',
                                success: function(e){
-                                   socket.emit('startCompetition', e);
+//                                   socket.emit('startCompetition', e);
                                    competitionToSend = e;
                                    $( "#competitionManagement" ).empty();
                                    $('#groupButtons').empty();
@@ -312,6 +315,8 @@ $( document ).ready(function() {
             url: '/admin/getHorseById/' + $( this ).attr('idHorse') + '/',
             dataType: 'json',
             success: function(data){
+                console.log(data);
+                socket.emit('startRateHorse', data);
                 horse = data;
             },
             error: function(jqXHR, textStatus, errorThrown) {
