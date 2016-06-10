@@ -131,6 +131,18 @@ io.on('connection', function (socket) {
         console.log(data);
         io.sockets.emit('stopCompetitionToReferee', data);
     });
+    
+    socket.on('startCompetition',function(data){
+        console.log('reminder data');
+        console.log(data);
+        io.sockets.emit('startCompetitionReferee', data);
+    });
+    
+    socket.on('partialMark',function(data){
+        console.log('partialMark data');
+        console.log(data);
+        io.sockets.emit('partialMarkToDb', data);
+    });
 });
 
 server.listen(3000, function () {

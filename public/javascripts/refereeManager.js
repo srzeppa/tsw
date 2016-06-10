@@ -6,12 +6,11 @@
 $( document ).ready(function() {
 	console.log('referee.ejs');
     
-    $('#headMark').prop( "disabled", true );
-    $('#legsMark').prop( "disabled", true );
-    $('#bodyMark').prop( "disabled", true );
-    $('#movementMark').prop( "disabled", true );
-    $('#neckMark').prop( "disabled", true );
-//    document.getElementById('horseToRateTable').style.visibility = "hidden";
+    $('#head').prop( "disabled", true );
+    $('#legs').prop( "disabled", true );
+    $('#body').prop( "disabled", true );
+    $('#movement').prop( "disabled", true );
+    $('#neck').prop( "disabled", true );
     
     var socket = io.connect('https://localhost:3000');
     var refereesArray = [];
@@ -21,19 +20,37 @@ $( document ).ready(function() {
     socket.on('connect', function(data) {
 	});
     
+    socket.on('startCompetitionReferee', function(data) {
+        competition = data;
+        console.log('competition');
+        console.log(competition);
+	});
+    
     socket.on('startRateHorseReferee', function(data) {
-        $('#horseToRate').html("<h1>" + data._id + "</h1>");
         console.log('startRateHorseReferee');
         console.log(data);
-//        document.getElementById('horseToRateTable').style.visibility = "visible";
-//        $('#horseToRateTable').show();
-        $('#headMark').prop( "disabled", false );
-        $('#legsMark').prop( "disabled", false );
-        $('#bodyMark').prop( "disabled", false );
-        $('#movementMark').prop( "disabled", false );
-        $('#neckMark').prop( "disabled", false );
         
-//        competition = data;
+        for(let i = 0; i < data.competition.groups.length; i ++){
+            $.ajax({
+                type: 'GET',
+                url: "/referee/getGroupById/" + data.competition.groups[i]._id + '/',
+                dataType: 'json',
+                success: function (e) {
+                    for(let j = 0; j < e.referees.length; j ++){
+                        console.log(e.referees[j]._id);
+                        if(userId == e.referees[j]._id){
+                            $('#horseToRate').html("<h1>" + data._id + "</h1>");
+                            $('#head').prop( "disabled", false );
+                            $('#legs').prop( "disabled", false );
+                            $('#body').prop( "disabled", false );
+                            $('#movement').prop( "disabled", false );
+                            $('#neck').prop( "disabled", false );
+                        }
+                    }
+                }
+            });
+        }
+        
 //        $('#horseToRateTable').empty();
 //        var $table = $( "<table id=\"horsesToRateTable\" class='table table-hover'><thead><tr><th>Name</th><th>Typ</th><th>Głowa</th><th>Kłoda</th><th>Nogi</th><th>Ruch</th></tr></thead></table>" );
 //        var $tbody = $("<tbody></tbody>");
@@ -107,16 +124,25 @@ $( document ).ready(function() {
     socket.on('reminderReferee',function(data){
         if(data == userId){
             alert('Send me marks please!!');
+            if(!($('#headMark').is(':disabled')))
             $('#headMarkDiv').css('border', '3px solid red'); 
+            if(!($('#legsMark').is(':disabled')))
             $('#legsMarkDiv').css('border', '3px solid red'); 
+            if(!($('#movementMark').is(':disabled')))
             $('#movementMarkDiv').css('border', '3px solid red'); 
+            if(!($('#bodyMark').is(':disabled')))
             $('#bodyMarkDiv').css('border', '3px solid red'); 
+            if(!($('#neckMark').is(':disabled')))
             $('#neckMarkDiv').css('border', '3px solid red'); 
         }
     });
     
     socket.on('stopCompetitionToReferee', function(data){
-//        $('#horseToRateTable').empty();
+        $('#headMark').prop( "disabled", true );
+        $('#legsMark').prop( "disabled", true );
+        $('#bodyMark').prop( "disabled", true );
+        $('#movementMark').prop( "disabled", true );
+        $('#neckMark').prop( "disabled", true );
     });
     
     $('input[type=range]').each(function(){
@@ -124,6 +150,21 @@ $( document ).ready(function() {
            var attr = $(this).attr('id');
             var value = $(this).val();
            $('div[id='+attr+']').text(value);
+        });
+    });
+    
+    $('input').each(function() {
+        $(this).change(function() {
+            console.log(userId);
+            console.log(competition);
+            console.log($(this).attr('id'));
+            console.log($(this).val());
+            socket.emit('partialMark', {
+                referee: userId,
+                competition: competition,
+                typeMark: $(this).attr('id'),
+                rate: $(this).val()
+            });
         });
     });
     

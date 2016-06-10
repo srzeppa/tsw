@@ -5,6 +5,7 @@
 $( document ).ready(function() {
 	console.log('admin.ejs');
     
+    var competitionToSend;
     var refereesSize;
     
     var socket = io('https://localhost:3000');
@@ -213,7 +214,6 @@ $( document ).ready(function() {
 
                 $('button#startCompetitionButton').each(function(){
                    var button = $(this);
-                    var competitionToSend;
                    $(this).click(function(){
                        if($(this).attr('class') == "btn btn-danger"){
                            $('#groupButtons').empty();
@@ -232,7 +232,7 @@ $( document ).ready(function() {
                                url: '/admin/getCompetitionById/' + $( this ).attr('idCompetition') + '/',
                                dataType: 'json',
                                success: function(e){
-//                                   socket.emit('startCompetition', e);
+                                   socket.emit('startCompetition', e);
                                    competitionToSend = e;
                                    $( "#competitionManagement" ).empty();
                                    $('#groupButtons').empty();
@@ -316,7 +316,10 @@ $( document ).ready(function() {
             dataType: 'json',
             success: function(data){
                 console.log(data);
-                socket.emit('startRateHorse', data);
+                socket.emit('startRateHorse', {
+                    horse: data,
+                    competition: competitionToSend
+                });
                 horse = data;
             },
             error: function(jqXHR, textStatus, errorThrown) {
@@ -476,6 +479,10 @@ $( document ).ready(function() {
         $('button#sendMarkToDb').remove();
         socket.emit('results', {overall: mark, competition: competition, horse: horseCompetition});
         $('#referees').empty();
+    });
+    
+    socket.on('partialMarkToDb', function(data){
+        $.post( "/admin/partialMark/", {referee: data.referee, competition: data.competition, typeMark: data.typeMark, rate: data.rate });
     });
     
 });

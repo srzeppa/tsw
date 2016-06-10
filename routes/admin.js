@@ -144,7 +144,7 @@ router.post('/deactivateUser/', [
 router.get('/getHorseById/:_id/', [
     hasAccess('admin'),
     function(req,res){
-    Horse.findOne({_id:req.params._id},function(err,horse){
+    Horse.findOne({_id:req.params._id}, function(err,horse){
         res.json(horse);
     });
 }]);
@@ -473,6 +473,47 @@ router.post('/mark/', [
     });
     res.end();
 }]);
+
+router.post('/partialMark/', [
+    hasAccess('admin'),
+    function (req, res) {
+        var partialMarkFunction = function(){
+            Competition.findOne({_id:req.body.competition._id},function(err,competition){
+                console.log('~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~competition');
+                console.log(competition);
+//                competition.score.referee = req.body.referee;
+//                competition.score.scoreType = req.body.typeMark;
+//                competition.score.value = req.body.rate;
+//                competition.save(function(err){
+//                    if(err){
+//                        return{
+//                            "msg": "error"
+//                        };
+//                    }
+//                    return {
+//                        "msg": "partial mark added"
+//                    };
+//                });
+                
+                competition.save({
+                    score : {
+                        referee : req.body.referee,
+                        scoreType : req.body.typeMark,
+                        value : req.body.rate
+                    }
+                }, function(error){
+                    console.log(error);
+                });
+            });
+        };
+        res.json(partialMarkFunction());
+        res.writeHead(302, {
+            'Location': '/admin/'
+        });
+        res.end();
+    }
+]);
+
 
 var createHash = function(password){
     return bCrypt.hashSync(password, bCrypt.genSaltSync(10), null);
