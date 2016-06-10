@@ -6,7 +6,11 @@
 $( document ).ready(function() {
 	console.log('referee.ejs');
     
-//    $('#horseToRateTable').hide();
+    $('#headMark').prop( "disabled", true );
+    $('#legsMark').prop( "disabled", true );
+    $('#bodyMark').prop( "disabled", true );
+    $('#movementMark').prop( "disabled", true );
+    $('#neckMark').prop( "disabled", true );
 //    document.getElementById('horseToRateTable').style.visibility = "hidden";
     
     var socket = io.connect('https://localhost:3000');
@@ -23,6 +27,11 @@ $( document ).ready(function() {
         console.log(data);
 //        document.getElementById('horseToRateTable').style.visibility = "visible";
 //        $('#horseToRateTable').show();
+        $('#headMark').prop( "disabled", false );
+        $('#legsMark').prop( "disabled", false );
+        $('#bodyMark').prop( "disabled", false );
+        $('#movementMark').prop( "disabled", false );
+        $('#neckMark').prop( "disabled", false );
         
 //        competition = data;
 //        $('#horseToRateTable').empty();
@@ -114,7 +123,7 @@ $( document ).ready(function() {
         $(this).change(function(){
            var attr = $(this).attr('id');
             var value = $(this).val();
-           $('div[id*='+attr+']').text(value);
+           $('div[id='+attr+']').text(value);
         });
     });
     
