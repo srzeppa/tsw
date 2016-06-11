@@ -11,6 +11,7 @@ $( document ).ready(function() {
     $('#body').prop( "disabled", true );
     $('#movement').prop( "disabled", true );
     $('#neck').prop( "disabled", true );
+    $('#markHorseButton').prop('disabled', true);
     
     var socket = io.connect('https://localhost:3000');
     var refereesArray = [];
@@ -18,13 +19,27 @@ $( document ).ready(function() {
     var group;
     var userId;
 
-    socket.on('connect', function(data) {
-	});
+//    socket.on('connect', function(data) {
+//	});
     
     socket.on('startCompetitionReferee', function(data) {
         competition = data;
         console.log('competition');
         console.log(competition);
+        $.ajax({
+            type: 'GET',
+            url: "/referee/getPartialMarks/" + competition._id + '/',
+            dataType: 'json',
+            success: function (e) {
+                console.log('getPartialMarks');
+                console.log(e);
+//                $('#head').val( e );
+//                $('#legs').prop( "disabled", false );
+//                $('#body').prop( "disabled", false );
+//                $('#movement').prop( "disabled", false );
+//                $('#neck').prop( "disabled", false );
+            }
+        });
 	});
     
     socket.on('getGroupReferee', function(data) {
@@ -37,11 +52,9 @@ $( document ).ready(function() {
         console.log('startRateHorseReferee');
         console.log(data);
         
-//        for(let i = 0; i < data.competition.groups.length; i ++){
             $.ajax({
                 type: 'GET',
                 url: "/referee/getGroupById/" + group + '/',
-//                url: "/referee/getGroupById/" + data.competition.groups[i]._id + '/',
                 dataType: 'json',
                 success: function (e) {
                     for(let j = 0; j < e.referees.length; j ++){
@@ -49,49 +62,22 @@ $( document ).ready(function() {
                         if(userId === e.referees[j]._id){
                             console.log('userId === e.referees[j]._id');
                             $('#horseToRate').html("<h1>" + data.horse._id + "</h1>");
-                            $('#head').prop( "disabled", false );
-                            $('#legs').prop( "disabled", false );
-                            $('#body').prop( "disabled", false );
-                            $('#movement').prop( "disabled", false );
-                            $('#neck').prop( "disabled", false );
+                            $('#head').prop( "disabled", false ).val(0);
+                            $('div#head').text(0);
+                            $('#legs').prop( "disabled", false ).val(0);
+                            $('div#legs').text(0);
+                            $('#body').prop( "disabled", false ).val(0);
+                            $('div#body').text(0);
+                            $('#movement').prop( "disabled", false ).val(0);
+                            $('div#movement').text(0);
+                            $('#neck').prop( "disabled", false ).val(0);
+                            $('div#neck').text(0);
+                            $('#markHorseButton').prop('disabled', false).attr('idHorse', data.horse._id);
                             break;
                         }
                     }
                 }
             });
-//        }
-        
-//        $('#horseToRateTable').empty();
-//        var $table = $( "<table id=\"horsesToRateTable\" class='table table-hover'><thead><tr><th>Name</th><th>Typ</th><th>Głowa</th><th>Kłoda</th><th>Nogi</th><th>Ruch</th></tr></thead></table>" );
-//        var $tbody = $("<tbody></tbody>");
-//        refereesArray = [];
-//        console.log('startCompetition listen');
-//        console.log(data);
-//        for (let i = 0; i < data.groups.length; i++){
-//            refereesArray.push(data.groups[i].referees);
-//        }
-//        for(let i = 0; i < data.groups.length; i ++){
-//            $.ajax({
-//                type: 'GET',
-//                url: "/referee/getGroupById/" + data.groups[i]._id + '/',
-//                dataType: 'json',
-//                success: function (e) {
-//                    for(let j = 0; j < e.referees.length; j ++){
-//                        if (userId == e.referees[j]._id){
-//                            for(let k = 0; k < e.horses.length; k ++){
-//                                var $line = $( "<tr></tr>" );
-//                                $line.append( $( "<td id='"+e.horses[k]._id+"'></td>" ).html( e.horses[k].name ) );
-//                                $tbody.append( $line );
-//                                $table.append( $tbody );
-//                            }
-//                            break;
-//                        }
-//                    }
-//                }
-//            });
-//        }
-//        $table.appendTo( $( "#horseToRateTable" ) );
-        
 	});
     
     socket.on('allowHorseToRating', function(data) {
@@ -103,18 +89,19 @@ $( document ).ready(function() {
         $('#' + data._id).parent().append($( "<td></td>" ).html( "<button id=\"markHorseButton\" class=\"btn btn-info\" idHorse="+ data._id +"> Mark </button>" ) );
 	});
     
-    $('#horseToRateTable').on('click', 'button#markHorseButton', function(){
+    $('button#markHorseButton').on('click', function(){
         var result = 0;
         
-        result = (parseInt($(this).closest('td').prevAll("td#typeMark").children('input').val()) + parseInt($(this).closest('td').prevAll("td#headMark").children('input').val()) + parseInt($(this).closest('td').prevAll("td#bodyMark").children('input').val()) + parseInt($(this).closest('td').prevAll("td#legsMark").children('input').val()) + parseInt($(this).closest('td').prevAll("td#movementMark").children('input').val()))/5;
-        $(this).parent().parent().remove();
+        result = (parseInt($('#head').val()) + parseInt($('#legs').val()) + parseInt($('#neck').val()) + parseInt($('#movement').val()) + parseInt($('#body').val()))/5;
         
-        socket.emit('markHorse', 
-                    {result: result,
-                     referee: userId,
-                     competition: competition._id,
-                     horse: $(this).attr('idHorse')
-                    });
+        $.post( "/referee/mark/", {overall: result, competition: competition, horse: $(this).attr('idHorse'), referee: userId});
+        
+        $('#head').prop( "disabled", true );
+        $('#legs').prop( "disabled", true );
+        $('#body').prop( "disabled", true );
+        $('#movement').prop( "disabled", true );
+        $('#neck').prop( "disabled", true );
+        $('#markHorseButton').prop('disabled', true);
     });
     
     
@@ -157,82 +144,68 @@ $( document ).ready(function() {
     
     $('input[type=range]').each(function(){
         $(this).change(function(){
-           var attr = $(this).attr('id');
+            var attr = $(this).attr('id');
             var value = $(this).val();
-           $('div[id='+attr+']').text(value);
+            $('div[id='+attr+']').text(value);
         });
     });
     
     $('input').each(function() {
         $(this).change(function() {
-            console.log(userId);
-            console.log(competition);
-            console.log($(this).attr('id'));
-            console.log($(this).val());
             if($(this).attr('id') == 'legs'){
                 socket.emit('partialMark', {
                     referee: userId,
                     competition: competition,
-    //                typeMark: $(this).attr('id'),
                     legs: $(this).val(),
                     head: 0,
                     body: 0,
                     movement: 0,
                     neck: 0
                 });
-                console.log('legs');
             }
             if($(this).attr('id') == 'head'){
                 socket.emit('partialMark', {
                     referee: userId,
                     competition: competition,
-    //                typeMark: $(this).attr('id'),
                     head: $(this).val(),
                     legs: 0,
                     body: 0,
                     movement: 0,
                     neck: 0
                 });
-                console.log('head');
             }
             if($(this).attr('id') == 'body'){
                 socket.emit('partialMark', {
                     referee: userId,
                     competition: competition,
-    //                typeMark: $(this).attr('id'),
                     body: $(this).val(),
                     head: 0,
                     legs: 0,
                     movement: 0,
                     neck: 0
                 });
-                console.log('body');
             }
             if($(this).attr('id') == 'movement'){
                 socket.emit('partialMark', {
                     referee: userId,
                     competition: competition,
-    //                typeMark: $(this).attr('id'),
                     movement: $(this).val(),
                     head: 0,
                     legs: 0,
                     body: 0,
                     neck: 0
                 });
-                console.log('movement');
             }
             if($(this).attr('id') == 'neck'){
                 socket.emit('partialMark', {
                     referee: userId,
                     competition: competition,
-    //                typeMark: $(this).attr('id'),
                     neck: $(this).val(),
                     head: 0,
                     legs: 0,
                     body: 0,
                     movement: 0
                 });
-                console.log('neck');
             }
         });
     });

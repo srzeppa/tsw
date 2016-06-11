@@ -12,6 +12,7 @@ $( document ).ready(function() {
         url: '/viewer/getAllResults/',
         dataType: 'json',
         success: function(e){
+            console.log(e);
             var $tbody = $("<tbody></tbody>");
             for(let i = 0; i < e.length; i ++){
                 console.log(e[i].competition._id);

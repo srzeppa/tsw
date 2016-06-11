@@ -10,21 +10,8 @@ var PartialScore = new Schema({
         movement: Number,
         body: Number,
         neck: Number,
-        referee: { type: Schema.Types.ObjectId, ref: 'User' }
+        referee: { type: Schema.Types.ObjectId, ref: 'User' },
+        horse: { type: Schema.Types.ObjectId, ref: 'Horse' }
     });
 
 module.exports = mongoose.model('PartialScore', PartialScore);
-
-
-
-
-//        value: Number,
-//        scoreType: {
-//            type: String,
-//            validate: {
-//                validator: function (v) {
-//                    return /type|neck|body|legs|movement/.test(v);
-//                },
-//                message: '{VALUE} is not a valid role. Must be either user, admin, refree or breeder.'
-//            }
-//        },

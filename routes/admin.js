@@ -479,7 +479,6 @@ router.post('/partialMark/', [
     hasAccess('admin'),
     function (req, res) {
         var partialMarkFunction = function(){
-//            var newScore;
             
             Score.find({referee: req.body.referee},function(err,score){
                 if(score.length){
@@ -539,80 +538,6 @@ router.post('/partialMark/', [
                     });
                 }
             });
-                
-
-//                                   function(err,competition){
-//                    competition.score = newScore._id;
-//                    competition.update(function(err){
-//                        if(err){
-//                            return{
-//                                "msg": "error"
-//                            };
-//                        }
-//                        return {
-//                            "msg": "activated"
-//                        };
-//                    });
-//                });
-//            {
-//                    legs : req.body.legs,
-//                    head : req.body.head,
-//                    movement : req.body.movement,
-//                    neck : req.body.neck,
-//                    body : req.body.body
-//                    referee: req.body.referee,
-//                    legs : 0,
-//                    head : 0,
-//                    movement : 0,
-//                    neck : 0,
-//                    body : 0
-//                });
-                
-//                if(req.body.head !== null){
-//                    console.log('~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~req.body.head');
-//                    newScore.save({
-//                        referee: req.body.referee,
-//                        head : req.body.head
-//                    });
-//                }
-//                
-//                if(req.body.body !== null){
-//                    console.log('~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~req.body.body');
-//                    newScore.save({
-//                        referee: req.body.referee,
-//                        body : req.body.body
-//                    });
-//                }
-//                
-//                if(req.body.movement !== null){
-//                    console.log('~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~req.body.movement');
-//                    newScore.save({
-//                        referee: req.body.referee,
-//                        movement : req.body.movement
-//                    });
-//                }
-//                
-//                if(req.body.neck !== null){
-//                    console.log('~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~req.body.neck');
-//                    newScore.save({
-//                        referee: req.body.referee,
-//                        neck : req.body.neck
-//                    });
-//                }
-                
-//                newScore.save({
-//                    score : {
-//                        referee : parseInt(req.body.referee),
-//                        legs : parseInt(req.body.legs),
-//                        head : parseInt(req.body.head),
-//                        body : parseInt(req.body.body),
-//                        movement : parseInt(req.body.movement),
-//                        neck : parseInt(req.body.neck),
-//                    }
-//                }, function(error){
-//                    console.log(error);
-//                });
-//            });
         };
         res.json(partialMarkFunction());
         res.writeHead(302, {
