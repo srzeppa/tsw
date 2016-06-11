@@ -23,7 +23,7 @@ $( document ).ready(function() {
                     $line.appendTo( $( "#" + e[i].competition._id));
                 } else {
                     var $title = $( "<h1>" + e[i].competition.name + "</h1>");
-                    $title.appendTo( $( "#titleDiv" ) );
+                    $title.appendTo( $( "#results" ) );
                     var $table = $( "<table id=\"" + e[i].competition._id + "\" class='table table-hover tablesorter'><thead><tr><th>Name</th><th>Overall</th></tr></thead></table>" );
                     $table.appendTo( $( "#results" ) );
                     var $linee = $( "<tr></tr>" );
@@ -47,26 +47,38 @@ $( document ).ready(function() {
             dataType: 'json',
             success: function(e){
                 if($('#' + data.competition._id).length){
+                    console.log('if');
                     var $line = $( "<tr></tr>" );
                     $line.append( $( "<td></td>" ).html( e.name ) );
                     $line.append( $( "<td></td>" ).html( data.overall ) );
                     $line.appendTo( $( "#" + data.competition._id));
                 } else {
+                    console.log('else');
                     $.ajax({
                         type: 'GET',
-                        url: '/viewer/getCompetitionById/' + data.competition + '/',
+                        url: '/viewer/getCompetitionById/' + data.competition._id + '/',
                         dataType: 'json',
                         success: function(competition){
+                            console.log('else1');
                             var $title = $( "<h1>" + competition.name + "</h1>");
-                            $title.appendTo( $( "#titleDiv" ) );
-                            var $table = $( "<table id=\"" + data.competition._id + "\" class='table table-hover'><thead><tr><th>Name</th><th>Overall</th></tr></thead></table>" );
+                            console.log('else2');
+                            $title.appendTo( $( "#results" ) );
+                            console.log('else3');
+                            var $table = $( "<table id=\"" + data.competition._id + "\" class='table table-hover tablesorter'><thead><tr><th>Name</th><th>Overall</th></tr></thead></table>" );
+                            console.log('else4');
                             $table.appendTo( $( "#results" ) );
+                            console.log('else5');
                             var $linee = $( "<tr></tr>" );
+                            console.log('else6');
                             $linee.append( $( "<td></td>" ).html( e.name ) );
+                            console.log('else7');
                             $linee.append( $( "<td></td>" ).html( data.overall ) );
+                            console.log('else8');
                             $linee.appendTo( $( "#" + data.competition._id));
+                            console.log('else9');
                         }
                     });
+                    $("#results").children().tablesorter();
                 }
             }
         });
