@@ -479,32 +479,68 @@ router.post('/partialMark/', [
     hasAccess('admin'),
     function (req, res) {
         var partialMarkFunction = function(){
-//            Competition.findOne({_id:req.body.competition._id},function(err,competition){
-                console.log('~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~req.body');
-                console.log(req.body.referee);
-                console.log(req.body.movement);
-                console.log(req.body.legs);
-                console.log(req.body.neck);
-                console.log(req.body.head);
-                console.log(req.body.body);
-                var newScore = Score({
-                    referee: req.body.referee,
-                    legs : req.body.legs,
-                    head : req.body.head,
-                    movement : req.body.movement,
-                    neck : req.body.neck,
-                    body : req.body.body
-                });
-                
-                newScore.save();
+//            var newScore;
             
-                Competition.update({_id:req.body.competition._id},{$push: {score:newScore._id}},{upsert:true},function(err){
-                    if(err){
-                        console.log(err);
-                    }else{
-                        console.log("Successfully added");
+            Score.find({referee: req.body.referee},function(err,score){
+                if(score.length){
+                    console.log('score.length');
+                    if(parseInt(req.body.legs) !== 0){
+                        score[0].update({
+                            legs : req.body.legs,
+                        }, function(error){
+                            console.log(error);
+                        });
                     }
-                });
+                    if(parseInt(req.body.head) !== 0){
+                        score[0].update({
+                            head : req.body.head,
+                        }, function(error){
+                            console.log(error);
+                        });
+                    }
+                    if(parseInt(req.body.movement) !== 0){
+                        score[0].update({
+                            movement : req.body.movement,
+                        }, function(error){
+                            console.log(error);
+                        });
+                    }
+                    if(parseInt(req.body.neck) !== 0){
+                        score[0].update({
+                            neck : req.body.neck,
+                        }, function(error){
+                            console.log(error);
+                        });
+                    }
+                    if(parseInt(req.body.body) !== 0){
+                        score[0].update({
+                            body : req.body.body
+                        }, function(error){
+                            console.log(error);
+                        });
+                    }
+                } else {
+                    console.log('else');
+                    var newScore = Score({
+                        referee: req.body.referee,
+                        legs : req.body.legs,
+                        head : req.body.head,
+                        movement : req.body.movement,
+                        neck : req.body.neck,
+                        body : req.body.body
+                    });
+                    newScore.save();
+                    Competition.update({_id:req.body.competition._id},{$push: {score:newScore._id}},{upsert:true},function(err){
+                        if(err){
+                            console.log(err);
+                        }else{
+                            console.log("Successfully added");
+                        }
+                    });
+                }
+            });
+                
+
 //                                   function(err,competition){
 //                    competition.score = newScore._id;
 //                    competition.update(function(err){

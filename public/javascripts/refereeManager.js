@@ -175,10 +175,10 @@ $( document ).ready(function() {
                     competition: competition,
     //                typeMark: $(this).attr('id'),
                     legs: $(this).val(),
-//                    head: 0,
-//                    body: 0,
-//                    movement: 0,
-//                    neck: 0
+                    head: 0,
+                    body: 0,
+                    movement: 0,
+                    neck: 0
                 });
                 console.log('legs');
             }
@@ -188,10 +188,10 @@ $( document ).ready(function() {
                     competition: competition,
     //                typeMark: $(this).attr('id'),
                     head: $(this).val(),
-//                    legs: 0,
-//                    body: 0,
-//                    movement: 0,
-//                    neck: 0
+                    legs: 0,
+                    body: 0,
+                    movement: 0,
+                    neck: 0
                 });
                 console.log('head');
             }
@@ -201,10 +201,10 @@ $( document ).ready(function() {
                     competition: competition,
     //                typeMark: $(this).attr('id'),
                     body: $(this).val(),
-//                    head: 0,
-//                    legs: 0,
-//                    movement: 0,
-//                    neck: 0
+                    head: 0,
+                    legs: 0,
+                    movement: 0,
+                    neck: 0
                 });
                 console.log('body');
             }
@@ -214,10 +214,10 @@ $( document ).ready(function() {
                     competition: competition,
     //                typeMark: $(this).attr('id'),
                     movement: $(this).val(),
-//                    head: 0,
-//                    legs: 0,
-//                    body: 0,
-//                    neck: 0
+                    head: 0,
+                    legs: 0,
+                    body: 0,
+                    neck: 0
                 });
                 console.log('movement');
             }
@@ -227,10 +227,10 @@ $( document ).ready(function() {
                     competition: competition,
     //                typeMark: $(this).attr('id'),
                     neck: $(this).val(),
-//                    head: 0,
-//                    legs: 0,
-//                    body: 0,
-//                    movement: 0
+                    head: 0,
+                    legs: 0,
+                    body: 0,
+                    movement: 0
                 });
                 console.log('neck');
             }
