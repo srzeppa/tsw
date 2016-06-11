@@ -497,6 +497,27 @@ router.post('/partialMark/', [
                 });
                 
                 newScore.save();
+            
+                Competition.update({_id:req.body.competition._id},{$push: {score:newScore._id}},{upsert:true},function(err){
+                    if(err){
+                        console.log(err);
+                    }else{
+                        console.log("Successfully added");
+                    }
+                });
+//                                   function(err,competition){
+//                    competition.score = newScore._id;
+//                    competition.update(function(err){
+//                        if(err){
+//                            return{
+//                                "msg": "error"
+//                            };
+//                        }
+//                        return {
+//                            "msg": "activated"
+//                        };
+//                    });
+//                });
 //            {
 //                    legs : req.body.legs,
 //                    head : req.body.head,
