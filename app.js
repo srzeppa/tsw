@@ -143,6 +143,12 @@ io.on('connection', function (socket) {
         console.log(data);
         io.sockets.emit('partialMarkToDb', data);
     });
+    
+    socket.on('getGroup',function(data){
+        console.log('getGroup data');
+        console.log(data);
+        io.sockets.emit('getGroupReferee', data);
+    });
 });
 
 server.listen(3000, function () {

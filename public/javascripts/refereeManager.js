@@ -15,6 +15,7 @@ $( document ).ready(function() {
     var socket = io.connect('https://localhost:3000');
     var refereesArray = [];
     var competition;
+    var group;
     var userId;
 
     socket.on('connect', function(data) {
@@ -26,30 +27,39 @@ $( document ).ready(function() {
         console.log(competition);
 	});
     
+    socket.on('getGroupReferee', function(data) {
+        group = data;
+        console.log('group');
+        console.log(group);
+	});
+    
     socket.on('startRateHorseReferee', function(data) {
         console.log('startRateHorseReferee');
         console.log(data);
         
-        for(let i = 0; i < data.competition.groups.length; i ++){
+//        for(let i = 0; i < data.competition.groups.length; i ++){
             $.ajax({
                 type: 'GET',
-                url: "/referee/getGroupById/" + data.competition.groups[i]._id + '/',
+                url: "/referee/getGroupById/" + group + '/',
+//                url: "/referee/getGroupById/" + data.competition.groups[i]._id + '/',
                 dataType: 'json',
                 success: function (e) {
                     for(let j = 0; j < e.referees.length; j ++){
                         console.log(e.referees[j]._id);
-                        if(userId == e.referees[j]._id){
+                        if(userId === e.referees[j]._id){
+                            console.log('userId === e.referees[j]._id');
                             $('#horseToRate').html("<h1>" + data.horse._id + "</h1>");
                             $('#head').prop( "disabled", false );
                             $('#legs').prop( "disabled", false );
                             $('#body').prop( "disabled", false );
                             $('#movement').prop( "disabled", false );
                             $('#neck').prop( "disabled", false );
+                            break;
                         }
                     }
                 }
             });
-        }
+//        }
         
 //        $('#horseToRateTable').empty();
 //        var $table = $( "<table id=\"horsesToRateTable\" class='table table-hover'><thead><tr><th>Name</th><th>Typ</th><th>Głowa</th><th>Kłoda</th><th>Nogi</th><th>Ruch</th></tr></thead></table>" );

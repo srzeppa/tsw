@@ -250,6 +250,7 @@ $( document ).ready(function() {
                 });
                 
                 $('#groupButtons').on('click', 'button#groupButton', function(){
+                    socket.emit('getGroup', $( this ).attr('idGroup'));
                    $.ajax({
                        type: 'GET',
                        url: '/admin/getGroupById/' + $( this ).attr('idGroup') + '/',
