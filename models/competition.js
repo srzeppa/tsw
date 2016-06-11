@@ -8,19 +8,7 @@ var Competition = new Schema({
 	name: String,
 	groups: [{type: Schema.Types.ObjectId, ref: 'Group'}],
     started: Boolean,
-    score : [{
-        scoreType: {
-            type: String,
-            validate: {
-                validator: function (v) {
-                    return /type|neck|body|legs|movement/.test(v);
-                },
-                message: '{VALUE} is not a valid role. Must be either user, admin, refree or breeder.'
-            }
-        },
-        value: Number,
-        referee: { type: Schema.Types.ObjectId, ref: 'User' }
-    }]
+    score: [{type: Schema.Types.ObjectId, ref: 'PartialScore'}]
 });
 
 module.exports = mongoose.model('Competition', Competition);

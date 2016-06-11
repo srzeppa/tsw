@@ -39,7 +39,7 @@ $( document ).ready(function() {
                     for(let j = 0; j < e.referees.length; j ++){
                         console.log(e.referees[j]._id);
                         if(userId == e.referees[j]._id){
-                            $('#horseToRate').html("<h1>" + data._id + "</h1>");
+                            $('#horseToRate').html("<h1>" + data.horse._id + "</h1>");
                             $('#head').prop( "disabled", false );
                             $('#legs').prop( "disabled", false );
                             $('#body').prop( "disabled", false );
@@ -159,12 +159,71 @@ $( document ).ready(function() {
             console.log(competition);
             console.log($(this).attr('id'));
             console.log($(this).val());
-            socket.emit('partialMark', {
-                referee: userId,
-                competition: competition,
-                typeMark: $(this).attr('id'),
-                rate: $(this).val()
-            });
+            if($(this).attr('id') == 'legs'){
+                socket.emit('partialMark', {
+                    referee: userId,
+                    competition: competition,
+    //                typeMark: $(this).attr('id'),
+                    legs: $(this).val(),
+//                    head: 0,
+//                    body: 0,
+//                    movement: 0,
+//                    neck: 0
+                });
+                console.log('legs');
+            }
+            if($(this).attr('id') == 'head'){
+                socket.emit('partialMark', {
+                    referee: userId,
+                    competition: competition,
+    //                typeMark: $(this).attr('id'),
+                    head: $(this).val(),
+//                    legs: 0,
+//                    body: 0,
+//                    movement: 0,
+//                    neck: 0
+                });
+                console.log('head');
+            }
+            if($(this).attr('id') == 'body'){
+                socket.emit('partialMark', {
+                    referee: userId,
+                    competition: competition,
+    //                typeMark: $(this).attr('id'),
+                    body: $(this).val(),
+//                    head: 0,
+//                    legs: 0,
+//                    movement: 0,
+//                    neck: 0
+                });
+                console.log('body');
+            }
+            if($(this).attr('id') == 'movement'){
+                socket.emit('partialMark', {
+                    referee: userId,
+                    competition: competition,
+    //                typeMark: $(this).attr('id'),
+                    movement: $(this).val(),
+//                    head: 0,
+//                    legs: 0,
+//                    body: 0,
+//                    neck: 0
+                });
+                console.log('movement');
+            }
+            if($(this).attr('id') == 'neck'){
+                socket.emit('partialMark', {
+                    referee: userId,
+                    competition: competition,
+    //                typeMark: $(this).attr('id'),
+                    neck: $(this).val(),
+//                    head: 0,
+//                    legs: 0,
+//                    body: 0,
+//                    movement: 0
+                });
+                console.log('neck');
+            }
         });
     });
     

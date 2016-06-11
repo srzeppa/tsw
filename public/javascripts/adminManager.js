@@ -482,7 +482,7 @@ $( document ).ready(function() {
     });
     
     socket.on('partialMarkToDb', function(data){
-        $.post( "/admin/partialMark/", {referee: data.referee, competition: data.competition, typeMark: data.typeMark, rate: data.rate });
+        $.post( "/admin/partialMark/", {referee: data.referee, competition: data.competition, typeMark: data.typeMark, head: data.head, neck: data.neck, movement: data.movement, body: data.body, legs: data.legs });
     });
     
 });

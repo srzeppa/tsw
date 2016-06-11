@@ -4,6 +4,7 @@ var express = require('express');
 var router = express.Router();
 var Horse = require('../models/horse');
 var Competition = require('../models/competition');
+var Score = require('../models/partialScore');
 var Group = require('../models/group');
 var Result = require('../models/result');
 var mongodb = require('mongodb');
@@ -478,33 +479,83 @@ router.post('/partialMark/', [
     hasAccess('admin'),
     function (req, res) {
         var partialMarkFunction = function(){
-            Competition.findOne({_id:req.body.competition._id},function(err,competition){
-                console.log('~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~competition');
-                console.log(competition);
-//                competition.score.referee = req.body.referee;
-//                competition.score.scoreType = req.body.typeMark;
-//                competition.score.value = req.body.rate;
-//                competition.save(function(err){
-//                    if(err){
-//                        return{
-//                            "msg": "error"
-//                        };
-//                    }
-//                    return {
-//                        "msg": "partial mark added"
-//                    };
+//            Competition.findOne({_id:req.body.competition._id},function(err,competition){
+                console.log('~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~req.body');
+                console.log(req.body.referee);
+                console.log(req.body.movement);
+                console.log(req.body.legs);
+                console.log(req.body.neck);
+                console.log(req.body.head);
+                console.log(req.body.body);
+                var newScore = Score({
+                    referee: req.body.referee,
+                    legs : req.body.legs,
+                    head : req.body.head,
+                    movement : req.body.movement,
+                    neck : req.body.neck,
+                    body : req.body.body
+                });
+                
+                newScore.save();
+//            {
+//                    legs : req.body.legs,
+//                    head : req.body.head,
+//                    movement : req.body.movement,
+//                    neck : req.body.neck,
+//                    body : req.body.body
+//                    referee: req.body.referee,
+//                    legs : 0,
+//                    head : 0,
+//                    movement : 0,
+//                    neck : 0,
+//                    body : 0
 //                });
                 
-                competition.save({
-                    score : {
-                        referee : req.body.referee,
-                        scoreType : req.body.typeMark,
-                        value : req.body.rate
-                    }
-                }, function(error){
-                    console.log(error);
-                });
-            });
+//                if(req.body.head !== null){
+//                    console.log('~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~req.body.head');
+//                    newScore.save({
+//                        referee: req.body.referee,
+//                        head : req.body.head
+//                    });
+//                }
+//                
+//                if(req.body.body !== null){
+//                    console.log('~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~req.body.body');
+//                    newScore.save({
+//                        referee: req.body.referee,
+//                        body : req.body.body
+//                    });
+//                }
+//                
+//                if(req.body.movement !== null){
+//                    console.log('~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~req.body.movement');
+//                    newScore.save({
+//                        referee: req.body.referee,
+//                        movement : req.body.movement
+//                    });
+//                }
+//                
+//                if(req.body.neck !== null){
+//                    console.log('~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~req.body.neck');
+//                    newScore.save({
+//                        referee: req.body.referee,
+//                        neck : req.body.neck
+//                    });
+//                }
+                
+//                newScore.save({
+//                    score : {
+//                        referee : parseInt(req.body.referee),
+//                        legs : parseInt(req.body.legs),
+//                        head : parseInt(req.body.head),
+//                        body : parseInt(req.body.body),
+//                        movement : parseInt(req.body.movement),
+//                        neck : parseInt(req.body.neck),
+//                    }
+//                }, function(error){
+//                    console.log(error);
+//                });
+//            });
         };
         res.json(partialMarkFunction());
         res.writeHead(302, {
