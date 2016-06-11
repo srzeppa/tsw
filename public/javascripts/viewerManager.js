@@ -23,8 +23,8 @@ $( document ).ready(function() {
                     $line.appendTo( $( "#" + e[i].competition._id));
                 } else {
                     var $title = $( "<h1>" + e[i].competition.name + "</h1>");
-                    $title.appendTo( $( "#results" ) );
-                    var $table = $( "<table id=\"" + e[i].competition._id + "\" class='table table-hover'><thead><tr><th>Name</th><th>Overall</th></tr></thead></table>" );
+                    $title.appendTo( $( "#titleDiv" ) );
+                    var $table = $( "<table id=\"" + e[i].competition._id + "\" class='table table-hover tablesorter'><thead><tr><th>Name</th><th>Overall</th></tr></thead></table>" );
                     $table.appendTo( $( "#results" ) );
                     var $linee = $( "<tr></tr>" );
                     $linee.append( $( "<td></td>" ).html( e[i].horse.name ) );
@@ -32,11 +32,13 @@ $( document ).ready(function() {
                     $linee.appendTo( $( "#" + e[i].competition._id));
                 }
             }
+            $("#results").children().tablesorter();
         }
     });
     
     
     socket.on('showResults',function(data){
+        console.log('showresults');
         console.log(data);
         
         $.ajax({
@@ -44,11 +46,11 @@ $( document ).ready(function() {
             url: '/viewer/getHorseById/' + data.horse + '/',
             dataType: 'json',
             success: function(e){
-                if($('#' + data.competition).length){
+                if($('#' + data.competition._id).length){
                     var $line = $( "<tr></tr>" );
                     $line.append( $( "<td></td>" ).html( e.name ) );
                     $line.append( $( "<td></td>" ).html( data.overall ) );
-                    $line.appendTo( $( "#" + data.competition));
+                    $line.appendTo( $( "#" + data.competition._id));
                 } else {
                     $.ajax({
                         type: 'GET',
@@ -56,13 +58,13 @@ $( document ).ready(function() {
                         dataType: 'json',
                         success: function(competition){
                             var $title = $( "<h1>" + competition.name + "</h1>");
-                            $title.appendTo( $( "#results" ) );
-                            var $table = $( "<table id=\"" + data.competition + "\" class='table table-hover'><thead><tr><th>Name</th><th>Overall</th></tr></thead></table>" );
+                            $title.appendTo( $( "#titleDiv" ) );
+                            var $table = $( "<table id=\"" + data.competition._id + "\" class='table table-hover'><thead><tr><th>Name</th><th>Overall</th></tr></thead></table>" );
                             $table.appendTo( $( "#results" ) );
                             var $linee = $( "<tr></tr>" );
                             $linee.append( $( "<td></td>" ).html( e.name ) );
                             $linee.append( $( "<td></td>" ).html( data.overall ) );
-                            $linee.appendTo( $( "#" + data.competition));
+                            $linee.appendTo( $( "#" + data.competition._id));
                         }
                     });
                 }

@@ -44,6 +44,7 @@ app.use(bodyParser.urlencoded());
 app.use(cookieParser());
 app.use(express.static(path.join(__dirname, 'public')));
 app.use(express.static(path.join(__dirname, 'bower_components')));
+app.use(express.static(path.join(__dirname, 'node_modules/tablesorter/dist/js')));
 app.use(express.static(path.join(__dirname, 'node_modules/rangeslider.js/dist')));
 app.use(express.static(path.join(__dirname, 'node_modules/bootstrap/dist/css')));
 app.use(express.static(path.join(__dirname, 'node_modules/bootstrap/dist/js')));

@@ -96,6 +96,8 @@ $( document ).ready(function() {
         
         $.post( "/referee/mark/", {overall: result, competition: competition, horse: $(this).attr('idHorse'), referee: userId});
         
+        socket.emit('results', {overall: result, competition: competition, horse: $(this).attr('idHorse'), referee: userId});
+        
         $('#head').prop( "disabled", true );
         $('#legs').prop( "disabled", true );
         $('#body').prop( "disabled", true );
