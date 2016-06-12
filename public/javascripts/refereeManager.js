@@ -123,15 +123,15 @@ $( document ).ready(function() {
     socket.on('reminderReferee',function(data){
         if(data == userId){
             alert('Send me marks please!!');
-            if(!($('#headMark').is(':disabled')))
+            if(!($('#headMark').is(':disabled')) && parseInt($('#headMark').val()) === 0)
             $('#headMarkDiv').css('border', '3px solid red'); 
-            if(!($('#legsMark').is(':disabled')))
+            if(!($('#legsMark').is(':disabled')) && parseInt($('#legsMark').val()) === 0)
             $('#legsMarkDiv').css('border', '3px solid red'); 
-            if(!($('#movementMark').is(':disabled')))
+            if(!($('#movementMark').is(':disabled')) && parseInt($('#movementMark').val()) === 0)
             $('#movementMarkDiv').css('border', '3px solid red'); 
-            if(!($('#bodyMark').is(':disabled')))
+            if(!($('#bodyMark').is(':disabled')) && parseInt($('#bodyMark').val()) === 0)
             $('#bodyMarkDiv').css('border', '3px solid red'); 
-            if(!($('#neckMark').is(':disabled')))
+            if(!($('#neckMark').is(':disabled')) && parseInt($('#neckMark').val()) === 0)
             $('#neckMarkDiv').css('border', '3px solid red'); 
         }
     });

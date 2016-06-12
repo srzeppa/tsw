@@ -11,6 +11,7 @@ var mongodb = require('mongodb');
 var ObjectId = require('mongodb').ObjectID;
 var users = require('../models/users');
 var bCrypt = require('bcrypt-nodejs');
+var async = require("async");
 
 router.use(function(req, res, next) {
     if (!req.user) {
@@ -307,65 +308,231 @@ router.post('/addUser/', [
     res.end();
 }]);
 
+var getAllHorses = function(data){
+    var maleHorses = [];
+    var femaleHorses = [];
+    data.forEach(function(data){
+        Horse.findOne({_id:data},function(err,horse){
+            if(horse.gender === 'female'){
+                console.log('female');
+                femaleHorses.push(horse);
+            } else {
+                console.log('male');
+                maleHorses.push(horse);
+            }
+        });
+    });
+    return {
+        maleHorses: maleHorses,
+        femaleHorses: femaleHorses
+    };
+};
+
+
+var test = function(data){
+    var horsesAfterGet = [];
+    for (var i = 0; i < data.length; i ++){
+        Horse.findOne({_id:data[i]}, function(err,horse){
+                console.log('horse');
+                console.log(horse);
+            horsesAfterGet.push(horse);
+        });
+    }
+    
+    return horsesAfterGet;
+};
+
 router.post('/addCompetition/', [
     hasAccess('admin'),
     function(req, res) {
-    var addCompetitionFunction = function() {
-        var newCompetition = new Competition();
-        var tmpTable;
-        var startHorse = 0;
-        var startReferee = 0;
-        var randomizedHorses = shuffle(req.body.horses);
-        var randomizedReferees = shuffle(req.body.referees);
-        var horsesCount = parseInt(req.body.numberOfHorses);
-        var refereesCount = parseInt(req.body.numberOfReferees);
-        var endHorse = horsesCount;
-        var endReferee = refereesCount;
-        var listOfGroups = [];
-        var newGroup;
-        var test = randomizedHorses.length / horsesCount;
+//    var addCompetitionFunction = function() {
+        
+//        var randomizedHorses = shuffle(req.body.horses);
+        
+//        var newCompetition = new Competition();
+//        var tmpTable;
+//        var startHorse = 0;
+//        var startReferee = 0;
+//        var malesHorses = req.body.males;
+//        var femalesHorses = req.body.females;
+//        var randomizedReferees = shuffle(req.body.referees);
+//        var horsesCount = parseInt(req.body.numberOfHorses);
+//        var refereesCount = parseInt(req.body.numberOfReferees);
+//        var endHorse = horsesCount;
+//        var endReferee = refereesCount;
+//        var listOfGroups = [];
+//        var newGroup;
+//
+//        while (malesHorses.slice(startHorse, endHorse).length === (endHorse - startHorse) || randomizedReferees.slice(startReferee, endReferee).length === (endReferee - startReferee)) {
+//            newGroup = new Group({
+//                horses: malesHorses.slice(startHorse, endHorse),
+//                referees: randomizedReferees.slice(startReferee, endReferee)
+//            });
+//
+//            startHorse = startHorse + horsesCount;
+//            endHorse = endHorse + horsesCount;
+//            
+//            startReferee = startReferee + refereesCount;
+//            endReferee = endReferee + refereesCount;
+//
+//            listOfGroups.push(newGroup);
+//
+//            newGroup.save(function(err) {
+//                if (err) {
+//                    console.log('Error in Saving horse: ' + err);
+//                    throw err;
+//                }
+//            });
+//        }
+//
+//        newCompetition.name = req.body.name;
+//        newCompetition.groups = listOfGroups;
+//        newCompetition.started = false;
+//
+//        newCompetition.save(function(err) {
+//            if (err) {
+//                console.log('Error in Saving horse: ' + err);
+//                throw err;
+//            }
+//        });
+//        return {
+//            "competition": newCompetition,
+//        };
+        
+    var name = '';
+    var horses = [];
+    var referees = [];
+    var randomizedReferees = [];
+    var randomizedHorses = [];
+    var tmpTable = [];
+    var startHorse = 0;
+    var endHorse = 0;
+    var endStalion = 0;
+    var endMare = 0;
+    var startReferee = 0;
+    var endReferee = 0;
+    var refereesCount = 0;
+    var horsesCount = 0;
+    var randomizedStalions = [];
+    var randomizedMares = [];
+    var startStalion = 0;
+    var startMare = 0;
 
-        while (randomizedHorses.slice(startHorse, endHorse).length === (endHorse - startHorse) || randomizedReferees.slice(startReferee, endReferee).length === (endReferee - startReferee)) {
-            newGroup = new Group({
-                horses: randomizedHorses.slice(startHorse, endHorse),
-                referees: randomizedReferees.slice(startReferee, endReferee)
-            });
 
-            startHorse = startHorse + horsesCount;
-            endHorse = endHorse + horsesCount;
-            
-            startReferee = startReferee + refereesCount;
-            endReferee = endReferee + refereesCount;
+    var arr = Object.keys(req.body).map(function (k) {
+        return req.body[k];
+    });
 
-            listOfGroups.push(newGroup);
+    name = arr[0];
+    horses = arr[1];
+    referees = arr[2];
+    refereesCount = parseInt(arr[3]);
+    horsesCount = parseInt(arr[4]);
+    randomizedStalions = arr[5];
+    randomizedMares = arr[6];
 
-            newGroup.save(function(err) {
-                if (err) {
-                    console.log('Error in Saving horse: ' + err);
-                    throw err;
+    randomizedHorses = shuffle(horses);
+    randomizedReferees = shuffle(referees);
+
+    randomizedMares = shuffle(randomizedMares);
+    randomizedStalions = shuffle(randomizedStalions);
+
+    var i = 0;
+    endHorse = horsesCount;
+    endReferee = refereesCount;
+
+    endStalion = horsesCount;
+    endMare = horsesCount;
+
+    parseInt(endMare);
+    parseInt(endStalion);
+    parseInt(startStalion);
+    parseInt(startMare);
+
+    async.whilst(
+        function () {return (randomizedStalions.slice(startStalion, endStalion).length === horsesCount && randomizedReferees.slice(startReferee, endReferee).length === refereesCount); },
+            function(callback) {
+
+                var group = new Group({
+                    horses: randomizedStalions.slice(startStalion, endStalion),
+                    referees: randomizedReferees.slice(startReferee, endReferee)
+                });  
+                  
+            tmpTable.push(group);
+
+        i++;
+
+        startStalion = startStalion + horsesCount;
+        endStalion = endStalion + horsesCount;
+
+        startReferee = startReferee + refereesCount;
+        endReferee = endReferee + refereesCount;
+
+        callback();      
+            },
+            function(err, n) {
+
+            }
+        );
+        i=0;
+
+    async.whilst(
+        function () {return (randomizedMares.slice(startMare, endMare).length === horsesCount && randomizedReferees.slice(startReferee, endReferee).length === refereesCount); },
+            function(callback) {
+                var group = new Group({
+                    horses: randomizedMares.slice(startMare, endMare),
+                    referees: randomizedReferees.slice(startReferee, endReferee)
+                });     
+            tmpTable.push(group);
+
+        i++;
+
+        startMare = startMare + horsesCount;
+        endMare = endMare + horsesCount;
+
+        startReferee = startReferee + refereesCount;
+        endReferee = endReferee + refereesCount;
+        callback();         
+            },
+            function(err, n) {
+
+            }
+        );
+        
+    var z = 0;
+    async.each(tmpTable, function (item, callback) {
+        item.save(function (err) {
+            if (!err) {
+                if (z === 0) {
+                    z++;
+                    var competition = new Competition({
+                        name: name,
+                        groups: tmpTable,
+                        isActive: true,
+                        hasStarted: false
+                    });
+                    competition.save(function (err) {
+                        if (!err) {
+
+                            res.json(tmpTable);
+                        } else {
+                            console.log(err);
+                        }
+                    });
                 }
-            });
-        }
-
-        newCompetition.name = req.body.name;
-        newCompetition.groups = listOfGroups;
-        newCompetition.started = false;
-
-        newCompetition.save(function(err) {
-            if (err) {
-                console.log('Error in Saving horse: ' + err);
-                throw err;
+                callback();
+            } else {
+                console.log(err);
+                callback();
             }
         });
-        return {
-            "competition": newCompetition,
-        };
-    };
-    res.json(addCompetitionFunction());
-    res.writeHead(302, {
-      'Location': '/admin/'
     });
-    res.end();
+//    };
+//    res.json(addCompetitionFunction());
+//    res.writeHead(302, {
+//      'Location': '/admin/'
+//    });
+//    res.end();
 }]);
 
 router.post('/startCompetition/', [

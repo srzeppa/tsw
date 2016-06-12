@@ -1,5 +1,6 @@
 /*jshint jquery: true, devel: true, esversion: 6, browser: true, node: true */
 /*global io: false */
+/*jshint loopfunc: true */
 "use strict";
 
 $( document ).ready(function() {
@@ -276,6 +277,7 @@ $( document ).ready(function() {
                                 $table.append( $tbody );
                             }
                            $( "#competitionManagement" ).empty();
+                           $( '#referees' ).empty();
                             $table.appendTo( $( "#competitionManagement" ) );
                            
                             var $tableReferees = $( "<table id=\"refereesTable\" class='table table-hover'><thead><tr><th>Firstname</th><th>Lastname</th></tr></thead></table>" );
@@ -394,9 +396,10 @@ $( document ).ready(function() {
                 $('#competitionStartedDiv').append($('<h1>Select horses</h1>'));
                 $('#competitionStartedDiv').append($("<select multiple class='form-control' id='multipleHorses'>"));
                 for (let i = 0; i < horsesArrayLength; i ++){
-                    $('#multipleHorses').append($('<option>', { 
+                    $('#multipleHorses').append($("<option>", { 
                         value: e.horses[i]._id,
-                        text : e.horses[i].name
+                        text : e.horses[i].name,
+                        gender: e.horses[i].gender
                     }));
                 }
             },
@@ -434,13 +437,32 @@ $( document ).ready(function() {
             $('#addCompetitionButton').on('click', function(e){
                 var refereesArray = $('#multipleReferees').val();
                 var horsesArray = $('#multipleHorses').val();
-                $.post( "/admin/addCompetition/", {name: $('#competitionName').val(), referees: refereesArray, horses: horsesArray, numberOfReferees: $('#refereesInGroup').val(), numberOfHorses: $('#horsesInGroup').val()})
-                    .done(function( data ) {
+                var femaleForGroup = [];
+                var maleForGroup = [];
+                
+                
+                $('select#multipleHorses > option:selected').each(function() {
+                    var horse = {
+                        horseName: $(this).text(),
+                        id: $(this).val()
+                    };
+                    if($(this).attr('gender') == 'male'){
+                        maleForGroup.push($(this).val());
+                    }else{
+                        femaleForGroup.push($(this).val());
+                    }
+                });
+                
+                console.log(maleForGroup);
+                console.log(femaleForGroup);
+                
+                $.post( "/admin/addCompetition/", {name: $('#competitionName').val(), horses: horsesArray, referees: refereesArray, numberOfReferees: $('#refereesInGroup').val(), numberOfHorses: $('#horsesInGroup').val(), females: femaleForGroup, males: maleForGroup}).done(function( data ) {
                     $('#nextButton').show();
                     $('#competitionStartedDiv').empty();
                     $('#showAllCompetitions').empty();
                     refreshCompetitionsTable();
                 });
+                
             });
         });
     });
