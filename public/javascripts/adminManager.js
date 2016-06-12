@@ -268,11 +268,7 @@ $( document ).ready(function() {
                                 $line.append( $( "<td></td>" ).html( hor.gender ) );
                                 $line.append( $( "<td></td>" ).html( hor.born ) );
                                 $line.append( $( "<td></td>" ).html( hor.owner ) );
-//                                if(hor.activate === true){
                                     $line.append( $( "<td> </td>" ).html( "<button id=\"allowHorseToRatingButton\" class=\"btn btn-danger\" idHorse="+ hor._id +"> Activation </button>" ) );
-//                                } else {
-//                                    $line.append( $( "<td> </td>" ).html( "<button id=\"allowHorseToRatingButton\" class=\"btn btn-success\" idHorse="+ hor._id +"> Activation </button>" ) );
-//                                }
                                 $tbody.append( $line );
                                 $table.append( $tbody );
                             }

@@ -61,6 +61,11 @@ $( document ).ready(function() {
                         console.log(e.referees[j]._id);
                         if(userId === e.referees[j]._id){
                             console.log('userId === e.referees[j]._id');
+                            $('#headMarkDiv').css('border', 'none');
+                            $('#neckMarkDiv').css('border', 'none');
+                            $('#legsMarkDiv').css('border', 'none');
+                            $('#movementMarkDiv').css('border', 'none');
+                            $('#bodyMarkDiv').css('border', 'none');
                             $('#horseToRate').html("<h1>" + data.horse._id + "</h1>");
                             $('#head').prop( "disabled", false ).val(0);
                             $('div#head').text(0);
@@ -123,25 +128,30 @@ $( document ).ready(function() {
     socket.on('reminderReferee',function(data){
         if(data == userId){
             alert('Send me marks please!!');
-            if(!($('#headMark').is(':disabled')) && parseInt($('#headMark').val()) === 0)
-            $('#headMarkDiv').css('border', '3px solid red'); 
-            if(!($('#legsMark').is(':disabled')) && parseInt($('#legsMark').val()) === 0)
-            $('#legsMarkDiv').css('border', '3px solid red'); 
-            if(!($('#movementMark').is(':disabled')) && parseInt($('#movementMark').val()) === 0)
-            $('#movementMarkDiv').css('border', '3px solid red'); 
-            if(!($('#bodyMark').is(':disabled')) && parseInt($('#bodyMark').val()) === 0)
-            $('#bodyMarkDiv').css('border', '3px solid red'); 
-            if(!($('#neckMark').is(':disabled')) && parseInt($('#neckMark').val()) === 0)
-            $('#neckMarkDiv').css('border', '3px solid red'); 
+            if(!($('#head').is(':disabled')) && parseInt($('#head').val()) === 0){
+                $('#headMarkDiv').css('border', '3px solid red');
+            }
+            if(!($('#legs').is(':disabled')) && parseInt($('#legs').val()) === 0){
+                $('#legsMarkDiv').css('border', '3px solid red'); 
+            }
+            if(!($('#movement').is(':disabled')) && parseInt($('#movement').val()) === 0){
+                $('#movementMarkDiv').css('border', '3px solid red'); 
+            }
+            if(!($('#body').is(':disabled')) && parseInt($('#body').val()) === 0){
+                $('#bodyMarkDiv').css('border', '3px solid red'); 
+            }
+            if(!($('#neck').is(':disabled')) && parseInt($('#neck').val()) === 0){
+                $('#neckMarkDiv').css('border', '3px solid red'); 
+            }
         }
     });
     
     socket.on('stopCompetitionToReferee', function(data){
-        $('#headMark').prop( "disabled", true );
-        $('#legsMark').prop( "disabled", true );
-        $('#bodyMark').prop( "disabled", true );
-        $('#movementMark').prop( "disabled", true );
-        $('#neckMark').prop( "disabled", true );
+        $('#head').prop( "disabled", true );
+        $('#legs').prop( "disabled", true );
+        $('#body').prop( "disabled", true );
+        $('#movement').prop( "disabled", true );
+        $('#neck').prop( "disabled", true );
     });
     
     $('input[type=range]').each(function(){

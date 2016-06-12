@@ -128,7 +128,7 @@ io.on('connection', function (socket) {
     });
     
     socket.on('stopCompetition',function(data){
-        console.log('reminder data');
+        console.log('stopCompetition data');
         console.log(data);
         io.sockets.emit('stopCompetitionToReferee', data);
     });
