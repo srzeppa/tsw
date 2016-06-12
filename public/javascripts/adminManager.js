@@ -508,50 +508,50 @@ $(document).ready(function() {
         });
     });
 
-    var tmp = 0;
-    var mark = 0;
-    var competition = '';
-    var horseCompetition = '';
-    socket.on('markHorseToDb', function(data) {
-
-        mark = mark + data.result;
-        tmp++;
-        $.ajax({
-            type: 'GET',
-            url: '/admin/getUserById/' + data.referee + '/',
-            dataType: 'json',
-            success: function(e) {
-                if (refereesSize == tmp) {
-                    competition = data.competition;
-                    horseCompetition = data.horse;
-                    $('#referees').html("<button id=\"sendMarkToDb\" class=\"btn btn-info\"> Send mark </button>");
-                }
-                $("#reminderButton[idReferee=\"" + data.referee + "\"]").remove();
-            },
-            error: function(jqXHR, textStatus, errorThrown) {
-                console.log(textStatus, errorThrown);
-            }
-        });
-
-
-    });
-
-    $('#referees').on('click', 'button#sendMarkToDb', function() {
-        tmp = 0;
-        mark = mark / refereesSize;
-        $.post("/admin/mark/", {
-            overall: mark,
-            competition: competition,
-            horse: horseCompetition
-        });
-        $('button#sendMarkToDb').remove();
-        socket.emit('results', {
-            overall: mark,
-            competition: competition,
-            horse: horseCompetition
-        });
-        $('#referees').empty();
-    });
+//    var tmp = 0;
+//    var mark = 0;
+//    var competition = '';
+//    var horseCompetition = '';
+//    socket.on('markHorseToDb', function(data) {
+//
+//        mark = mark + data.result;
+//        tmp++;
+//        $.ajax({
+//            type: 'GET',
+//            url: '/admin/getUserById/' + data.referee + '/',
+//            dataType: 'json',
+//            success: function(e) {
+//                if (refereesSize == tmp) {
+//                    competition = data.competition;
+//                    horseCompetition = data.horse;
+//                    $('#referees').html("<button id=\"sendMarkToDb\" class=\"btn btn-info\"> Send mark </button>");
+//                }
+//                $("#reminderButton[idReferee=\"" + data.referee + "\"]").remove();
+//            },
+//            error: function(jqXHR, textStatus, errorThrown) {
+//                console.log(textStatus, errorThrown);
+//            }
+//        });
+//
+//
+//    });
+//
+//    $('#referees').on('click', 'button#sendMarkToDb', function() {
+//        tmp = 0;
+//        mark = mark / refereesSize;
+//        $.post("/admin/mark/", {
+//            overall: mark,
+//            competition: competition,
+//            horse: horseCompetition
+//        });
+//        $('button#sendMarkToDb').remove();
+//        socket.emit('results', {
+//            overall: mark,
+//            competition: competition,
+//            horse: horseCompetition
+//        });
+//        $('#referees').empty();
+//    });
 
     socket.on('partialMarkToDb', function(data) {
         $.post("/admin/partialMark/", {
@@ -564,6 +564,10 @@ $(document).ready(function() {
             body: data.body,
             legs: data.legs
         });
+    });
+    
+    socket.on('blockReminderAdmin',function(data){
+        $("#reminderButton[idReferee=\"" + data.referee + "\"]").remove();
     });
 
 });

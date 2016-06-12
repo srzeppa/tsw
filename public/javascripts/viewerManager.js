@@ -37,7 +37,7 @@ $(document).ready(function() {
                     $linee.appendTo($("#" + e[i].competition._id));
                 }
             }
-            $("#results").children().tablesorter();
+            $("#results").children().tablesorter({sortList: [[1,1]]});
         }
     });
 
@@ -79,8 +79,8 @@ $(document).ready(function() {
                             $linee.appendTo($("#" + data.competition._id));
                         }
                     });
-                    $("#results").children().tablesorter();
                 }
+                $("#results").children().tablesorter({sortList: [[1,1]]});
             }
         });
     });

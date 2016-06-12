@@ -150,6 +150,10 @@ io.on('connection', function (socket) {
         console.log(data);
         io.sockets.emit('getGroupReferee', data);
     });
+    
+    socket.on('blockReminder',function(data){
+        io.sockets.emit('blockReminderAdmin', data);
+    });
 });
 
 server.listen(3000, function () {

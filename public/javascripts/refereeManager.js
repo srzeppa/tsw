@@ -111,6 +111,8 @@ $(document).ready(function() {
             horse: $(this).attr('idHorse'),
             referee: userId
         });
+        
+        socket.emit('blockReminder', {referee: userId});
 
         $('#head').prop("disabled", true);
         $('#legs').prop("disabled", true);
