@@ -70,6 +70,20 @@ router.get('/getAllResults', function(req, res, next) {
     });
 });
 
+router.get('/getAllResultsHorseById/:id/', function(req, res, next) {
+    Result.find({horse: req.params.id}).populate('horse').populate('competition').lean().exec(function(err, result) {
+        if (err) throw err;
+        res.json(JSON.parse(JSON.stringify(result)));
+    });
+});
+
+router.get('/getAllResultsHorseById/:id/:competition/', function(req, res, next) {
+    Result.find({horse: req.params.id, competition: req.params.competition}).populate('horse').populate('competition').lean().exec(function(err, result) {
+        if (err) throw err;
+        res.json(JSON.parse(JSON.stringify(result)));
+    });
+});
+
 router.get('/getHorseById/:_id/', function(req, res) {
     Horse.findOne({
         _id: req.params._id

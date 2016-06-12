@@ -24,16 +24,18 @@ $(document).ready(function() {
                         var $line = $("<tr></tr>");
                         $line.append($("<td id='" + e[i].competition._id + e[i].horse._id + "'></td>").html(e[i].horse.name));
                         $line.append($("<td></td>").html(Math.round((e[i].overall) * 100) / 100));
+                        $line.append($("<td> </td>").html("<button id=\"statsButton\" class=\"btn btn-success\" idHorse=" + e[i].horse._id + " type='button' data-toggle='collapse' data-target='#stats' aria-expanded='false' aria-controls='collapseExample'> Stats </button>"));
                         $line.appendTo($("#" + e[i].competition._id));
                     }
                 } else {
                     var $title = $("<h1>" + e[i].competition.name + "</h1>");
                     $title.appendTo($("#results"));
-                    var $table = $("<table id=\"" + e[i].competition._id + "\" class='table table-hover tablesorter'><thead><tr><th>Name</th><th>Overall</th></tr></thead></table>");
+                    var $table = $("<table id=\"" + e[i].competition._id + "\" class='table table-hover tablesorter'><thead><tr><th>Name</th><th>Overall</th><th>Stats</th></tr></thead></table>");
                     $table.appendTo($("#results"));
                     var $linee = $("<tr></tr>");
                     $linee.append($("<td id='" + e[i].competition._id + e[i].horse._id + "'></td>").html(e[i].horse.name));
                     $linee.append($("<td></td>").html(Math.round((e[i].overall) * 100) / 100));
+                    $linee.append($("<td> </td>").html("<button id=\"statsButton\" class=\"btn btn-success\" idHorse=" + e[i].horse._id + " type='button' data-toggle='collapse' data-target='#stats' aria-expanded='false' aria-controls='collapseExample'> Stats </button>"));
                     $linee.appendTo($("#" + e[i].competition._id));
                 }
             }
@@ -60,6 +62,7 @@ $(document).ready(function() {
                         var $line = $("<tr></tr>");
                         $line.append($("<td id='" + data.competition._id + e._id + "'></td>").html(e.name));
                         $line.append($("<td></td>").html(Math.round((data.overall) * 100) / 100));
+                        $line.append($("<td> </td>").html("<button id=\"statsButton\" class=\"btn btn-success\" idHorse=" + e._id + " type='button' data-toggle='collapse' data-target='#stats' aria-expanded='false' aria-controls='collapseExample'> Stats </button>"));
                         $line.appendTo($("#" + data.competition._id));
                     }
                 } else {
@@ -71,16 +74,51 @@ $(document).ready(function() {
                         success: function(competition) {
                             var $title = $("<h1>" + competition.name + "</h1>");
                             $title.appendTo($("#results"));
-                            var $table = $("<table id=\"" + data.competition._id + "\" class='table table-hover tablesorter'><thead><tr><th>Name</th><th>Overall</th></tr></thead></table>");
+                            var $table = $("<table id=\"" + data.competition._id + "\" class='table table-hover tablesorter'><thead><tr><th>Name</th><th>Overall</th><th>Stats</th></tr></thead></table>");
                             $table.appendTo($("#results"));
                             var $linee = $("<tr></tr>");
                             $linee.append($("<td id='" + data.competition._id + e._id + "'></td>").html(e.name));
                             $linee.append($("<td></td>").html(data.overall));
+                            $linee.append($("<td> </td>").html("<button id=\"statsButton\" class=\"btn btn-success\" idHorse=" + e._id + " type='button' data-toggle='collapse' data-target='#stats' aria-expanded='false' aria-controls='collapseExample'> Stats </button>"));
                             $linee.appendTo($("#" + data.competition._id));
                         }
                     });
                 }
                 $("#results").children().tablesorter({sortList: [[1,1]]});
+            }
+        });
+    });
+    
+    $('#results').on('click', 'button#statsButton', function() {
+        console.log('statsButton clicked');
+        $.ajax({
+            type: 'GET',
+            url: '/viewer/getAllResultsHorseById/' + $(this).attr('idHorse') + '/',
+            dataType: 'json',
+            success: function(e) {
+                var $line;
+                console.log(e);
+                $('#statsDiv').html('<h3>' + e[0].horse.name + '</h3>');
+                var $table = $("<table class='table table-hover tablesorter'><thead><tr><th>Competition</th><th>Overall</th></tr></thead></table>");
+                
+                for(let i = 0; i < e.length; i ++) {
+                    if($('#' + e[i].competition.name).length){
+                        var value = parseInt($('#' + e[i].competition.name).next().text());
+                        value = (e[i].overall + value) / 2;
+                        var next = $('#' + e[i].competition.name).next().text(value);
+                    } else {
+                        $table.appendTo($("#results"));
+                        var $linee = $("<tr></tr>");
+                        $linee.append($("<td id='" + e[i].competition.name + "'></td>").html(e[i].competition.name));
+                        $linee.append($("<td></td>").html(e[i].overall));
+                        $linee.appendTo($($table));
+                    }
+                }
+                
+                $table.appendTo($('#statsDiv'));
+            },
+            error: function(jqXHR, textStatus, errorThrown) {
+                console.log(textStatus, errorThrown);
             }
         });
     });
