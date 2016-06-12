@@ -6,6 +6,7 @@ $(document).ready(function() {
     console.log('viewer.ejs');
 
     var socket = io.connect('https://localhost:3000');
+    alert = function() {};
 
     $.ajax({
         type: 'GET',
@@ -17,7 +18,7 @@ $(document).ready(function() {
             for (let i = 0; i < e.length; i++) {
                 if ($('#' + e[i].competition._id).length) {
                     if ($('#' + e[i].competition._id + e[i].horse._id).length) {
-                        var value = parseInt($('#' + e[i].competition._id + e[i].horse._id).next().text());
+                        var value = parseFloat($('#' + e[i].competition._id + e[i].horse._id).next().text());
                         value = (e[i].overall + value) / 2;
                         var next = $('#' + e[i].competition._id + e[i].horse._id).next().text(value);
                     } else {
@@ -38,8 +39,12 @@ $(document).ready(function() {
                     $linee.append($("<td> </td>").html("<button id=\"statsButton\" class=\"btn btn-success\" idHorse=" + e[i].horse._id + " type='button' data-toggle='collapse' data-target='#stats' aria-expanded='false' aria-controls='collapseExample'> Stats </button>"));
                     $linee.appendTo($("#" + e[i].competition._id));
                 }
+                $('#' + e[i].competition._id).DataTable( {
+                    "pagingType": "full_numbers",
+                    searching: false
+                } );
+//                $("#results").children().tablesorter({sortList: [[1,1]]});
             }
-            $("#results").children().tablesorter({sortList: [[1,1]]});
         }
     });
 
@@ -55,7 +60,7 @@ $(document).ready(function() {
             success: function(e) {
                 if ($('#' + data.competition._id).length) {
                     if ($('#' + data.competition._id + e._id).length) {
-                        var value = parseInt($('#' + data.competition._id + e._id).next().text());
+                        var value = parseFloat($('#' + data.competition._id + e._id).next().text());
                         value = (data.overall + value) / 2;
                         var next = $('#' + data.competition._id + e._id).next().text(value);
                     } else {
@@ -84,7 +89,7 @@ $(document).ready(function() {
                         }
                     });
                 }
-                $("#results").children().tablesorter({sortList: [[1,1]]});
+//                $("#results").children().tablesorter({sortList: [[1,1]]});
             }
         });
     });
@@ -103,7 +108,7 @@ $(document).ready(function() {
                 
                 for(let i = 0; i < e.length; i ++) {
                     if($('#' + e[i].competition.name).length){
-                        var value = parseInt($('#' + e[i].competition.name).next().text());
+                        var value = parseFloat($('#' + e[i].competition.name).next().text());
                         value = (e[i].overall + value) / 2;
                         var next = $('#' + e[i].competition.name).next().text(value);
                     } else {
@@ -119,6 +124,35 @@ $(document).ready(function() {
             },
             error: function(jqXHR, textStatus, errorThrown) {
                 console.log(textStatus, errorThrown);
+            }
+        });
+    });
+    
+    $('#championsButton').click(function(){
+        console.log('champions clicked');
+        $.ajax({
+            type: 'GET',
+            url: '/viewer/getAllResults/',
+            dataType: 'json',
+            success: function(e) {
+                console.log(e);
+                var $table = $("<table id='championsTable' class='table table-hover tablesorter'><thead><tr><th>Name</th><th>Overall</th></tr></thead></table>");
+                $("#championsDiv").html($table);
+                for (let i = 0; i < e.length; i ++) {
+                    if($('#' + e[i].horse._id + 'champions').length){
+                        var value = parseFloat($('#' + e[i].horse._id + "champions").next().text());
+                        console.log(e[i].horse.name);
+                        console.log(value);
+                        value = (e[i].overall + value) / 2;
+                        var next = $('#' + e[i].horse._id + "champions").next().text(value);
+                    } else {
+                        var $linee = $("<tr></tr>");
+                        $linee.append($("<td id='" + e[i].horse._id + "champions'></td>").html(e[i].horse.name));
+                        $linee.append($("<td></td>").html(e[i].overall));
+                        $linee.appendTo($("#championsTable"));
+                    }
+//                    $linee.appendTo($('#championsTable'));
+                }
             }
         });
     });
