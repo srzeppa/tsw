@@ -155,6 +155,10 @@ io.on('connection', function (socket) {
     socket.on('blockReminder',function(data){
         io.sockets.emit('blockReminderAdmin', data);
     });
+    
+    socket.on('horseMarkedFromReferee',function(data){
+        io.sockets.emit('horseMarkedToAdmin', data);
+    });
 });
 
 

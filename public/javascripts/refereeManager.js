@@ -55,7 +55,7 @@ $(document).ready(function() {
         console.log('startRateHorseReferee');
         console.log(data);
         
-        if(startNumber !== 0){
+//        if(startNumber !== 0){
             var result = 0;
 
             result = (parseInt($('#head').val()) + parseInt($('#legs').val()) + parseInt($('#neck').val()) + parseInt($('#movement').val()) + parseInt($('#body').val())) / 5;
@@ -77,7 +77,7 @@ $(document).ready(function() {
             });
 
             socket.emit('blockReminder', {referee: userId});
-        }
+//        }
         
         startNumber ++;
 
@@ -195,6 +195,8 @@ $(document).ready(function() {
         $('#movement').prop("disabled", true);
         $('#neck').prop("disabled", true);
     });
+    
+    
 
     $('input[type=range]').each(function() {
         $(this).change(function() {
@@ -202,6 +204,9 @@ $(document).ready(function() {
             var attr = $(this).attr('id');
             var value = $(this).val();
             $('div[id=' + attr + ']').text(value);
+            if((parseInt($('#head').val()) !== 0) && (parseInt($('#legs').val()) !== 0) && (parseInt($('#body').val()) !== 0) && (parseInt($('#movement').val()) !== 0) && (parseInt($('#neck').val()) !== 0)){
+                socket.emit('horseMarkedFromReferee', userId);
+            }
         });
     });
 

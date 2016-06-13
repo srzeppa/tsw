@@ -14,6 +14,11 @@ $(document).ready(function() {
     socket.on('startCompetition', function(data) {
         console.log('startCompetition listen');
     });
+    
+    socket.on('horseMarkedToAdmin', function(data) {
+        console.log('horseMarkedToAdmin listen');
+        $("#reminderButton[idReferee=\"" + data + "\"]").prop("disabled", true);
+    });
 
     var refreshHorsesTable = function() {
         $.ajax({
@@ -337,6 +342,10 @@ $(document).ready(function() {
     var horse;
     $('#competitionManagement').on('click', 'button#allowHorseToRatingButton', function() {
 //        $("#reminderButton[idReferee=\"" + data.referee + "\"]").prop("disabled", false);
+//        $("#reminderButton").each().prop("disabled", false);
+        $("#reminderButton").each(function(index) {
+            $(this).prop("disabled", false);
+        });
 //        $("#reminderButton").each().prop("disabled", false);
         $.ajax({
             type: 'GET',
