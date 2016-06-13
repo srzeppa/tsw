@@ -99,6 +99,7 @@ var server = https.createServer(options,app);
 var io = require('socket.io')(server);
 
 io.on('connection', function (socket) {
+//io.on('connection', function (socket) {
     console.log('User connected');
 
     socket.on('allowHorseToRating',function(data){
@@ -156,6 +157,11 @@ io.on('connection', function (socket) {
     });
 });
 
+
+//app = connect().use(connect.static('public')).listen(3000, "0.0.0.0");
+//server.address({ address: '0.0.0.0', family: 'IPv4', port: 3000 });
+//console.log(server.address().address);
+//server.listen(3000, "0.0.0.0");
 server.listen(3000, function () {
     console.log('Serwer pod adresem https://localhost:3000/');
 });

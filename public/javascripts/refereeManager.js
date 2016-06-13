@@ -3,6 +3,9 @@
 /*jshint loopfunc: true */
 "use strict";
 $(document).ready(function() {
+    
+    var startNumber = 0;
+    
     console.log('referee.ejs');
 
     $('#head').prop("disabled", true);
@@ -12,7 +15,8 @@ $(document).ready(function() {
     $('#neck').prop("disabled", true);
     $('#markHorseButton').prop('disabled', true);
 
-    var socket = io.connect('https://localhost:3000');
+//    var socket = io.connect('https://0.0.0.0:3000');
+    var socket = io.connect(location.host);
     var refereesArray = [];
     var competition;
     var group;
@@ -50,6 +54,32 @@ $(document).ready(function() {
     socket.on('startRateHorseReferee', function(data) {
         console.log('startRateHorseReferee');
         console.log(data);
+        
+        if(startNumber !== 0){
+            var result = 0;
+
+            result = (parseInt($('#head').val()) + parseInt($('#legs').val()) + parseInt($('#neck').val()) + parseInt($('#movement').val()) + parseInt($('#body').val())) / 5;
+
+            $.post("/referee/mark/", {
+                overall: result,
+                competition: competition,
+    //            horse: $(this).attr('idHorse'),
+                horse: data.horse._id,
+                referee: userId
+            });
+
+            socket.emit('results', {
+                overall: result,
+                competition: competition,
+                horse: data.horse._id,
+    //            horse: $(this).attr('idHorse'),
+                referee: userId
+            });
+
+            socket.emit('blockReminder', {referee: userId});
+        }
+        
+        startNumber ++;
 
         $.ajax({
             type: 'GET',
@@ -65,7 +95,7 @@ $(document).ready(function() {
                         $('#legsMarkDiv').css('border', 'none');
                         $('#movementMarkDiv').css('border', 'none');
                         $('#bodyMarkDiv').css('border', 'none');
-                        $('#horseToRate').html("<h1>" + data.horse._id + "</h1>");
+                        $('#horseToRate').html("<h1>" + startNumber + "</h1>");
                         $('#head').prop("disabled", false).val(0);
                         $('div#head').text(0);
                         $('#legs').prop("disabled", false).val(0);
@@ -80,47 +110,48 @@ $(document).ready(function() {
                         break;
                     }
                 }
+                
             }
         });
     });
 
-    socket.on('allowHorseToRating', function(data) {
-        $('#' + data._id).parent().append($("<td id='typeMark'></td>").html("<input required='true' type='number' class='form-control'>"));
-        $('#' + data._id).parent().append($("<td id='headMark'></td>").html("<input required='true' type='number' class='form-control'>"));
-        $('#' + data._id).parent().append($("<td id='bodyMark'></td>").html("<input required='true' type='number' class='form-control'>"));
-        $('#' + data._id).parent().append($("<td id='legsMark'></td>").html("<input required='true' type='number' class='form-control'>"));
-        $('#' + data._id).parent().append($("<td id='movementMark'></td>").html("<input required='true' type='number' class='form-control'>"));
-        $('#' + data._id).parent().append($("<td></td>").html("<button id=\"markHorseButton\" class=\"btn btn-info\" idHorse=" + data._id + "> Mark </button>"));
-    });
-
-    $('button#markHorseButton').on('click', function() {
-        var result = 0;
-
-        result = (parseInt($('#head').val()) + parseInt($('#legs').val()) + parseInt($('#neck').val()) + parseInt($('#movement').val()) + parseInt($('#body').val())) / 5;
-
-        $.post("/referee/mark/", {
-            overall: result,
-            competition: competition,
-            horse: $(this).attr('idHorse'),
-            referee: userId
-        });
-
-        socket.emit('results', {
-            overall: result,
-            competition: competition,
-            horse: $(this).attr('idHorse'),
-            referee: userId
-        });
-        
-        socket.emit('blockReminder', {referee: userId});
-
-        $('#head').prop("disabled", true);
-        $('#legs').prop("disabled", true);
-        $('#body').prop("disabled", true);
-        $('#movement').prop("disabled", true);
-        $('#neck').prop("disabled", true);
-        $('#markHorseButton').prop('disabled', true);
-    });
+//    socket.on('allowHorseToRating', function(data) {
+//        $('#' + data._id).parent().append($("<td id='typeMark'></td>").html("<input required='true' type='number' class='form-control'>"));
+//        $('#' + data._id).parent().append($("<td id='headMark'></td>").html("<input required='true' type='number' class='form-control'>"));
+//        $('#' + data._id).parent().append($("<td id='bodyMark'></td>").html("<input required='true' type='number' class='form-control'>"));
+//        $('#' + data._id).parent().append($("<td id='legsMark'></td>").html("<input required='true' type='number' class='form-control'>"));
+//        $('#' + data._id).parent().append($("<td id='movementMark'></td>").html("<input required='true' type='number' class='form-control'>"));
+//        $('#' + data._id).parent().append($("<td></td>").html("<button id=\"markHorseButton\" class=\"btn btn-info\" idHorse=" + data._id + "> Mark </button>"));
+//    });
+//
+//    $('button#markHorseButton').on('click', function() {
+//        var result = 0;
+//
+//        result = (parseInt($('#head').val()) + parseInt($('#legs').val()) + parseInt($('#neck').val()) + parseInt($('#movement').val()) + parseInt($('#body').val())) / 5;
+//
+//        $.post("/referee/mark/", {
+//            overall: result,
+//            competition: competition,
+//            horse: $(this).attr('idHorse'),
+//            referee: userId
+//        });
+//
+//        socket.emit('results', {
+//            overall: result,
+//            competition: competition,
+//            horse: $(this).attr('idHorse'),
+//            referee: userId
+//        });
+//        
+//        socket.emit('blockReminder', {referee: userId});
+//
+//        $('#head').prop("disabled", true);
+//        $('#legs').prop("disabled", true);
+//        $('#body').prop("disabled", true);
+//        $('#movement').prop("disabled", true);
+//        $('#neck').prop("disabled", true);
+//        $('#markHorseButton').prop('disabled', true);
+//    });
 
 
     $.ajax({
@@ -138,7 +169,7 @@ $(document).ready(function() {
 
     socket.on('reminderReferee', function(data) {
         if (data == userId) {
-            alert('Send me marks please!!');
+//            alert('Send me marks please!!');
             if (!($('#head').is(':disabled')) && parseInt($('#head').val()) === 0) {
                 $('#headMarkDiv').css('border', '3px solid red');
             }
@@ -167,6 +198,7 @@ $(document).ready(function() {
 
     $('input[type=range]').each(function() {
         $(this).change(function() {
+            $(this).parent().parent().css('border', 'none');
             var attr = $(this).attr('id');
             var value = $(this).val();
             $('div[id=' + attr + ']').text(value);

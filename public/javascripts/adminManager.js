@@ -9,7 +9,8 @@ $(document).ready(function() {
     var competitionToSend;
     var refereesSize;
 
-    var socket = io('https://localhost:3000');
+//    var socket = io('https://0.0.0.0:3000');
+    var socket = io(location.host);
     socket.on('startCompetition', function(data) {
         console.log('startCompetition listen');
     });
@@ -335,6 +336,8 @@ $(document).ready(function() {
 
     var horse;
     $('#competitionManagement').on('click', 'button#allowHorseToRatingButton', function() {
+//        $("#reminderButton[idReferee=\"" + data.referee + "\"]").prop("disabled", false);
+//        $("#reminderButton").each().prop("disabled", false);
         $.ajax({
             type: 'GET',
             url: '/admin/getHorseById/' + $(this).attr('idHorse') + '/',
@@ -352,6 +355,7 @@ $(document).ready(function() {
             }
         }).done(function() {
             socket.emit('allowHorseToRating', horse);
+            
         });
     });
 
@@ -567,7 +571,7 @@ $(document).ready(function() {
     });
     
     socket.on('blockReminderAdmin',function(data){
-        $("#reminderButton[idReferee=\"" + data.referee + "\"]").remove();
+//        $("#reminderButton[idReferee=\"" + data.referee + "\"]").prop("disabled", true);
     });
 
 });

@@ -5,7 +5,10 @@
 $(document).ready(function() {
     console.log('viewer.ejs');
 
-    var socket = io.connect('https://localhost:3000');
+    console.log(location);
+    
+    var socket = io.connect(location.host);
+//    var socket = io.connect('https://10.10.4.25:3000');
     alert = function() {};
 
     $.ajax({
