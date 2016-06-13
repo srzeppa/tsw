@@ -13,7 +13,7 @@ $(document).ready(function() {
     $('#body').prop("disabled", true);
     $('#movement').prop("disabled", true);
     $('#neck').prop("disabled", true);
-    $('#markHorseButton').prop('disabled', true);
+//    $('#markHorseButton').prop('disabled', true);
 
 //    var socket = io.connect('https://0.0.0.0:3000');
     var socket = io.connect(location.host);
@@ -106,7 +106,7 @@ $(document).ready(function() {
                         $('div#movement').text(0);
                         $('#neck').prop("disabled", false).val(0);
                         $('div#neck').text(0);
-                        $('#markHorseButton').prop('disabled', false).attr('idHorse', data.horse._id);
+//                        $('#markHorseButton').prop('disabled', false).attr('idHorse', data.horse._id);
                         break;
                     }
                 }
